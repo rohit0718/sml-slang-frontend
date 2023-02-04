@@ -124,20 +124,6 @@ const NavigationBar: React.FC<NavigationBarProps> = props => {
               <Icon icon={IconNames.BRIEFCASE} />
               <div>Classroom</div>
             </NavLink>
-            <NavLink
-              activeClassName={Classes.ACTIVE}
-              className={classNames(
-                'NavigationBar__link__mobile',
-                Classes.BUTTON,
-                Classes.MINIMAL,
-                Classes.LARGE
-              )}
-              to={`/sicpjs/`}
-              onClick={() => setMobileSideMenuOpen(false)}
-            >
-              <Icon icon={IconNames.BOOK} />
-              <div>SICP JS</div>
-            </NavLink>
           </Drawer>
         </NavbarGroup>
       </>
@@ -159,14 +145,6 @@ const NavigationBar: React.FC<NavigationBarProps> = props => {
           <Icon icon={IconNames.BRIEFCASE} />
           <div>Classroom</div>
         </NavLink>
-        <NavLink
-          activeClassName={Classes.ACTIVE}
-          className={classNames('NavigationBar__link__mobile', Classes.BUTTON, Classes.MINIMAL)}
-          to={`/sicpjs/`}
-        >
-          <Icon icon={IconNames.BOOK} />
-          <div>SICP JS</div>
-        </NavLink>
       </NavbarGroup>
     )
   ) : (
@@ -178,14 +156,6 @@ const NavigationBar: React.FC<NavigationBarProps> = props => {
       >
         <Icon icon={IconNames.CODE} />
         <div>Playground</div>
-      </NavLink>
-      <NavLink
-        activeClassName={Classes.ACTIVE}
-        className={classNames('NavigationBar__link__mobile', Classes.BUTTON, Classes.MINIMAL)}
-        to={`/sicpjs/`}
-      >
-        <Icon icon={IconNames.BOOK} />
-        <div>SICP JS</div>
       </NavLink>
     </NavbarGroup>
   );
@@ -268,7 +238,6 @@ const NavigationBar: React.FC<NavigationBarProps> = props => {
 
   const enableDesktopPopoverIn = [
     '/playground',
-    '/sicpjs',
     '/contributors',
     `/courses/${props.courseId}/sourcecast`,
     `/courses/${props.courseId}/achievements`
@@ -322,16 +291,7 @@ const NavigationBar: React.FC<NavigationBarProps> = props => {
           <div className="navbar-button-text">Classroom</div>
         </NavLink>
       )}
-      {props.name && (
-        <NavLink
-          activeClassName={Classes.ACTIVE}
-          className={classNames('NavigationBar__link', Classes.BUTTON, Classes.MINIMAL)}
-          to={`/sicpjs/`}
-        >
-          <Icon icon={IconNames.BOOK} />
-          <div className="navbar-button-text">SICP JS</div>
-        </NavLink>
-      )}
+      {props.name}
       {props.role && props.enableAchievements && (
         <NavLink
           activeClassName={Classes.ACTIVE}

@@ -87,9 +87,6 @@ import Markdown from '../../commons/Markdown';
 import MobileWorkspace, {
   MobileWorkspaceProps
 } from '../../commons/mobileWorkspace/MobileWorkspace';
-import SideContentRemoteExecution from '../../commons/sideContent/remoteExecution/SideContentRemoteExecution';
-import SideContentDataVisualizer from '../../commons/sideContent/SideContentDataVisualizer';
-import SideContentEnvVisualizer from '../../commons/sideContent/SideContentEnvVisualizer';
 import SideContentSubstVisualizer from '../../commons/sideContent/SideContentSubstVisualizer';
 import { SideContentTab, SideContentType } from '../../commons/sideContent/SideContentTypes';
 import { Links } from '../../commons/utils/Constants';
@@ -228,21 +225,6 @@ const Playground: React.FC<PlaygroundProps> = ({ workspaceLocation = 'playground
     })
   );
 
-  const remoteExecutionTab: SideContentTab = React.useMemo(
-    () => ({
-      label: 'Remote Execution',
-      iconName: IconNames.SATELLITE,
-      body: (
-        <SideContentRemoteExecution
-          workspace="playground"
-          secretParams={deviceSecret || undefined}
-          callbackFunction={setDeviceSecret}
-        />
-      ),
-      id: SideContentType.remoteExecution
-    }),
-    [deviceSecret]
-  );
 
   const usingRemoteExecution =
     useTypedSelector(state => !!state.session.remoteExecutionSession) && !isSicpEditor;
@@ -584,21 +566,7 @@ const Playground: React.FC<PlaygroundProps> = ({ workspaceLocation = 'playground
 
     // (TEMP) Remove tabs for fullJS until support is integrated
     if (props.playgroundSourceChapter === Chapter.FULL_JS) {
-      return [...tabs, dataVisualizerTab];
-    }
-
-    if (props.playgroundSourceChapter >= 2 && !usingRemoteExecution) {
-      // Enable Data Visualizer for Source Chapter 2 and above
-      tabs.push(dataVisualizerTab);
-    }
-    if (
-      props.playgroundSourceChapter >= 3 &&
-      props.playgroundSourceVariant !== Variant.CONCURRENT &&
-      props.playgroundSourceVariant !== Variant.NON_DET &&
-      !usingRemoteExecution
-    ) {
-      // Enable Env Visualizer for Source Chapter 3 and above
-      tabs.push(envVisualizerTab);
+      return [...tabs];
     }
 
     if (
@@ -615,9 +583,6 @@ const Playground: React.FC<PlaygroundProps> = ({ workspaceLocation = 'playground
       });
     }
 
-    if (!isSicpEditor) {
-      tabs.push(remoteExecutionTab);
-    }
 
     return tabs;
   }, [
@@ -625,11 +590,8 @@ const Playground: React.FC<PlaygroundProps> = ({ workspaceLocation = 'playground
     props.playgroundSourceChapter,
     props.playgroundSourceVariant,
     props.output,
-    usingRemoteExecution,
-    isSicpEditor,
     dispatch,
-    workspaceLocation,
-    remoteExecutionTab
+    workspaceLocation
   ]);
 
   // Remove Intro and Remote Execution tabs for mobile
@@ -857,18 +819,5 @@ const mobileOnlyTabIds: readonly SideContentType[] = [
 ];
 const desktopOnlyTabIds: readonly SideContentType[] = [SideContentType.introduction];
 
-const dataVisualizerTab: SideContentTab = {
-  label: 'Data Visualizer',
-  iconName: IconNames.EYE_OPEN,
-  body: <SideContentDataVisualizer />,
-  id: SideContentType.dataVisualizer
-};
-
-const envVisualizerTab: SideContentTab = {
-  label: 'Env Visualizer',
-  iconName: IconNames.GLOBE,
-  body: <SideContentEnvVisualizer />,
-  id: SideContentType.envVisualizer
-};
 
 export default Playground;
