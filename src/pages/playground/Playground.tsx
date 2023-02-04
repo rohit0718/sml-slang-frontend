@@ -18,11 +18,6 @@ import {
   debuggerResume
 } from 'src/commons/application/actions/InterpreterActions';
 import {
-  loginGitHub,
-  logoutGitHub,
-  logoutGoogle
-} from 'src/commons/application/actions/SessionActions';
-import {
   setEditorSessionId,
   setSharedbConnected
 } from 'src/commons/collabEditing/CollabEditingActions';
@@ -45,17 +40,6 @@ import {
 } from 'src/commons/workspace/WorkspaceActions';
 import { WorkspaceLocation } from 'src/commons/workspace/WorkspaceTypes';
 import {
-  githubOpenFile,
-  githubSaveFile,
-  githubSaveFileAs
-} from 'src/features/github/GitHubActions';
-import {
-  persistenceInitialise,
-  persistenceOpenPicker,
-  persistenceSaveFile,
-  persistenceSaveFileAs
-} from 'src/features/persistence/PersistenceActions';
-import {
   generateLzString,
   shortenURL,
   updateShortURL
@@ -73,11 +57,9 @@ import { ControlBarChapterSelect } from '../../commons/controlBar/ControlBarChap
 import { ControlBarClearButton } from '../../commons/controlBar/ControlBarClearButton';
 import { ControlBarEvalButton } from '../../commons/controlBar/ControlBarEvalButton';
 import { ControlBarExecutionTime } from '../../commons/controlBar/ControlBarExecutionTime';
-import { ControlBarGoogleDriveButtons } from '../../commons/controlBar/ControlBarGoogleDriveButtons';
 import { ControlBarSessionButtons } from '../../commons/controlBar/ControlBarSessionButton';
 import { ControlBarShareButton } from '../../commons/controlBar/ControlBarShareButton';
 import { ControlBarStepLimit } from '../../commons/controlBar/ControlBarStepLimit';
-import { ControlBarGitHubButtons } from '../../commons/controlBar/github/ControlBarGitHubButtons';
 import {
   convertEditorTabStateToProps,
   NormalEditorContainerProps
@@ -211,7 +193,7 @@ const Playground: React.FC<PlaygroundProps> = ({ workspaceLocation = 'playground
     history.replace(location.pathname);
   }
 
-  const [lastEdit, setLastEdit] = React.useState(new Date());
+  const [, setLastEdit] = React.useState(new Date());
   const [isGreen, setIsGreen] = React.useState(false);
   const [selectedTab, setSelectedTab] = React.useState(
     shouldAddDevice ? SideContentType.remoteExecution : SideContentType.introduction
@@ -428,47 +410,8 @@ const Playground: React.FC<PlaygroundProps> = ({ workspaceLocation = 'playground
     [props.handleReplEval, props.isRunning, selectedTab]
   );
 
-  const { persistenceUser, persistenceFile } = props;
-  // Compute this here to avoid re-rendering the button every keystroke
-  const persistenceIsDirty =
-    persistenceFile && (!persistenceFile.lastSaved || persistenceFile.lastSaved < lastEdit);
-  const persistenceButtons = React.useMemo(() => {
-    return (
-      <ControlBarGoogleDriveButtons
-        currentFile={persistenceFile}
-        loggedInAs={persistenceUser}
-        isDirty={persistenceIsDirty}
-        key="googledrive"
-        onClickSaveAs={() => dispatch(persistenceSaveFileAs())}
-        onClickOpen={() => dispatch(persistenceOpenPicker())}
-        onClickSave={
-          persistenceFile ? () => dispatch(persistenceSaveFile(persistenceFile)) : undefined
-        }
-        onClickLogOut={() => dispatch(logoutGoogle())}
-        onPopoverOpening={() => dispatch(persistenceInitialise())}
-      />
-    );
-  }, [dispatch, persistenceUser, persistenceFile, persistenceIsDirty]);
 
-  const githubOctokitObject = useTypedSelector(store => store.session.githubOctokitObject);
-  const githubSaveInfo = props.githubSaveInfo;
-  const githubPersistenceIsDirty =
-    githubSaveInfo && (!githubSaveInfo.lastSaved || githubSaveInfo.lastSaved < lastEdit);
-  const githubButtons = React.useMemo(() => {
-    return (
-      <ControlBarGitHubButtons
-        key="github"
-        loggedInAs={githubOctokitObject.octokit}
-        githubSaveInfo={githubSaveInfo}
-        isDirty={githubPersistenceIsDirty}
-        onClickOpen={() => dispatch(githubOpenFile())}
-        onClickSaveAs={() => dispatch(githubSaveFileAs())}
-        onClickSave={() => dispatch(githubSaveFile())}
-        onClickLogIn={() => dispatch(loginGitHub())}
-        onClickLogOut={() => dispatch(logoutGitHub())}
-      />
-    );
-  }, [dispatch, githubOctokitObject, githubPersistenceIsDirty, githubSaveInfo]);
+
 
   const executionTime = React.useMemo(
     () => (
@@ -742,11 +685,7 @@ const Playground: React.FC<PlaygroundProps> = ({ workspaceLocation = 'playground
     controlBarProps: {
       editorButtons: [
         autorunButtons,
-        props.playgroundSourceChapter === Chapter.FULL_JS ? null : shareButton,
         chapterSelect,
-        isSicpEditor ? null : sessionButtons,
-        persistenceButtons,
-        githubButtons,
         usingRemoteExecution || !isSourceLanguage(props.playgroundSourceChapter)
           ? null
           : props.usingSubst
@@ -784,8 +723,6 @@ const Playground: React.FC<PlaygroundProps> = ({ workspaceLocation = 'playground
           chapterSelect,
           props.playgroundSourceChapter === Chapter.FULL_JS ? null : shareButton,
           isSicpEditor ? null : sessionButtons,
-          persistenceButtons,
-          githubButtons
         ]
       },
       selectedTabId: selectedTab,

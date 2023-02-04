@@ -5,9 +5,7 @@ import { Links } from './Constants';
 
 const MAIN_INTRODUCTION = `
 Welcome to the Source Academy playground!
-
-The book [_Structure and Interpretation of Computer Programs, JavaScript Edition_](${Links.textbook})
-uses JavaScript sublanguages that we call [_Source_](${Links.sourceDocs}). `;
+`;
 
 const HOTKEYS_INTRODUCTION = `
 
