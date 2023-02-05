@@ -2,9 +2,7 @@ import { Chapter, Language, SourceError, Variant } from 'calc-slang/dist/types';
 
 import { AcademyState } from '../../features/academy/AcademyTypes';
 import { AchievementState } from '../../features/achievement/AchievementTypes';
-import { DashboardState } from '../../features/dashboard/DashboardTypes';
-import { Grading } from '../../features/grading/GradingTypes';
-import { PlaygroundState } from '../../features/playground/PlaygroundTypes';
+
 import { PlaybackStatus, RecordingStatus } from '../../features/sourceRecorder/SourceRecorderTypes';
 import { Assessment } from '../assessment/AssessmentTypes';
 import Constants from '../utils/Constants';
