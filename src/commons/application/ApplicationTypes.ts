@@ -110,59 +110,18 @@ export interface SALanguage extends Language {
 }
 
 const variantDisplay: Map<Variant, string> = new Map([
-  [Variant.TYPED, 'Typed'],
-  [Variant.WASM, 'WebAssembly'],
-  [Variant.NON_DET, 'Non-Det'],
-  [Variant.CONCURRENT, 'Concurrent'],
-  [Variant.LAZY, 'Lazy'],
-  [Variant.GPU, 'GPU'],
-  [Variant.NATIVE, 'Native']
+  [Variant.DEFAULT, 'calc']
 ]);
 
-export const fullJSLanguage: SALanguage = {
-  chapter: Chapter.FULL_JS,
-  variant: Variant.DEFAULT,
-  displayName: 'full JavaScript'
-};
-
-export const htmlLanguage: SALanguage = {
-  chapter: Chapter.HTML,
-  variant: Variant.DEFAULT,
-  displayName: 'HTML'
-};
 
 export const styliseSublanguage = (chapter: Chapter, variant: Variant = Variant.DEFAULT) => {
-  switch (chapter) {
-    case Chapter.FULL_JS:
-      return fullJSLanguage.displayName;
-    case Chapter.HTML:
-      return htmlLanguage.displayName;
-    default:
-      return `Source \xa7${chapter}${
-        variantDisplay.has(variant) ? ` ${variantDisplay.get(variant)}` : ''
-      }`;
-  }
+  return `Source \xa7${chapter}${
+    variantDisplay.has(variant) ? ` ${variantDisplay.get(variant)}` : ''
+  }`;
 };
 
 export const sublanguages: Language[] = [
-  { chapter: Chapter.SOURCE_1, variant: Variant.DEFAULT },
-  { chapter: Chapter.SOURCE_1, variant: Variant.TYPED },
-  { chapter: Chapter.SOURCE_1, variant: Variant.WASM },
-  { chapter: Chapter.SOURCE_1, variant: Variant.LAZY },
-  { chapter: Chapter.SOURCE_1, variant: Variant.NATIVE },
-  { chapter: Chapter.SOURCE_2, variant: Variant.DEFAULT },
-  { chapter: Chapter.SOURCE_2, variant: Variant.TYPED },
-  { chapter: Chapter.SOURCE_2, variant: Variant.LAZY },
-  { chapter: Chapter.SOURCE_2, variant: Variant.NATIVE },
-  { chapter: Chapter.SOURCE_3, variant: Variant.DEFAULT },
-  { chapter: Chapter.SOURCE_3, variant: Variant.TYPED },
-  { chapter: Chapter.SOURCE_3, variant: Variant.CONCURRENT },
-  { chapter: Chapter.SOURCE_3, variant: Variant.NON_DET },
-  { chapter: Chapter.SOURCE_3, variant: Variant.NATIVE },
-  { chapter: Chapter.SOURCE_4, variant: Variant.DEFAULT },
-  { chapter: Chapter.SOURCE_4, variant: Variant.TYPED },
-  { chapter: Chapter.SOURCE_4, variant: Variant.GPU },
-  { chapter: Chapter.SOURCE_4, variant: Variant.NATIVE }
+  { chapter: Chapter.CALC, variant: Variant.DEFAULT }
 ];
 
 export const sourceLanguages: SALanguage[] = sublanguages.map(sublang => {
@@ -181,7 +140,7 @@ export const variantLanguages = sourceLanguages.filter(
 );
 
 export const isSourceLanguage = (chapter: Chapter) =>
-  [Chapter.SOURCE_1, Chapter.SOURCE_2, Chapter.SOURCE_3, Chapter.SOURCE_4].includes(chapter);
+  [Chapter.CALC].includes(chapter);
 
 const currentEnvironment = (): ApplicationEnvironment => {
   switch (process.env.NODE_ENV) {
@@ -220,7 +179,7 @@ export const defaultPlayground: PlaygroundState = {
   githubSaveInfo: { repoName: '', filePath: '' }
 };
 
-export const defaultEditorValue = '// Type your program in here!';
+export const defaultEditorValue = '1+1';
 
 /**
  * Create a default IWorkspaceState for 'resetting' a workspace.
@@ -231,7 +190,6 @@ export const defaultEditorValue = '// Type your program in here!';
 export const createDefaultWorkspace = (workspaceLocation: WorkspaceLocation): WorkspaceState => ({
   autogradingResults: [],
   context: createContext<WorkspaceLocation>(
-    Constants.defaultSourceChapter,
     [],
     workspaceLocation,
     Constants.defaultSourceVariant
@@ -297,7 +255,7 @@ export const defaultWorkspaceManager: WorkspaceManagerState = {
     playbackData: {
       init: {
         editorValue: '',
-        chapter: Chapter.SOURCE_1,
+        chapter: Chapter.CALC,
         externalLibrary: ExternalLibraryName.NONE
       },
       inputs: []
@@ -313,7 +271,7 @@ export const defaultWorkspaceManager: WorkspaceManagerState = {
     playbackData: {
       init: {
         editorValue: '',
-        chapter: Chapter.SOURCE_1,
+        chapter: Chapter.CALC,
         externalLibrary: ExternalLibraryName.NONE
       },
       inputs: []

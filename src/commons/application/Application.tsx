@@ -12,7 +12,6 @@ import Login from '../../pages/login/Login';
 import MissionControlContainer from '../../pages/missionControl/MissionControlContainer';
 import NotFound from '../../pages/notFound/NotFound';
 import Playground from '../../pages/playground/PlaygroundContainer';
-import Sicp from '../../pages/sicp/Sicp';
 import Welcome from '../../pages/welcome/Welcome';
 import { AssessmentConfiguration } from '../assessment/AssessmentTypes';
 import NavigationBar from '../navigationBar/NavigationBar';
@@ -131,12 +130,6 @@ const Application: React.FC<ApplicationProps> = props => {
   const commonPaths = [
     <Route path="/contributors" component={Contributors} key="contributors" />,
     <Route path="/callback/github" component={GitHubCallback} key="githubCallback" />,
-    <Redirect
-      from="/interactive-sicp/:section?"
-      to="/sicpjs/:section?"
-      key="oldToNewSicpRedirect"
-    />,
-    <Route path="/sicpjs/:section?" component={Sicp} key="sicp" />,
     Constants.enableGitHubAssessments ? (
       <Route
         path="/githubassessments"

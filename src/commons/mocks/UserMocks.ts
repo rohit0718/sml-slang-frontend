@@ -130,7 +130,7 @@ export const mockCourseConfigurations: CourseConfiguration[] = [
     enableGame: false,
     enableAchievements: true,
     enableSourcecast: true,
-    sourceChapter: Chapter.SOURCE_1,
+    sourceChapter: Chapter.CALC,
     sourceVariant: Variant.DEFAULT,
     moduleHelpText: '',
     assetsPrefix: ''
@@ -142,7 +142,7 @@ export const mockCourseConfigurations: CourseConfiguration[] = [
     enableGame: false,
     enableAchievements: false,
     enableSourcecast: false,
-    sourceChapter: Chapter.SOURCE_2,
+    sourceChapter: Chapter.CALC,
     sourceVariant: Variant.DEFAULT,
     moduleHelpText: 'Help Text!',
     assetsPrefix: ''

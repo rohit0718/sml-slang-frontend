@@ -191,7 +191,7 @@ class GradingWorkspace extends React.Component<GradingWorkspaceProps, State> {
               handleEditorUpdateBreakpoints: this.props.handleEditorUpdateBreakpoints,
               handlePromptAutocomplete: this.props.handlePromptAutocomplete,
               isEditorAutorun: false,
-              sourceChapter: question?.library?.chapter || Chapter.SOURCE_4,
+              sourceChapter: Chapter.CALC,
               sourceVariant: question?.library?.variant ?? Variant.DEFAULT,
               externalLibraryName: question?.library?.external?.name || 'NONE'
             }
@@ -213,7 +213,7 @@ class GradingWorkspace extends React.Component<GradingWorkspaceProps, State> {
         handleReplValueChange: this.props.handleReplValueChange,
         output: this.props.output,
         replValue: this.props.replValue,
-        sourceChapter: question?.library?.chapter || Chapter.SOURCE_4,
+        sourceChapter: Chapter.CALC,
         sourceVariant: question?.library?.variant ?? Variant.DEFAULT,
         externalLibrary: question?.library?.external?.name || 'NONE',
         replButtons: this.replButtons()

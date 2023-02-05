@@ -1,4 +1,4 @@
-import { Chapter, Variant } from 'js-slang/dist/types';
+import { Variant } from 'js-slang/dist/types';
 import { compressToEncodedURIComponent } from 'lz-string';
 import * as qs from 'query-string';
 import { SagaIterator } from 'redux-saga';
@@ -63,9 +63,6 @@ function* updateQueryString() {
     yield put(changeQueryString(''));
     return;
   }
-  const chapter: Chapter = yield select(
-    (state: OverallState) => state.workspaces.playground.context.chapter
-  );
   const variant: Variant = yield select(
     (state: OverallState) => state.workspaces.playground.context.variant
   );
@@ -77,7 +74,6 @@ function* updateQueryString() {
   );
   const newQueryString: string = qs.stringify({
     prgrm: compressToEncodedURIComponent(code),
-    chap: chapter,
     variant,
     ext: external,
     exec: execTime

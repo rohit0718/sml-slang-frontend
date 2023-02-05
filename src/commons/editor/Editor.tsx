@@ -16,11 +16,7 @@ import { AceMouseEvent, HighlightedLines, Position } from './EditorTypes';
 // =============== Hooks ===============
 // TODO: Should further refactor into EditorBase + different variants.
 // Ideally, hooks should be specified by the parent component instead.
-import useHighlighting from './UseHighlighting';
-import useNavigation from './UseNavigation';
-import useRefactor from './UseRefactor';
 import useShareAce from './UseShareAce';
-import useTypeInference from './UseTypeInference';
 import { getModeString, selectMode } from '../utils/AceHelper';
 import { EditorBinding, WorkspaceSettingsContext } from '../WorkspaceSettingsContext';
 
@@ -216,7 +212,7 @@ const EditorBase = React.memo((props: EditorProps & LocalStateProps) => {
   }, []);
 
   const [sourceChapter, sourceVariant, externalLibraryName] = [
-    props.sourceChapter || Chapter.SOURCE_1,
+    props.sourceChapter || Chapter.CALC,
     props.sourceVariant || Variant.DEFAULT,
     props.externalLibraryName || 'NONE'
   ];
@@ -376,7 +372,7 @@ const EditorBase = React.memo((props: EditorProps & LocalStateProps) => {
 });
 
 // don't create a new list every render.
-const hooks = [useHighlighting, useNavigation, useTypeInference, useShareAce, useRefactor];
+const hooks = [useShareAce];
 
 const Editor: React.FC<EditorProps> = (props: EditorProps) => {
   const [workspaceSettings] = React.useContext(WorkspaceSettingsContext)!;

@@ -96,7 +96,7 @@ test('SET_COURSE_CONFIGURATION works correctly', () => {
     enableGame: true,
     enableAchievements: true,
     enableSourcecast: true,
-    sourceChapter: Chapter.SOURCE_1,
+    sourceChapter: Chapter.CALC,
     sourceVariant: Variant.DEFAULT,
     moduleHelpText: 'Help text',
     assessmentTypes: ['Missions', 'Quests', 'Paths', 'Contests', 'Others']

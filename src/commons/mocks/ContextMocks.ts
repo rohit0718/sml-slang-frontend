@@ -3,11 +3,11 @@ import { FunctionExpression, Node } from 'estree';
 import { ACORN_PARSE_OPTIONS } from 'js-slang/dist/constants';
 import createContext, { EnvTree } from 'js-slang/dist/createContext';
 import Closure from 'js-slang/dist/interpreter/closure';
-import { Context, Environment } from 'js-slang/dist/types';
+import { Context, Environment, Variant } from 'js-slang/dist/types';
 import { TypeError } from 'js-slang/dist/utils/rttc';
 
-export function mockContext(chapter = 1): Context {
-  return createContext(chapter);
+export function mockContext(): Context {
+  return createContext(Variant.DEFAULT);
 }
 
 export function mockRuntimeContext(): Context {

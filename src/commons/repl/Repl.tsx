@@ -44,7 +44,6 @@ const Repl: React.FC<ReplProps> = (props: ReplProps) => {
       output={slice}
       key={index}
       usingSubst={props.usingSubst ?? false}
-      isHtml={props.sourceChapter === Chapter.HTML}
     />
   ));
   return (
@@ -84,12 +83,6 @@ export const Output: React.FC<OutputProps> = (props: OutputProps) => {
         return (
           <Card>
             <Pre className="log-output">Check out the Stepper tab!</Pre>
-          </Card>
-        );
-      } else if (props.isHtml) {
-        return (
-          <Card>
-            <Pre className="log-output">Check out the HTML Display tab!</Pre>
           </Card>
         );
       } else if (props.output.consoleLogs.length === 0) {

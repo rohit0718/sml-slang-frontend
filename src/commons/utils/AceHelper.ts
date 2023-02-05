@@ -1,4 +1,4 @@
-import { HighlightRulesSelector, ModeSelector } from 'js-slang/dist/editors/ace/modes/source';
+import { ModeSelector } from 'js-slang/dist/editors/ace/modes/source';
 import { Chapter, Variant } from 'js-slang/dist/types';
 
 import { HighlightRulesSelector_native } from '../../features/fullJS/fullJSHighlight';
@@ -18,22 +18,15 @@ export const selectMode = (chapter: Chapter, variant: Variant, library: string) 
     return;
   }
 
-  if (chapter !== Chapter.FULL_JS) {
-    HighlightRulesSelector(chapter, variant, library, Documentation.externalLibraries[library]);
-  } else {
-    HighlightRulesSelector_native(
-      chapter,
-      variant,
-      library,
-      Documentation.externalLibraries[library]
-    );
-  }
+  HighlightRulesSelector_native(
+    chapter,
+    variant,
+    library,
+    Documentation.externalLibraries[library]
+  );
   ModeSelector(chapter, variant, library);
 };
 
 export const getModeString = (chapter: Chapter, variant: Variant, library: string) => {
-  if (chapter === Chapter.HTML) {
-    return 'html';
-  }
   return `source${chapter}${variant}${library}`;
 };

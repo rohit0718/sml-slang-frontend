@@ -1,4 +1,4 @@
-import { Variant } from 'js-slang/dist/types';
+import { Chapter, Variant } from 'js-slang/dist/types';
 import { compressToUTF16, decompressFromUTF16 } from 'lz-string';
 
 import { OverallState } from '../commons/application/ApplicationTypes';
@@ -61,7 +61,7 @@ export const saveState = (state: OverallState) => {
       // TODO: Hardcoded to make use of the first editor tab. Rewrite after editor tabs are added.
       playgroundEditorValue: state.workspaces.playground.editorTabs[0].value,
       playgroundIsEditorAutorun: state.workspaces.playground.isEditorAutorun,
-      playgroundSourceChapter: state.workspaces.playground.context.chapter,
+      playgroundSourceChapter: Chapter.CALC,
       playgroundSourceVariant: state.workspaces.playground.context.variant,
       playgroundExternalLibrary: state.workspaces.playground.externalLibrary
     };

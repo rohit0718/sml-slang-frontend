@@ -223,7 +223,7 @@ const EditingWorkspace: React.FC<EditingWorkspaceProps> = props => {
   const handleRefreshLibrary = (library: Library | undefined = undefined) => {
     const question = assessment!.questions[formatedQuestionId()];
     if (!library) {
-      library = question.library.chapter === -1 ? assessment!.globalDeployment! : question.library;
+      library = question.library;
     }
     if (library && library.globals.length > 0) {
       const globalsVal = library.globals.map((x: any) => x[0]);
@@ -642,7 +642,7 @@ const EditingWorkspace: React.FC<EditingWorkspaceProps> = props => {
       handleReplValueChange: props.handleReplValueChange,
       output: props.output,
       replValue: props.replValue,
-      sourceChapter: question?.library?.chapter || Chapter.SOURCE_4,
+      sourceChapter: Chapter.CALC,
       sourceVariant: Variant.DEFAULT,
       externalLibrary: question?.library?.external?.name || 'NONE',
       replButtons: replButtons()

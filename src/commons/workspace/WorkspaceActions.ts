@@ -148,8 +148,9 @@ export const endClearContext = (library: Library, workspaceLocation: WorkspaceLo
 export const evalEditor = (workspaceLocation: WorkspaceLocation) =>
   action(EVAL_EDITOR, { workspaceLocation });
 
-export const evalRepl = (workspaceLocation: WorkspaceLocation) =>
+export const evalRepl = (workspaceLocation: WorkspaceLocation) => 
   action(EVAL_REPL, { workspaceLocation });
+  
 
 export const evalTestcase = (workspaceLocation: WorkspaceLocation, testcaseId: number) =>
   action(EVAL_TESTCASE, { workspaceLocation, testcaseId });

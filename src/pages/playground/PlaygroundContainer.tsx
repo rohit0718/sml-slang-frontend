@@ -37,7 +37,7 @@ const mapStateToProps: MapStateToProps<StateProps, {}, OverallState> = state => 
   ),
   queryString: state.playground.queryString,
   shortURL: state.playground.shortURL,
-  playgroundSourceChapter: state.workspaces.playground.context.chapter,
+  playgroundSourceChapter: Chapter.CALC,
   playgroundSourceVariant: state.workspaces.playground.context.variant,
   courseSourceChapter: state.session.sourceChapter,
   courseSourceVariant: state.session.sourceVariant,

@@ -18,7 +18,6 @@ import { Location } from 'history';
 import * as React from 'react';
 import { match, NavLink, Route, Switch, useLocation } from 'react-router-dom';
 
-import SicpNavigationBar from '../../commons/navigationBar/subcomponents/SicpNavigationBar';
 import { Role } from '../application/ApplicationTypes';
 import { UpdateCourseConfiguration, UserCourse } from '../application/types/SessionTypes';
 import { AssessmentType } from '../assessment/AssessmentTypes';
@@ -349,9 +348,6 @@ const NavigationBar: React.FC<NavigationBarProps> = props => {
         <Route path="/contributors" />
         <Route path="/courses/:courseId/sourcecast" />
         <Route path="/courses/:courseId/achievements" />
-        <Route path="/sicpjs/:section?">
-          <SicpNavigationBar />
-        </Route>
         <Route>
           {!Constants.playgroundOnly && props.role && !isMobileBreakpoint && (
             <AcademyNavigationBar

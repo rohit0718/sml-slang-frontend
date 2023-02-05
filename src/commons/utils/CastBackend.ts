@@ -6,7 +6,6 @@ import { Library } from '../assessment/AssessmentTypes';
  * Library used in the frontend.
  */
 export const castLibrary = (lib: any): Library => ({
-  chapter: lib.chapter,
   external: {
     /** external names are lowercase for API results */
     name: lib.external.name.toUpperCase() as ExternalLibraryName,

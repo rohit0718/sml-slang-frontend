@@ -3,7 +3,6 @@ import { IconNames } from '@blueprintjs/icons';
 import { Octokit } from '@octokit/rest';
 import { Ace, Range } from 'ace-builds';
 import classNames from 'classnames';
-import { isStepperOutput } from 'js-slang/dist/stepper/stepper';
 import { Chapter, Variant } from 'js-slang/dist/types';
 import _, { isEqual } from 'lodash';
 import { decompressFromEncodedURIComponent } from 'lz-string';
@@ -21,12 +20,8 @@ import {
   setEditorSessionId,
   setSharedbConnected
 } from 'src/commons/collabEditing/CollabEditingActions';
-import { showFullJSWarningOnUrlLoad } from 'src/commons/fullJS/FullJSUtils';
-import { showHTMLDisclaimer } from 'src/commons/html/HTMLUtils';
-import SideContentHtmlDisplay from 'src/commons/sideContent/SideContentHtmlDisplay';
 import { useResponsive, useTypedSelector } from 'src/commons/utils/Hooks';
 import {
-  addHtmlConsoleError,
   browseReplHistoryDown,
   browseReplHistoryUp,
   changeSideContentHeight,
@@ -48,7 +43,6 @@ import {
 import {
   InterpreterOutput,
   isSourceLanguage,
-  ResultOutput,
   sourceLanguages
 } from '../../commons/application/ApplicationTypes';
 import { ExternalLibraryName } from '../../commons/application/types/ExternalTypes';
@@ -69,7 +63,6 @@ import Markdown from '../../commons/Markdown';
 import MobileWorkspace, {
   MobileWorkspaceProps
 } from '../../commons/mobileWorkspace/MobileWorkspace';
-import SideContentSubstVisualizer from '../../commons/sideContent/SideContentSubstVisualizer';
 import { SideContentTab, SideContentType } from '../../commons/sideContent/SideContentTypes';
 import { Links } from '../../commons/utils/Constants';
 import { generateSourceIntroduction } from '../../commons/utils/IntroductionHelper';
@@ -143,32 +136,22 @@ export async function handleHash(hash: string, props: PlaygroundProps) {
   const qs = parseQuery(hash);
 
   const chapter = stringParamToInt(qs.chap) || undefined;
-  if (chapter === Chapter.FULL_JS) {
-    showFullJSWarningOnUrlLoad();
-  } else {
-    if (chapter === Chapter.HTML) {
-      const continueToHtml = await showHTMLDisclaimer();
-      if (!continueToHtml) {
-        return;
-      }
-    }
-    const programLz = qs.lz ?? qs.prgrm;
-    const program = programLz && decompressFromEncodedURIComponent(programLz);
-    if (program) {
-      props.handleEditorValueChange(program);
-    }
-    const variant: Variant =
-      sourceLanguages.find(
-        language => language.chapter === chapter && language.variant === qs.variant
-      )?.variant ?? Variant.DEFAULT;
-    if (chapter) {
-      props.handleChapterSelect(chapter, variant);
-    }
+  const programLz = qs.lz ?? qs.prgrm;
+  const program = programLz && decompressFromEncodedURIComponent(programLz);
+  if (program) {
+    props.handleEditorValueChange(program);
+  }
+  const variant: Variant =
+    sourceLanguages.find(
+      language => language.chapter === chapter && language.variant === qs.variant
+    )?.variant ?? Variant.DEFAULT;
+  if (chapter) {
+    props.handleChapterSelect(chapter, variant);
+  }
 
-    const execTime = Math.max(stringParamToInt(qs.exec || '1000') || 1000, 1000);
-    if (execTime) {
-      props.handleChangeExecTime(execTime);
-    }
+  const execTime = Math.max(stringParamToInt(qs.exec || '1000') || 1000, 1000);
+  if (execTime) {
+    props.handleChangeExecTime(execTime);
   }
 }
 
@@ -299,20 +282,6 @@ const Playground: React.FC<PlaygroundProps> = ({ workspaceLocation = 'playground
     [hasBreakpoints]
   );
 
-  const processStepperOutput = (output: InterpreterOutput[]) => {
-    const editorOutput = output[0];
-    if (
-      editorOutput &&
-      editorOutput.type === 'result' &&
-      editorOutput.value instanceof Array &&
-      editorOutput.value[0] === Object(editorOutput.value[0]) &&
-      isStepperOutput(editorOutput.value[0])
-    ) {
-      return editorOutput.value;
-    } else {
-      return [];
-    }
-  };
 
   const pushLog = React.useCallback(
     (newInput: Input) => {
@@ -487,55 +456,10 @@ const Playground: React.FC<PlaygroundProps> = ({ workspaceLocation = 'playground
   const tabs = React.useMemo(() => {
     const tabs: SideContentTab[] = [playgroundIntroductionTab];
 
-    // For HTML Chapter, HTML Display tab is added only after code is run
-    if (props.playgroundSourceChapter === Chapter.HTML) {
-      if (props.output.length > 0 && props.output[0].type === 'result') {
-        tabs.push({
-          label: 'HTML Display',
-          iconName: IconNames.MODAL,
-          body: (
-            <SideContentHtmlDisplay
-              content={(props.output[0] as ResultOutput).value}
-              handleAddHtmlConsoleError={errorMsg =>
-                dispatch(addHtmlConsoleError(errorMsg, workspaceLocation))
-              }
-            />
-          ),
-          id: SideContentType.htmlDisplay
-        });
-      }
-      return tabs;
-    }
-
-    // (TEMP) Remove tabs for fullJS until support is integrated
-    if (props.playgroundSourceChapter === Chapter.FULL_JS) {
-      return [...tabs];
-    }
-
-    if (
-      props.playgroundSourceChapter <= 2 &&
-      (props.playgroundSourceVariant === Variant.DEFAULT ||
-        props.playgroundSourceVariant === Variant.NATIVE)
-    ) {
-      // Enable Subst Visualizer only for default Source 1 & 2
-      tabs.push({
-        label: 'Stepper',
-        iconName: IconNames.FLOW_REVIEW,
-        body: <SideContentSubstVisualizer content={processStepperOutput(props.output)} />,
-        id: SideContentType.substVisualizer
-      });
-    }
 
 
     return tabs;
-  }, [
-    playgroundIntroductionTab,
-    props.playgroundSourceChapter,
-    props.playgroundSourceVariant,
-    props.output,
-    dispatch,
-    workspaceLocation
-  ]);
+  }, [playgroundIntroductionTab]);
 
   // Remove Intro and Remote Execution tabs for mobile
   const mobileTabs = [...tabs].filter(({ id }) => !(id && desktopOnlyTabIds.includes(id)));
@@ -625,10 +549,7 @@ const Playground: React.FC<PlaygroundProps> = ({ workspaceLocation = 'playground
     [selectedTab]
   );
 
-  const replDisabled =
-    props.playgroundSourceChapter === Chapter.HTML ||
-    props.playgroundSourceVariant === Variant.CONCURRENT ||
-    usingRemoteExecution;
+  const replDisabled = usingRemoteExecution;
 
   const editorContainerProps: NormalEditorContainerProps = {
     ..._.pick(props, 'editorSessionId', 'isEditorAutorun'),
@@ -721,7 +642,7 @@ const Playground: React.FC<PlaygroundProps> = ({ workspaceLocation = 'playground
         editorButtons: [
           autorunButtons,
           chapterSelect,
-          props.playgroundSourceChapter === Chapter.FULL_JS ? null : shareButton,
+          shareButton,
           isSicpEditor ? null : sessionButtons,
         ]
       },

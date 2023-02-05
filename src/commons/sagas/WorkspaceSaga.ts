@@ -1,15 +1,10 @@
 import {
   Context,
   findDeclaration,
-  getNames,
   interrupt,
   parseError,
-  Result,
-  resume,
   runInContext
 } from 'js-slang';
-import { TRY_AGAIN } from 'js-slang/dist/constants';
-import { defineSymbol } from 'js-slang/dist/createContext';
 import { InterruptedError } from 'js-slang/dist/errors/errors';
 import { parse } from 'js-slang/dist/parser/parser';
 import { manualToggleDebugger } from 'js-slang/dist/stdlib/inspector';
@@ -20,7 +15,6 @@ import { random } from 'lodash';
 import Phaser from 'phaser';
 import { SagaIterator } from 'redux-saga';
 import { call, put, race, select, StrictEffect, take } from 'redux-saga/effects';
-import * as Sourceror from 'sourceror';
 import EnvVisualizer from 'src/features/envVisualizer/EnvVisualizer';
 
 import { EventType } from '../../features/achievement/AchievementTypes';
@@ -40,9 +34,6 @@ import {
   HIGHLIGHT_LINE
 } from '../application/types/InterpreterTypes';
 import { Library, Testcase, TestcaseType, TestcaseTypes } from '../assessment/AssessmentTypes';
-import { Documentation } from '../documentation/Documentation';
-import { showFullJSDisclaimer } from '../fullJS/FullJSUtils';
-import { SideContentType } from '../sideContent/SideContentTypes';
 import { actions } from '../utils/ActionsHelper';
 import DisplayBufferService from '../utils/DisplayBufferService';
 import {
@@ -56,7 +47,6 @@ import {
   visualizeEnv
 } from '../utils/JsSlangHelper';
 import { showSuccessMessage, showWarningMessage } from '../utils/NotificationsHelper';
-import { makeExternalBuiltins as makeSourcerorExternalBuiltins } from '../utils/SourcerorHelper';
 import { notifyProgramEvaluated } from '../workspace/WorkspaceActions';
 import {
   ADD_HTML_CONSOLE_ERROR,
@@ -70,9 +60,6 @@ import {
   EVAL_TESTCASE,
   NAV_DECLARATION,
   PLAYGROUND_EXTERNAL_SELECT,
-  PlaygroundWorkspaceState,
-  PROMPT_AUTOCOMPLETE,
-  SicpWorkspaceState,
   TOGGLE_EDITOR_AUTORUN,
   WorkspaceLocation
 } from '../workspace/WorkspaceTypes';
@@ -95,75 +82,6 @@ export default function* WorkspaceSaga(): SagaIterator {
     yield* evalEditor(workspaceLocation);
   });
 
-  yield takeEvery(
-    PROMPT_AUTOCOMPLETE,
-    function* (action: ReturnType<typeof actions.promptAutocomplete>): any {
-      const workspaceLocation = action.payload.workspaceLocation;
-
-      context = yield select((state: OverallState) => state.workspaces[workspaceLocation].context);
-
-      const code: string = yield select((state: OverallState) => {
-        // TODO: Hardcoded to make use of the first editor tab. Rewrite after editor tabs are added.
-        const prependCode = state.workspaces[workspaceLocation].editorTabs[0].prependValue;
-        const editorCode = state.workspaces[workspaceLocation].editorTabs[0].value;
-        return [prependCode, editorCode] as [string, string];
-      });
-      const [prepend, editorValue] = code;
-
-      // Deal with prepended code
-      let autocompleteCode;
-      let prependLength = 0;
-      if (!prepend) {
-        autocompleteCode = editorValue;
-      } else {
-        prependLength = prepend.split('\n').length;
-        autocompleteCode = prepend + '\n' + editorValue;
-      }
-
-      const [editorNames, displaySuggestions] = yield call(
-        getNames,
-        autocompleteCode,
-        action.payload.row + prependLength,
-        action.payload.column,
-        context
-      );
-
-      if (!displaySuggestions) {
-        yield call(action.payload.callback);
-        return;
-      }
-
-      const editorSuggestions = editorNames.map((name: any) => {
-        return {
-          ...name,
-          caption: name.name,
-          value: name.name,
-          score: name.score ? name.score + 1000 : 1000, // Prioritize suggestions from code
-          name: undefined
-        };
-      });
-
-      let chapterName = context.chapter.toString();
-      const variant = context.variant ?? Variant.DEFAULT;
-      if (variant !== Variant.DEFAULT) {
-        chapterName += '_' + variant;
-      }
-
-      const builtinSuggestions = Documentation.builtins[chapterName] || [];
-
-      const extLib = yield select(
-        (state: OverallState) => state.workspaces[workspaceLocation].externalLibrary
-      );
-
-      const extLibSuggestions = Documentation.externalLibraries[extLib] || [];
-
-      yield call(
-        action.payload.callback,
-        null,
-        editorSuggestions.concat(builtinSuggestions, extLibSuggestions)
-      );
-    }
-  );
 
   yield takeEvery(
     TOGGLE_EDITOR_AUTORUN,
@@ -247,7 +165,6 @@ export default function* WorkspaceSaga(): SagaIterator {
       ExternalLibraryName
     ] = yield select((state: OverallState) => [
       state.workspaces[workspaceLocation].context.variant,
-      state.workspaces[workspaceLocation].context.chapter,
       state.workspaces[workspaceLocation].context.externalSymbols,
       state.workspaces[workspaceLocation].globals,
       state.workspaces[workspaceLocation].externalLibrary
@@ -255,13 +172,10 @@ export default function* WorkspaceSaga(): SagaIterator {
 
     const chapterChanged: boolean = newChapter !== oldChapter || newVariant !== oldVariant;
     const toChangeChapter: boolean =
-      newChapter === Chapter.FULL_JS
-        ? chapterChanged && (yield call(showFullJSDisclaimer))
-        : chapterChanged;
+      chapterChanged;
 
     if (toChangeChapter) {
       const library: Library = {
-        chapter: newChapter,
         variant: newVariant,
         external: {
           name: externalLibraryName,
@@ -295,18 +209,15 @@ export default function* WorkspaceSaga(): SagaIterator {
     PLAYGROUND_EXTERNAL_SELECT,
     function* (action: ReturnType<typeof actions.externalLibrarySelect>) {
       const { workspaceLocation, externalLibraryName: newExternalLibraryName } = action.payload;
-      const [chapter, globals, oldExternalLibraryName]: [
-        Chapter,
+      const [globals, oldExternalLibraryName]: [
         Array<[string, any]>,
         ExternalLibraryName
       ] = yield select((state: OverallState) => [
-        state.workspaces[workspaceLocation].context.chapter,
         state.workspaces[workspaceLocation].globals,
         state.workspaces[workspaceLocation].externalLibrary
       ]);
       const symbols = externalLibraries.get(newExternalLibraryName)!;
       const library: Library = {
-        chapter,
         external: {
           name: newExternalLibraryName,
           symbols
@@ -411,7 +322,6 @@ export default function* WorkspaceSaga(): SagaIterator {
 }
 
 let lastDebuggerResult: any;
-let lastNonDetResult: Result;
 function* updateInspector(workspaceLocation: WorkspaceLocation): SagaIterator {
   try {
     const start = lastDebuggerResult.context.runtime.nodes[0].loc.start.line - 1;
@@ -427,14 +337,12 @@ function* updateInspector(workspaceLocation: WorkspaceLocation): SagaIterator {
 }
 
 function* clearContext(workspaceLocation: WorkspaceLocation, program: string) {
-  const [chapter, symbols, externalLibraryName, globals, variant]: [
-    number,
+  const [symbols, externalLibraryName, globals, variant]: [
     string[],
     ExternalLibraryName,
     Array<[string, any]>,
     Variant
   ] = yield select((state: OverallState) => [
-    state.workspaces[workspaceLocation].context.chapter,
     state.workspaces[workspaceLocation].context.externalSymbols,
     state.workspaces[workspaceLocation].externalLibrary,
     state.workspaces[workspaceLocation].globals,
@@ -442,7 +350,6 @@ function* clearContext(workspaceLocation: WorkspaceLocation, program: string) {
   ]);
 
   const library = {
-    chapter,
     variant,
     external: {
       name: externalLibraryName,
@@ -455,11 +362,6 @@ function* clearContext(workspaceLocation: WorkspaceLocation, program: string) {
   yield put(actions.beginClearContext(workspaceLocation, library, false));
   // Wait for the clearing to be done.
   yield take(END_CLEAR_CONTEXT);
-
-  const context: Context = yield select(
-    (state: OverallState) => state.workspaces[workspaceLocation].context
-  );
-  defineSymbol(context, '__PROGRAM__', program);
 }
 
 export function* dumpDisplayBuffer(
@@ -643,101 +545,19 @@ export function* evalCode(
   workspaceLocation: WorkspaceLocation,
   actionType: string
 ): SagaIterator {
-  context.runtime.debuggerOn =
-    (actionType === EVAL_EDITOR || actionType === DEBUG_RESUME) && context.chapter > 2;
-
-  // Logic for execution of substitution model visualizer
-  const correctWorkspace = workspaceLocation === 'playground' || workspaceLocation === 'sicp';
-  const substIsActive: boolean = correctWorkspace
-    ? yield select(
-        (state: OverallState) =>
-          (state.workspaces[workspaceLocation] as PlaygroundWorkspaceState | SicpWorkspaceState)
-            .usingSubst
-      )
-    : false;
   const stepLimit: number = yield select(
     (state: OverallState) => state.workspaces[workspaceLocation].stepLimit
   );
-  const substActiveAndCorrectChapter = context.chapter <= 2 && substIsActive;
-  if (substActiveAndCorrectChapter) {
-    context.executionMethod = 'interpreter';
-    // icon to blink
-    const icon = document.getElementById(SideContentType.substVisualizer + '-icon');
-    if (icon) {
-      icon.classList.add('side-content-tab-alert');
-    }
-  }
-
-  function call_variant(variant: Variant) {
-    if (variant === Variant.NON_DET) {
-      return code.trim() === TRY_AGAIN
-        ? call(resume, lastNonDetResult)
-        : call(runInContext, code, context, {
-            executionMethod: 'interpreter',
-            originalMaxExecTime: execTime,
-            stepLimit: stepLimit,
-            useSubst: substActiveAndCorrectChapter
-          });
-    } else if (variant === Variant.LAZY) {
-      return call(runInContext, code, context, {
-        scheduler: 'preemptive',
-        originalMaxExecTime: execTime,
-        stepLimit: stepLimit,
-        useSubst: substActiveAndCorrectChapter
-      });
-    } else if (variant === Variant.WASM) {
-      return call(wasm_compile_and_run, code, context, actionType === EVAL_REPL);
-    } else {
-      throw new Error('Unknown variant: ' + variant);
-    }
-  }
-  async function wasm_compile_and_run(
-    wasmCode: string,
-    wasmContext: Context,
-    isRepl: boolean
-  ): Promise<Result> {
-    return Sourceror.compile(wasmCode, wasmContext, isRepl)
-      .then((wasmModule: WebAssembly.Module) => {
-        const transcoder = new Sourceror.Transcoder();
-        return Sourceror.run(
-          wasmModule,
-          Sourceror.makePlatformImports(makeSourcerorExternalBuiltins(wasmContext), transcoder),
-          transcoder,
-          wasmContext,
-          isRepl
-        );
-      })
-      .then(
-        (returnedValue: any): Result => ({ status: 'finished', context, value: returnedValue }),
-        (e: any): Result => {
-          console.log(e);
-          return { status: 'error' };
-        }
-      );
-  }
-
-  const isNonDet: boolean = context.variant === Variant.NON_DET;
-  const isLazy: boolean = context.variant === Variant.LAZY;
-  const isWasm: boolean = context.variant === Variant.WASM;
-
-  // Handles `console.log` statements in fullJS
-  const detachConsole: () => void =
-    context.chapter === Chapter.FULL_JS
-      ? DisplayBufferService.attachConsole(workspaceLocation)
-      : () => {};
 
   const { result, interrupted, paused } = yield race({
     result:
-      actionType === DEBUG_RESUME
-        ? call(resume, lastDebuggerResult)
-        : isNonDet || isLazy || isWasm
-        ? call_variant(context.variant)
-        : call(runInContext, code, context, {
+      call(runInContext, code, context, {
             scheduler: 'preemptive',
+            executionMethod: 'interpreter',
             originalMaxExecTime: execTime,
             stepLimit: stepLimit,
-            throwInfiniteLoops: true,
-            useSubst: substActiveAndCorrectChapter
+            variant: Variant.DEFAULT,
+            useSubst: false
           }),
 
     /**
@@ -747,9 +567,6 @@ export function* evalCode(
     interrupted: take(BEGIN_INTERRUPT_EXECUTION),
     paused: take(BEGIN_DEBUG_PAUSE)
   });
-
-  detachConsole();
-
   if (interrupted) {
     interrupt(context);
     /* Redundancy, added ensure that interruption results in an error. */
@@ -802,15 +619,8 @@ export function* evalCode(
     yield put(actions.endDebuggerPause(workspaceLocation));
     yield put(actions.evalInterpreterSuccess('Breakpoint hit!', workspaceLocation));
     return;
-  } else if (isNonDet) {
-    if (result.value === 'cut') {
-      result.value = undefined;
-    }
-    lastNonDetResult = result;
-  }
-
+  } 
   yield* dumpDisplayBuffer(workspaceLocation);
-
   // Do not write interpreter output to REPL, if executing chunks (e.g. prepend/postpend blocks)
   if (actionType !== EVAL_SILENT) {
     yield put(actions.evalInterpreterSuccess(result.value, workspaceLocation));

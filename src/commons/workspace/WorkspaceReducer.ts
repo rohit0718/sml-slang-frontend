@@ -241,7 +241,6 @@ export const WorkspaceReducer: Reducer<WorkspaceManagerState> = (
         [workspaceLocation]: {
           ...state[workspaceLocation],
           context: createContext<WorkspaceLocation>(
-            action.payload.library.chapter,
             action.payload.library.external.symbols,
             workspaceLocation,
             action.payload.library.variant

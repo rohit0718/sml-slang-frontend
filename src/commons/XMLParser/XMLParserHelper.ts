@@ -126,7 +126,6 @@ const makeLibrary = (deploymentArr: XmlParseStrDeployment[] | undefined): Librar
         >)
       : [];
     return {
-      chapter: parseInt(deployment.$.interpreter, 10) as Chapter,
       external: {
         name: nameVal as ExternalLibraryName,
         symbols: symbolsVal
@@ -258,7 +257,7 @@ const download = (filename: string, text: string) => {
 const exportLibrary = (library: Library) => {
   const deployment = {
     $: {
-      interpreter: library.chapter.toString()
+      interpreter: Chapter.CALC.toString()
     },
     EXTERNAL: {
       $: {
@@ -309,9 +308,7 @@ export const assessmentToXml = (
 
   task.DEPLOYMENT = exportLibrary(assessment.globalDeployment!);
 
-  if (assessment.graderDeployment!.chapter !== -1) {
-    task.GRADERDEPLOYMENT = exportLibrary(assessment.graderDeployment!);
-  }
+  task.GRADERDEPLOYMENT = exportLibrary(assessment.graderDeployment!);
 
   assessment.questions.forEach((question: Question) => {
     const problem = {
@@ -325,15 +322,12 @@ export const assessmentToXml = (
       CHOICE: [] as any[]
     };
 
-    if (question.library.chapter !== -1) {
-      /* tslint:disable:no-string-literal */
-      problem.$['DEPLOYMENT'] = exportLibrary(question.library);
-    }
+    
+    /* tslint:disable:no-string-literal */
+    problem.$['DEPLOYMENT'] = exportLibrary(question.library);
 
-    if (question.graderLibrary!.chapter !== -1) {
-      /* tslint:disable:no-string-literal */
-      problem.$['GRADERDEPLOYMENT'] = exportLibrary(question.graderLibrary!);
-    }
+    /* tslint:disable:no-string-literal */
+    problem.$['GRADERDEPLOYMENT'] = exportLibrary(question.graderLibrary!);
 
     if (question.maxXp) {
       /* tslint:disable:no-string-literal */

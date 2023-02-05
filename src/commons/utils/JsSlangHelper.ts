@@ -1,6 +1,6 @@
 /* tslint:disable: ban-types*/
-import createSlangContext, { defineBuiltin, importBuiltins } from 'js-slang/dist/createContext';
-import { Chapter, Context, CustomBuiltIns, Value, Variant } from 'js-slang/dist/types';
+import createSlangContext from 'js-slang/dist/createContext';
+import { Context, Value, Variant } from 'js-slang/dist/types';
 import { stringify } from 'js-slang/dist/utils/stringify';
 import { difference, keys } from 'lodash';
 import EnvVisualizer from 'src/features/envVisualizer/EnvVisualizer';
@@ -128,22 +128,13 @@ export const externalBuiltIns = {
  * externalBuiltIns, such as display and prompt.
  */
 export function createContext<T>(
-  chapter: Chapter,
   externals: string[],
   externalContext: T,
   variant: Variant = Variant.DEFAULT
 ) {
-  return createSlangContext<T>(chapter, variant, externals, externalContext, externalBuiltIns);
+  return createSlangContext<T>(variant, externals, externalContext);
 }
 
-// Assumes that the grader doesn't need additional external libraries apart from the standard
-// libraries (lists, streams).
-function loadStandardLibraries(proxyContext: Context, customBuiltIns: CustomBuiltIns) {
-  importBuiltins(proxyContext, customBuiltIns);
-  defineBuiltin(proxyContext, 'makeUndefinedErrorFunction', (fname: string) => () => {
-    throw new Error(`Name ${fname} not declared.`);
-  });
-}
 
 // Given a Context, returns a privileged Context that when referenced,
 // intercepts reads from the underlying Context and returns desired values
@@ -198,7 +189,6 @@ export function makeElevatedContext(context: Context) {
     }
   });
 
-  loadStandardLibraries(elevatedContext, externalBuiltIns);
   return elevatedContext;
 }
 

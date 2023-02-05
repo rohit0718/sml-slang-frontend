@@ -35,7 +35,7 @@ const DropdownCreateCourse: React.FC<DialogProps> = props => {
     enableGame: true,
     enableAchievements: true,
     enableSourcecast: true,
-    sourceChapter: Chapter.SOURCE_1,
+    sourceChapter: Chapter.CALC,
     sourceVariant: Variant.DEFAULT,
     moduleHelpText: ''
   });
@@ -44,10 +44,7 @@ const DropdownCreateCourse: React.FC<DialogProps> = props => {
     React.useState<CourseHelpTextEditorTab>(CourseHelpTextEditorTab.WRITE);
 
   const sourceChapterOptions = [
-    { value: Chapter.SOURCE_1 },
-    { value: Chapter.SOURCE_2 },
-    { value: Chapter.SOURCE_3 },
-    { value: Chapter.SOURCE_4 }
+    { value: Chapter.CALC }
   ];
 
   const sourceVariantOptions = (chapter: Chapter) =>

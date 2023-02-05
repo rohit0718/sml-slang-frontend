@@ -130,7 +130,7 @@ class DeploymentTab extends React.Component<DeploymentTabProps, {}> {
         <Divider />
         Interpreter:
         <br />
-        {chapterSelect(deployment.chapter, deployment.variant, this.handleChapterSelect)}
+        {chapterSelect(deployment.variant, this.handleChapterSelect)}
         <Divider />
         {symbolsFragment}
         <Divider />
@@ -206,8 +206,6 @@ class DeploymentTab extends React.Component<DeploymentTabProps, {}> {
 
   private handleChapterSelect = (i: SALanguage, _e?: React.SyntheticEvent<HTMLElement>) => {
     const assessment = this.props.assessment;
-    const deployment = getValueFromPath(this.props.pathToLibrary, assessment) as Library;
-    deployment.chapter = i.chapter;
     this.props.updateAssessment(assessment);
   };
 
@@ -226,9 +224,6 @@ class DeploymentTab extends React.Component<DeploymentTabProps, {}> {
         this.props.pathToCopy || ['globalDeployment'],
         assessment
       ) as Library;
-      if (library.chapter === -1) {
-        library = assessment.globalDeployment!;
-      }
       library = JSON.parse(JSON.stringify(library));
       assignToPath(this.props.pathToLibrary, library, assessment);
     } else {
@@ -252,7 +247,6 @@ const altEval = (str: string): any => {
 };
 
 const chapterSelect = (
-  currentChap: Chapter,
   variant: Variant = Variant.DEFAULT,
   handleSelect = (i: SALanguage, e?: React.SyntheticEvent<HTMLElement>) => {}
 ) => (
@@ -265,7 +259,7 @@ const chapterSelect = (
   >
     <Button
       className={Classes.MINIMAL}
-      text={styliseSublanguage(currentChap, variant)}
+      text={styliseSublanguage(Chapter.CALC, variant)}
       rightIcon={IconNames.DOUBLE_CARET_VERTICAL}
     />
   </ChapterSelectComponent>

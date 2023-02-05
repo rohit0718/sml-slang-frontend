@@ -6,14 +6,10 @@ import React from 'react';
 
 import {
   defaultLanguages,
-  fullJSLanguage,
-  htmlLanguage,
   SALanguage,
   sourceLanguages,
-  styliseSublanguage,
-  variantLanguages
+  styliseSublanguage
 } from '../application/ApplicationTypes';
-import Constants from '../utils/Constants';
 
 type ControlBarChapterSelectProps = DispatchProps & StateProps;
 
@@ -29,17 +25,9 @@ type StateProps = {
 
 const chapterListRenderer: ItemListRenderer<SALanguage> = ({ itemsParentRef, renderItem }) => {
   const defaultChoices = defaultLanguages.map(renderItem);
-  const variantChoices = variantLanguages.map(renderItem);
-  const fullJSChoice = renderItem(fullJSLanguage, 0);
-  const htmlChoice = renderItem(htmlLanguage, 0);
   return (
     <Menu ulRef={itemsParentRef}>
       {defaultChoices}
-      {Constants.playgroundOnly && fullJSChoice}
-      {Constants.playgroundOnly && htmlChoice}
-      <MenuItem key="variant-menu" text="Variants" icon="cog">
-        {variantChoices}
-      </MenuItem>
     </Menu>
   );
 };

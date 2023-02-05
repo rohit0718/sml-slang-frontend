@@ -98,7 +98,7 @@ export const deviceTypes: DeviceType[] = [
       'ev3_ledGetBrightness',
       'ev3_ledSetBrightness'
     ],
-    languageChapter: Chapter.SOURCE_3,
+    languageChapter: Chapter.CALC,
     deviceLibraryName: ExternalLibraryName.EV3
   }
 ];
