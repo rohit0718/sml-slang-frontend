@@ -1,8 +1,8 @@
 import { Card, Classes, Pre } from '@blueprintjs/core';
 import { Ace } from 'ace-builds';
+import { parseError } from 'calc-slang';
+import { Chapter, Variant } from 'calc-slang/dist/types';
 import classNames from 'classnames';
-import { parseError } from 'js-slang';
-import { Chapter, Variant } from 'js-slang/dist/types';
 import * as React from 'react';
 import { HotKeys } from 'react-hotkeys';
 

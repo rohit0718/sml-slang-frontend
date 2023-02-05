@@ -3,7 +3,7 @@ import {
   GetResponseDataTypeFromEndpointMethod,
   GetResponseTypeFromEndpointMethod
 } from '@octokit/types';
-import { Chapter } from 'js-slang/dist/types';
+import { Chapter } from 'calc-slang/dist/types';
 import { isEqual } from 'lodash';
 
 import { IMCQQuestion, Testcase } from '../assessment/AssessmentTypes';

@@ -1,5 +1,5 @@
 import { Button, ButtonGroup, Checkbox } from '@blueprintjs/core';
-import { Frame } from 'js-slang/dist/types';
+import { Frame } from 'calc-slang/dist/types';
 import React, { RefObject } from 'react';
 import { Layer, Rect, Stage } from 'react-konva';
 

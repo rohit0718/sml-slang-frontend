@@ -39,7 +39,7 @@ export const getDynamicTabs = (debuggerContext: DebuggerContext): SideContentTab
  * @param debuggerContext - DebuggerContext object from redux store
  */
 export const getModuleTabs = (debuggerContext: DebuggerContext): ModuleSideContent[] => {
-  // Check if js-slang's context object is null
+  // Check if calc-slang's context object is null
   if (debuggerContext.context == null) {
     return [];
   }

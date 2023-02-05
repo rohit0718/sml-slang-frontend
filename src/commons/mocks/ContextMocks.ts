@@ -1,10 +1,10 @@
 import { parse } from 'acorn';
 import { FunctionExpression, Node } from 'estree';
-import { ACORN_PARSE_OPTIONS } from 'js-slang/dist/constants';
-import createContext, { EnvTree } from 'js-slang/dist/createContext';
-import Closure from 'js-slang/dist/interpreter/closure';
-import { Context, Environment, Variant } from 'js-slang/dist/types';
-import { TypeError } from 'js-slang/dist/utils/rttc';
+import { ACORN_PARSE_OPTIONS } from 'calc-slang/dist/constants';
+import createContext, { EnvTree } from 'calc-slang/dist/createContext';
+import Closure from 'calc-slang/dist/interpreter/closure';
+import { Context, Environment, Variant } from 'calc-slang/dist/types';
+import { TypeError } from 'calc-slang/dist/utils/rttc';
 
 export function mockContext(): Context {
   return createContext(Variant.DEFAULT);

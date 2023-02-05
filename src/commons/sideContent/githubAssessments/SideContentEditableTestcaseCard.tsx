@@ -1,8 +1,8 @@
 import { Button, Card, Classes, Elevation, InputGroup } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
+import { parseError } from 'calc-slang';
+import { stringify } from 'calc-slang/dist/utils/stringify';
 import classNames from 'classnames';
-import { parseError } from 'js-slang';
-import { stringify } from 'js-slang/dist/utils/stringify';
 import * as React from 'react';
 
 import { Testcase, TestcaseTypes } from '../../assessment/AssessmentTypes';

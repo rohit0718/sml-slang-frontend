@@ -1,4 +1,4 @@
-import { Context } from 'js-slang/dist/types';
+import { Context } from 'calc-slang/dist/types';
 
 import { handleConsoleLog } from '../application/actions/InterpreterActions';
 

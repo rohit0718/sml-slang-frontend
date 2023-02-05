@@ -1,4 +1,4 @@
-import { Chapter } from 'js-slang/dist/types';
+import { Chapter } from 'calc-slang/dist/types';
 
 import { Testcase } from '../assessment/AssessmentTypes';
 

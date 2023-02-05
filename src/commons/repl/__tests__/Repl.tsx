@@ -1,5 +1,5 @@
 import { shallow } from 'enzyme';
-import { Chapter, Variant } from 'js-slang/dist/types';
+import { Chapter, Variant } from 'calc-slang/dist/types';
 import { ExternalLibraryName } from 'src/commons/application/types/ExternalTypes';
 
 import {

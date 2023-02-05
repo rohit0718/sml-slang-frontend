@@ -1,4 +1,4 @@
-import { Context } from 'js-slang';
+import { Context } from 'calc-slang';
 
 import { GitHubAssessmentWorkspaceState } from '../../features/githubAssessment/GitHubAssessmentTypes';
 import { SourcecastWorkspaceState } from '../../features/sourceRecorder/sourcecast/SourcecastTypes';

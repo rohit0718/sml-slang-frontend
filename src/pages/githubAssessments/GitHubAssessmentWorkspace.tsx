@@ -9,8 +9,8 @@ import {
 } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
 import { GetResponseTypeFromEndpointMethod } from '@octokit/types';
+import { Chapter, Variant } from 'calc-slang/dist/types';
 import classNames from 'classnames';
-import { Chapter, Variant } from 'js-slang/dist/types';
 import { isEqual } from 'lodash';
 import React, { useCallback, useEffect, useMemo } from 'react';
 import { useDispatch } from 'react-redux';

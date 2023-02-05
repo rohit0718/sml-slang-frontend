@@ -1,5 +1,5 @@
+import { Chapter, Variant } from 'calc-slang/dist/types';
 import { mount } from 'enzyme';
-import { Chapter, Variant } from 'js-slang/dist/types';
 
 import Markdown from '../Markdown';
 import { generateSourceIntroduction } from '../utils/IntroductionHelper';

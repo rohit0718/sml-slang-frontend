@@ -1,4 +1,4 @@
-import { Environment } from 'js-slang/dist/types';
+import { Environment } from 'calc-slang/dist/types';
 import { Group } from 'konva/lib/Group';
 import { Node } from 'konva/lib/Node';
 import { Shape } from 'konva/lib/Shape';

@@ -1,4 +1,4 @@
-import { stringify } from 'js-slang/dist/utils/stringify';
+import { stringify } from 'calc-slang/dist/utils/stringify';
 import { Reducer } from 'redux';
 
 import { SourcecastReducer } from '../../features/sourceRecorder/sourcecast/SourcecastReducer';
@@ -434,7 +434,7 @@ export const WorkspaceReducer: Reducer<WorkspaceManagerState> = (
       /**
        * Set the isRunning property of the
        * context to false, to ensure a re-render.
-       * Also in case the async js-slang interrupt()
+       * Also in case the async calc-slang interrupt()
        * function does not finish interrupting before
        * this action is called.
        */
@@ -496,7 +496,7 @@ export const WorkspaceReducer: Reducer<WorkspaceManagerState> = (
 
     /**
      * Resets the workspace to default settings,
-     * including the js-slang Context. Apply
+     * including the calc-slang Context. Apply
      * any specified settings (workspaceOptions)
      */
     case RESET_WORKSPACE:

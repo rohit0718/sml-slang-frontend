@@ -1,4 +1,4 @@
-import { Variant } from 'js-slang/dist/types';
+import { Variant } from 'calc-slang/dist/types';
 import { compressToEncodedURIComponent } from 'lz-string';
 import * as qs from 'query-string';
 import { SagaIterator } from 'redux-saga';

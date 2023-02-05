@@ -1,4 +1,4 @@
-import { Context } from 'js-slang';
+import { Context } from 'calc-slang';
 import React from 'react';
 
 import { Layout } from './EnvVisualizerLayout';

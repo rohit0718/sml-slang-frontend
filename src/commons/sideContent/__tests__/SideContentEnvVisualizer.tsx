@@ -1,5 +1,5 @@
 import { mount, shallow } from 'enzyme';
-import { runInContext } from 'js-slang/dist/';
+import { runInContext } from 'calc-slang/dist/';
 
 import { mockContext } from '../../mocks/ContextMocks';
 import { visualizeEnv } from '../../utils/JsSlangHelper';

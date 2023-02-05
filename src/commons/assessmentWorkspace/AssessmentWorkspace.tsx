@@ -10,9 +10,9 @@ import {
   SpinnerSize
 } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
+import { Chapter, Variant } from 'calc-slang/dist/types';
+import { stringify } from 'calc-slang/dist/utils/stringify';
 import classNames from 'classnames';
-import { Chapter, Variant } from 'js-slang/dist/types';
-import { stringify } from 'js-slang/dist/utils/stringify';
 import { isEqual } from 'lodash';
 import * as React from 'react';
 import { useDispatch } from 'react-redux';

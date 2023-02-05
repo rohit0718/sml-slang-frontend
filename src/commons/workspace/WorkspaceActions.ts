@@ -1,5 +1,5 @@
-import { Context } from 'js-slang';
-import { Chapter, Variant } from 'js-slang/dist/types';
+import { Context } from 'calc-slang';
+import { Chapter, Variant } from 'calc-slang/dist/types';
 import { action } from 'typesafe-actions';
 
 import { SET_IS_EDITOR_READONLY } from '../../features/sourceRecorder/sourcecast/SourcecastTypes';
@@ -95,7 +95,7 @@ export const toggleEditorAutorun = (workspaceLocation: WorkspaceLocation) =>
   action(TOGGLE_EDITOR_AUTORUN, { workspaceLocation });
 
 /**
- * Starts the process to clear the js-slang Context
+ * Starts the process to clear the calc-slang Context
  * at a specified workspace location.
  *
  * This action is to be handled by saga, in order to
@@ -128,7 +128,7 @@ export const clearReplOutputLast = (workspaceLocation: WorkspaceLocation) =>
   action(CLEAR_REPL_OUTPUT_LAST, { workspaceLocation });
 
 /**
- * Finishes the process to clear the js-slang Context
+ * Finishes the process to clear the calc-slang Context
  * at a specified workspace location.
  *
  * This action is to be handled in the reducer, to call the reset on the

@@ -4,13 +4,13 @@ import {
   interrupt,
   parseError,
   runInContext
-} from 'js-slang';
-import { InterruptedError } from 'js-slang/dist/errors/errors';
-import { parse } from 'js-slang/dist/parser/parser';
-import { manualToggleDebugger } from 'js-slang/dist/stdlib/inspector';
-import { typeCheck } from 'js-slang/dist/typeChecker/typeChecker';
-import { Chapter, Variant } from 'js-slang/dist/types';
-import { validateAndAnnotate } from 'js-slang/dist/validator/validator';
+} from 'calc-slang';
+import { InterruptedError } from 'calc-slang/dist/errors/errors';
+import { parse } from 'calc-slang/dist/parser/parser';
+import { manualToggleDebugger } from 'calc-slang/dist/stdlib/inspector';
+import { typeCheck } from 'calc-slang/dist/typeChecker/typeChecker';
+import { Chapter, Variant } from 'calc-slang/dist/types';
+import { validateAndAnnotate } from 'calc-slang/dist/validator/validator';
 import { random } from 'lodash';
 import Phaser from 'phaser';
 import { SagaIterator } from 'redux-saga';
