@@ -1,7 +1,7 @@
 import 'src/styles/index.scss';
 
 import * as Sentry from '@sentry/browser';
-import { setModulesStaticURL } from 'calc-slang/dist/modules/moduleLoader';
+// import { setModulesStaticURL } from 'calc-slang/dist/modules/moduleLoader';
 import { render } from 'react-dom';
 import { Provider } from 'react-redux';
 import { Router } from 'react-router-dom';
@@ -33,8 +33,8 @@ console.log(
   'font-weight: bold;'
 );
 
-setModulesStaticURL(Constants.moduleBackendUrl);
-console.log(`Using module backend: ${Constants.moduleBackendUrl}`);
+// setModulesStaticURL(Constants.moduleBackendUrl);
+// console.log(`Using module backend: ${Constants.moduleBackendUrl}`);
 
 render(
   <Provider store={store}>
