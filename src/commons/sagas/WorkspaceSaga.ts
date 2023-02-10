@@ -2,15 +2,11 @@ import {
   Context,
   findDeclaration,
   interrupt,
-  parseError,
   runInContext
 } from 'calc-slang';
 import { InterruptedError } from 'calc-slang/dist/errors/errors';
 import { parse } from 'calc-slang/dist/parser/parser';
-import { manualToggleDebugger } from 'calc-slang/dist/stdlib/inspector';
-import { typeCheck } from 'calc-slang/dist/typeChecker/typeChecker';
 import { Chapter, Variant } from 'calc-slang/dist/types';
-import { validateAndAnnotate } from 'calc-slang/dist/validator/validator';
 import { random } from 'lodash';
 import Phaser from 'phaser';
 import { SagaIterator } from 'redux-saga';
@@ -579,7 +575,6 @@ export function* evalCode(
 
   if (paused) {
     yield put(actions.endDebuggerPause(workspaceLocation));
-    lastDebuggerResult = manualToggleDebugger(context);
     yield call(updateInspector, workspaceLocation);
     yield call(showWarningMessage, 'Execution paused', 750);
     return;
@@ -601,18 +596,9 @@ export function* evalCode(
     // we need to parse again, but preserve the errors in context
     const oldErrors = context.errors;
     context.errors = [];
-    const parsed = parse(code, context);
-    const typeErrors = parsed && typeCheck(validateAndAnnotate(parsed!, context), context)[1];
     context.errors = oldErrors;
     // for achievement event tracking
     const events = context.errors.length > 0 ? [EventType.ERROR] : [];
-
-    if (typeErrors && typeErrors.length > 0) {
-      events.push(EventType.ERROR);
-      yield put(
-        actions.sendReplInputToOutput('Hints:\n' + parseError(typeErrors), workspaceLocation)
-      );
-    }
     yield put(actions.addEvent(events));
     return;
   } else if (result.status === 'suspended') {
