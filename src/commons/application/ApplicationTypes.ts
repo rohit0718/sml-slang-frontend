@@ -266,25 +266,7 @@ export const defaultWorkspaceManager: WorkspaceManagerState = {
 };
 
 export const defaultSession: SessionState = {
-  courses: [],
   group: null,
-  gameState: {
-    completed_quests: [],
-    collectibles: {}
-  },
-  xp: 0,
-  allUserXp: undefined,
-  story: {
-    story: '',
-    playStory: false
-  },
-  assessments: new Map<number, Assessment>(),
-  assessmentOverviews: undefined,
-  agreedToResearch: undefined,
-  sessionId: Date.now(),
-  githubOctokitObject: { octokit: undefined },
-  gradingOverviews: undefined,
-  gradings: new Map<number, Grading>(),
   notifications: []
 };
 
