@@ -1,4 +1,4 @@
-import { Chapter, Variant } from 'calc-slang/dist/types';
+import { Chapter, Variant } from '../../sml-slang-config';
 
 import { GameState, Role } from '../application/ApplicationTypes';
 import {
@@ -130,7 +130,7 @@ export const mockCourseConfigurations: CourseConfiguration[] = [
     enableGame: false,
     enableAchievements: true,
     enableSourcecast: true,
-    sourceChapter: Chapter.CALC,
+    sourceChapter: Chapter.SMLSlang,
     sourceVariant: Variant.DEFAULT,
     moduleHelpText: '',
     assetsPrefix: ''
@@ -142,7 +142,7 @@ export const mockCourseConfigurations: CourseConfiguration[] = [
     enableGame: false,
     enableAchievements: false,
     enableSourcecast: false,
-    sourceChapter: Chapter.CALC,
+    sourceChapter: Chapter.SMLSlang,
     sourceVariant: Variant.DEFAULT,
     moduleHelpText: 'Help Text!',
     assetsPrefix: ''

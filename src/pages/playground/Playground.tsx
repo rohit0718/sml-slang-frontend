@@ -2,7 +2,7 @@ import { Classes } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
 import { Octokit } from '@octokit/rest';
 import { Ace, Range } from 'ace-builds';
-import { Chapter, Variant } from 'calc-slang/dist/types';
+import { Chapter, Variant } from '../../sml-slang-config';
 import classNames from 'classnames';
 import _, { isEqual } from 'lodash';
 import { decompressFromEncodedURIComponent } from 'lz-string';

@@ -1,5 +1,5 @@
 import { SlingClient } from '@sourceacademy/sling-client';
-import { Chapter } from 'calc-slang/dist/types';
+import { Chapter } from '../../sml-slang-config';
 import { ExternalLibraryName } from 'src/commons/application/types/ExternalTypes';
 import { WorkspaceLocation } from 'src/commons/workspace/WorkspaceTypes';
 

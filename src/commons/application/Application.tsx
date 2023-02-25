@@ -1,19 +1,11 @@
-import { Button, Classes, Dialog, H4, Intent } from '@blueprintjs/core';
 import moment from 'moment';
 import * as React from 'react';
 import { Redirect, Route, RouteComponentProps, Switch } from 'react-router';
 
-import Academy from '../../pages/academy/Academy';
-import Contributors from '../../pages/contributors/Contributors';
-import Disabled from '../../pages/disabled/Disabled';
-import GitHubClassroom from '../../pages/githubAssessments/GitHubClassroom';
-import GitHubCallback from '../../pages/githubCallback/GitHubCallback';
-import Login from '../../pages/login/Login';
-import MissionControlContainer from '../../pages/missionControl/MissionControlContainer';
+// import Contributors from '../../pages/contributors/Contributors';
+
 import NotFound from '../../pages/notFound/NotFound';
 import Playground from '../../pages/playground/PlaygroundContainer';
-import Welcome from '../../pages/welcome/Welcome';
-import { AssessmentConfiguration } from '../assessment/AssessmentTypes';
 import NavigationBar from '../navigationBar/NavigationBar';
 import Constants from '../utils/Constants';
 import { useLocalStorageState } from '../utils/Hooks';
@@ -40,11 +32,11 @@ export type StateProps = {
   courseShortName?: string;
   enableAchievements?: boolean;
   enableSourcecast?: boolean;
-  assessmentConfigurations?: AssessmentConfiguration[];
+  // assessmentConfigurations?: AssessmentConfiguration[];
   agreedToResearch?: boolean | null;
 };
 
-const loginPath = <Route path="/login" component={Login} key="login" />;
+// const loginPath = <Route path="/login" component={Login} key="login" />;
 
 const Application: React.FC<ApplicationProps> = props => {
   const intervalId = React.useRef<number | undefined>(undefined);
@@ -127,22 +119,22 @@ const Application: React.FC<ApplicationProps> = props => {
   }, [isPWA, isMobile]);
 
   // Paths common to both deployments
-  const commonPaths = [
-    <Route path="/contributors" component={Contributors} key="contributors" />,
-    <Route path="/callback/github" component={GitHubCallback} key="githubCallback" />,
-    Constants.enableGitHubAssessments ? (
-      <Route
-        path="/githubassessments"
-        render={() => (
-          <GitHubClassroom
-            handleGitHubLogIn={props.handleGitHubLogIn}
-            handleGitHubLogOut={props.handleGitHubLogOut}
-          />
-        )}
-        key="githubAssessments"
-      />
-    ) : null
-  ];
+  // const commonPaths = [
+  //   <Route path="/contributors" component={Contributors} key="contributors" />,
+  //   <Route path="/callback/github" component={GitHubCallback} key="githubCallback" />,
+  //   Constants.enableGitHubAssessments ? (
+  //     <Route
+  //       path="/githubassessments"
+  //       render={() => (
+  //         <GitHubClassroom
+  //           handleGitHubLogIn={props.handleGitHubLogIn}
+  //           handleGitHubLogOut={props.handleGitHubLogOut}
+  //         />
+  //       )}
+  //       key="githubAssessments"
+  //     />
+  //   ) : null
+  // ];
 
   const isDisabledEffective = !['staff', 'admin'].includes(props.role!) && isDisabled;
 
@@ -161,10 +153,10 @@ const Application: React.FC<ApplicationProps> = props => {
           courseShortName={props.courseShortName}
           enableAchievements={props.enableAchievements}
           enableSourcecast={props.enableSourcecast}
-          assessmentTypes={React.useMemo(
-            () => props.assessmentConfigurations?.map(c => c.type),
-            [props.assessmentConfigurations]
-          )}
+          // assessmentTypes={React.useMemo(
+          //   () => props.assessmentConfigurations?.map(c => c.type),
+          //   [props.assessmentConfigurations]
+          // )}
         />
         <div className="Application__main">
           <Switch>
@@ -189,8 +181,8 @@ const redirectToWelcome = () => <Redirect to="/welcome" />;
  *  1. If the user is logged in, render the Academy component
  *  2. If the user is not logged in, redirect to /login
  */
-const toAcademy = ({ name, role }: ApplicationProps) =>
-  name === undefined ? redirectToLogin : role === undefined ? redirectToWelcome : () => <Academy />;
+// const toAcademy = ({ name, role }: ApplicationProps) =>
+//   name === undefined ? redirectToLogin : role === undefined ? redirectToWelcome : () => <Academy />;
 
 /**
  * Routes a user to the specified route,

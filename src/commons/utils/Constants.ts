@@ -1,4 +1,4 @@
-import { Chapter, Variant } from 'calc-slang/dist/types';
+import { Chapter, Variant } from '../../sml-slang-config';
 import moment, { Moment } from 'moment';
 
 function isTrue(value?: string, defaultTo?: boolean): boolean {
