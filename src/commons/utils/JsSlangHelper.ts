@@ -1,8 +1,8 @@
 /* tslint:disable: ban-types*/
-import createSlangContext from 'calc-slang/dist/createContext';
-import { Context, Value, Variant } from 'calc-slang/dist/types';
-import { stringify } from 'calc-slang/dist/utils/stringify';
-import { difference, keys } from 'lodash';
+// import createSlangContext from 'calc-slang/dist/createContext';
+// import { Context, Value, Variant } from 'calc-slang/dist/types';
+import { Value, Variant } from '../../sml-slang-config';
+import { Context } from 'sml-slang/src/types';
 import EnvVisualizer from 'src/features/envVisualizer/EnvVisualizer';
 
 import DataVisualizer from '../../features/dataVisualizer/dataVisualizer';
@@ -28,7 +28,7 @@ import DisplayBufferService from './DisplayBufferService';
  *   which REPL the value shows up in.
  */
 function display(value: Value, str: string, workspaceLocation: any) {
-  display((str === undefined ? '' : str + ' ') + stringify(value), '', workspaceLocation);
+  display((str === undefined ? '' : str + ' ') + value.toString(), '', workspaceLocation);
   return value;
 }
 
@@ -67,7 +67,7 @@ function cadetPrompt(value: any) {
  * @param value the value to alert the user with
  */
 function cadetAlert(value: any) {
-  alert(stringify(value));
+  alert(value.toString());
 }
 
 /**
@@ -132,70 +132,18 @@ export function createContext<T>(
   externalContext: T,
   variant: Variant = Variant.DEFAULT
 ) {
-  return createSlangContext<T>(variant, externals, externalContext);
+  return {}; // createSlangContext<T>(variant, externals, externalContext);
 }
 
 
 // Given a Context, returns a privileged Context that when referenced,
 // intercepts reads from the underlying Context and returns desired values
 export function makeElevatedContext(context: Context) {
-  function ProxyFrame() {}
-  ProxyFrame.prototype = context.runtime.environments[0].head;
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  const fakeFrame: { [key: string]: any } = new ProxyFrame();
-  // Explanation: Proxy doesn't work for defineProperty in use-strict.
-  // The calc-slang will defineProperty on loadStandardLibraries
-  // Creating a raw JS object and setting prototype will allow defineProperty on the child
-  // while reflection should work on parent.
-
-  const proxyGlobalEnv = new Proxy(context.runtime.environments[0], {
-    get(target, prop: string | symbol, receiver) {
-      if (prop === 'head') {
-        return fakeFrame;
-      }
-      return target[prop];
-    }
-  });
-
-  const proxyEnvs = new Proxy(context.runtime.environments, {
-    get(target, prop, receiver) {
-      if (prop === '0') {
-        return proxyGlobalEnv;
-      }
-      return target[prop];
-    }
-  });
-
-  const proxyRuntime = new Proxy(context.runtime, {
-    get(target, prop, receiver) {
-      if (prop === 'environments') {
-        return proxyEnvs;
-      }
-      return target[prop];
-    }
-  });
-
-  const elevatedContext = new Proxy(context, {
-    get(target, prop, receiver) {
-      switch (prop) {
-        case 'chapter':
-          return 4;
-        case 'runtime':
-          return proxyRuntime;
-        default:
-          return target[prop];
-      }
-    }
-  });
-
-  return elevatedContext;
+  return context;
 }
 
 export function getDifferenceInMethods(elevatedContext: Context, context: Context) {
-  const eFrame = elevatedContext.runtime.environments[0].head;
-  const frame = context.runtime.environments[0].head;
-  return difference(keys(eFrame), keys(frame));
+  return {}
 }
 
 export function getStoreExtraMethodsString(toRemove: string[], unblockKey: string) {

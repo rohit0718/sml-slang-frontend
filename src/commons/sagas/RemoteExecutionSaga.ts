@@ -1,6 +1,6 @@
 import { SlingClient } from '@sourceacademy/sling-client';
-import { ExceptionError } from 'calc-slang/dist/errors/errors';
-import { Variant } from 'calc-slang/dist/types';
+// import { ExceptionError } from 'calc-slang/dist/errors/errors';
+import { Variant } from '../../sml-slang-config';
 import _ from 'lodash';
 import { SagaIterator } from 'redux-saga';
 import { call, put, race, select, take } from 'redux-saga/effects';
@@ -159,8 +159,9 @@ export function* remoteExecutionSaga(): SagaIterator {
             store.dispatch(actions.handleConsoleLog(workspace, `${message}`));
             break;
           case 'error': {
-            const error = new ExceptionError(new Error(`${message}`), dummyLocation);
-            store.dispatch(actions.evalInterpreterError([error], workspace));
+            // TODO: handle this?
+            // const error = new ExceptionError(new Error(`${message}`), dummyLocation);
+            // store.dispatch(actions.evalInterpreterError([error], workspace));
             break;
           }
           case 'result':

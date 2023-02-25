@@ -2,9 +2,8 @@
 import { Ace, require as acequire } from 'ace-builds';
 import 'ace-builds/src-noconflict/ext-language_tools';
 import 'ace-builds/src-noconflict/ext-searchbox';
-import 'calc-slang/dist/editors/ace/theme/source';
 
-import { Chapter, Variant } from '../../sml-slang-config'
+import { Chapter, Variant } from '../../sml-slang-config';
 import * as React from 'react';
 import AceEditor, { IAceEditorProps, IEditorProps } from 'react-ace';
 import * as AceBuilds from 'ace-builds';

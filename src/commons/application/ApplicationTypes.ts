@@ -1,8 +1,13 @@
 import { Chapter, Language, Variant } from '../../sml-slang-config'
-import { SourceError } from 'sml-slang/src/errors/types'
+import { SourceError } from 'sml-slang/src/types'
 
+import { AcademyState } from '../../features/academy/AcademyTypes';
+import { AchievementState } from '../../features/achievement/AchievementTypes';
+import { DashboardState } from '../../features/dashboard/DashboardTypes';
+import { Grading } from '../../features/grading/GradingTypes';
 import { PlaygroundState } from '../../features/playground/PlaygroundTypes';
 import { PlaybackStatus, RecordingStatus } from '../../features/sourceRecorder/SourceRecorderTypes';
+import { Assessment } from '../assessment/AssessmentTypes';
 import Constants from '../utils/Constants';
 import { createContext } from '../utils/JsSlangHelper';
 import {
@@ -15,10 +20,13 @@ import { ExternalLibraryName } from './types/ExternalTypes';
 import { SessionState } from './types/SessionTypes';
 
 export type OverallState = {
+  readonly academy: AcademyState;
+  readonly achievement: AchievementState;
   readonly application: ApplicationState;
   readonly playground: PlaygroundState;
   readonly session: SessionState;
   readonly workspaces: WorkspaceManagerState;
+  readonly dashboard: DashboardState;
 };
 
 export type ApplicationState = {
@@ -103,7 +111,7 @@ export interface SALanguage extends Language {
 }
 
 const variantDisplay: Map<Variant, string> = new Map([
-  [Variant.DEFAULT, 'SML-Slang']
+  [Variant.DEFAULT, 'calc']
 ]);
 
 
@@ -146,8 +154,26 @@ const currentEnvironment = (): ApplicationEnvironment => {
   }
 };
 
+export const defaultAcademy: AcademyState = {
+  gameCanvas: undefined
+};
+
 export const defaultApplication: ApplicationState = {
   environment: currentEnvironment()
+};
+
+export const defaultDashboard: DashboardState = {
+  gradingSummary: {
+    cols: [],
+    rows: []
+  }
+};
+
+export const defaultAchievement: AchievementState = {
+  achievements: [],
+  goals: [],
+  users: [],
+  assessmentOverviews: []
 };
 
 export const defaultPlayground: PlaygroundState = {
@@ -158,7 +184,7 @@ export const defaultEditorValue = '1+1';
 
 /**
  * Create a default IWorkspaceState for 'resetting' a workspace.
- * Takes in parameters to set the sml-slang library and chapter.
+ * Takes in parameters to set the calc-slang library and chapter.
  *
  * @param workspaceLocation the location of the workspace, used for context
  */
@@ -266,12 +292,33 @@ export const defaultWorkspaceManager: WorkspaceManagerState = {
 };
 
 export const defaultSession: SessionState = {
+  courses: [],
   group: null,
+  gameState: {
+    completed_quests: [],
+    collectibles: {}
+  },
+  xp: 0,
+  allUserXp: undefined,
+  story: {
+    story: '',
+    playStory: false
+  },
+  assessments: new Map<number, Assessment>(),
+  assessmentOverviews: undefined,
+  agreedToResearch: undefined,
+  sessionId: Date.now(),
+  githubOctokitObject: { octokit: undefined },
+  gradingOverviews: undefined,
+  gradings: new Map<number, Grading>(),
   notifications: []
 };
 
 export const defaultState: OverallState = {
+  academy: defaultAcademy,
+  achievement: defaultAchievement,
   application: defaultApplication,
+  dashboard: defaultDashboard,
   playground: defaultPlayground,
   session: defaultSession,
   workspaces: defaultWorkspaceManager

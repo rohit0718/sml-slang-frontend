@@ -1,6 +1,5 @@
 import 'ace-builds/src-noconflict/ext-searchbox';
 import 'ace-builds/src-noconflict/mode-javascript';
-import 'calc-slang/dist/editors/ace/theme/source';
 
 import { Ace } from 'ace-builds';
 import { isEqual } from 'lodash';

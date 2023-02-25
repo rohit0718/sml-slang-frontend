@@ -1,6 +1,5 @@
 import { Card, Classes, Elevation, Pre } from '@blueprintjs/core';
-import { parseError } from 'calc-slang';
-import { stringify } from 'calc-slang/dist/utils/stringify';
+import { parseError } from '../../sml-slang-config';
 import classNames from 'classnames';
 import * as React from 'react';
 
@@ -27,7 +26,7 @@ const SideContentTestcaseCard: React.FunctionComponent<SideContentTestcaseCardPr
 
   const extraClasses = React.useMemo(() => {
     const isEvaluated = testcase.result !== undefined || testcase.errors;
-    const isEqual = stringify(testcase.result) === testcase.answer;
+    const isEqual = testcase.result.toString() === testcase.answer;
 
     return {
       correct: isEvaluated && isEqual,
@@ -74,7 +73,7 @@ const SideContentTestcaseCard: React.FunctionComponent<SideContentTestcaseCardPr
               {testcase.errors
                 ? parseError(testcase.errors)
                 : testcase.result !== undefined
-                ? stringify(testcase.result)
+                ? testcase.result.toString()
                 : 'No Answer'}
             </Pre>
           </>

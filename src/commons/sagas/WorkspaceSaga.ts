@@ -1,12 +1,10 @@
 import {
-  Context,
-  findDeclaration,
-  interrupt,
-  runInContext
-} from 'calc-slang';
-import { InterruptedError } from 'calc-slang/dist/errors/errors';
-import { parse } from 'calc-slang/dist/parser/parser';
-import { Chapter, Variant } from 'calc-slang/dist/types';
+  Context
+} from 'sml-slang/src/types';
+import {
+  run
+} from 'sml-slang/src';
+import { Chapter, Variant } from '../../sml-slang-config';
 import { random } from 'lodash';
 import Phaser from 'phaser';
 import { SagaIterator } from 'redux-saga';
@@ -271,19 +269,6 @@ export default function* WorkspaceSaga(): SagaIterator {
         (state: OverallState) => state.workspaces[workspaceLocation].editorTabs[0].value
       );
       context = yield select((state: OverallState) => state.workspaces[workspaceLocation].context);
-
-      const result = findDeclaration(code, context, {
-        line: action.payload.cursorPosition.row + 1,
-        column: action.payload.cursorPosition.column
-      });
-      if (result) {
-        yield put(
-          actions.moveCursor(action.payload.workspaceLocation, {
-            row: result.start.line - 1,
-            column: result.start.column
-          })
-        );
-      }
     }
   );
 
@@ -398,7 +383,8 @@ export function* evalEditor(
     // Check for initial syntax errors. If there are errors, we continue with
     // eval and let it print the error messages.
     if (isSourceLanguage(context.chapter)) {
-      parse(value, context);
+      // TODO: do we need this?
+      // parse(value, context);
     }
     if (!context.errors.length) {
       // Otherwise we step through the breakpoints one by one and check them.
@@ -417,7 +403,7 @@ export function* evalEditor(
         exploded[index] = 'debugger;' + exploded[index];
         value = exploded.join('\n');
         if (isSourceLanguage(context.chapter)) {
-          parse(value, context);
+          // parse(value, context);
         }
         if (context.errors.length) {
           const msg = 'Hint: Misplaced breakpoint at line ' + (index + 1) + '.';
@@ -541,21 +527,13 @@ export function* evalCode(
   workspaceLocation: WorkspaceLocation,
   actionType: string
 ): SagaIterator {
-  const stepLimit: number = yield select(
-    (state: OverallState) => state.workspaces[workspaceLocation].stepLimit
-  );
+  // TODO: add support for step limit?
+  // const stepLimit: number = yield select(
+  //   (state: OverallState) => state.workspaces[workspaceLocation].stepLimit
+  // );
 
   const { result, interrupted, paused } = yield race({
-    result:
-      call(runInContext, code, context, {
-            scheduler: 'preemptive',
-            executionMethod: 'interpreter',
-            originalMaxExecTime: execTime,
-            stepLimit: stepLimit,
-            variant: Variant.DEFAULT,
-            useSubst: false
-          }),
-
+    result: call(run, code, context),
     /**
      * A BEGIN_INTERRUPT_EXECUTION signals the beginning of an interruption,
      * i.e the trigger for the interpreter to interrupt execution.
@@ -563,15 +541,16 @@ export function* evalCode(
     interrupted: take(BEGIN_INTERRUPT_EXECUTION),
     paused: take(BEGIN_DEBUG_PAUSE)
   });
-  if (interrupted) {
-    interrupt(context);
-    /* Redundancy, added ensure that interruption results in an error. */
-    context.errors.push(new InterruptedError(context.runtime.nodes[0]));
-    yield put(actions.debuggerReset(workspaceLocation));
-    yield put(actions.endInterruptExecution(workspaceLocation));
-    yield call(showWarningMessage, 'Execution aborted', 750);
-    return;
-  }
+  // TODO: check if need to support interruts
+  // if (interrupted) {
+  //   interrupt(context);
+  //   /* Redundancy, added ensure that interruption results in an error. */
+  //   context.errors.push(new InterruptedError(context.runtime.nodes[0]));
+  //   yield put(actions.debuggerReset(workspaceLocation));
+  //   yield put(actions.endInterruptExecution(workspaceLocation));
+  //   yield call(showWarningMessage, 'Execution aborted', 750);
+  //   return;
+  // }
 
   if (paused) {
     yield put(actions.endDebuggerPause(workspaceLocation));
@@ -631,11 +610,7 @@ export function* evalTestCode(
 ) {
   yield put(actions.resetTestcase(workspaceLocation, index));
   const { result, interrupted } = yield race({
-    result: call(runInContext, code, context, {
-      scheduler: 'preemptive',
-      originalMaxExecTime: execTime,
-      throwInfiniteLoops: true
-    }),
+    result: call(run, code, context),
     /**
      * A BEGIN_INTERRUPT_EXECUTION signals the beginning of an interruption,
      * i.e the trigger for the interpreter to interrupt execution.
@@ -643,15 +618,16 @@ export function* evalTestCode(
     interrupted: take(BEGIN_INTERRUPT_EXECUTION)
   });
 
-  if (interrupted) {
-    interrupt(context);
-    yield* dumpDisplayBuffer(workspaceLocation);
-    // Redundancy, added ensure that interruption results in an error.
-    context.errors.push(new InterruptedError(context.runtime.nodes[0]));
-    yield put(actions.endInterruptExecution(workspaceLocation));
-    yield call(showWarningMessage, `Execution of testcase ${index} aborted`, 750);
-    return;
-  }
+  // TODO: check if need to support interruts
+  // if (interrupted) {
+  //   interrupt(context);
+  //   yield* dumpDisplayBuffer(workspaceLocation);
+  //   // Redundancy, added ensure that interruption results in an error.
+  //   context.errors.push(new InterruptedError(context.runtime.nodes[0]));
+  //   yield put(actions.endInterruptExecution(workspaceLocation));
+  //   yield call(showWarningMessage, `Execution of testcase ${index} aborted`, 750);
+  //   return;
+  // }
 
   yield* dumpDisplayBuffer(workspaceLocation);
   /** result.status here is either 'error' or 'finished'; 'suspended' is not possible

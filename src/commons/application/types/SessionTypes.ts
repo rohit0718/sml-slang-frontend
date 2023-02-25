@@ -1,6 +1,15 @@
+import { Octokit } from '@octokit/rest';
 import { Chapter, Variant } from '../../../sml-slang-config'
 
-
+import { Grading, GradingOverview } from '../../../features/grading/GradingTypes';
+import { Device, DeviceSession } from '../../../features/remoteExecution/RemoteExecutionTypes';
+import {
+  Assessment,
+  AssessmentConfiguration,
+  AssessmentOverview
+} from '../../assessment/AssessmentTypes';
+import { MissionRepoData } from '../../githubAssessments/GitHubMissionTypes';
+import { Notification } from '../../notificationBadge/NotificationBadgeTypes';
 import { GameState, Role, Story } from '../ApplicationTypes';
 
 export const FETCH_AUTH = 'FETCH_AUTH';
@@ -67,13 +76,48 @@ export type SessionState = {
   // User
   readonly userId?: number;
   readonly name?: string;
+  readonly courses: UserCourse[];
 
   // Course Registration
+  readonly courseRegId?: number;
   readonly role?: Role;
   readonly group: string | null;
+  readonly gameState: GameState;
+  readonly courseId?: number;
+  readonly xp: number;
+  readonly allUserXp: string[][] | undefined;
+  readonly story: Story;
 
+  // Course Configuration
+  readonly courseName?: string;
+  readonly courseShortName?: string;
+  readonly viewable?: boolean;
+  readonly enableGame?: boolean;
+  readonly enableAchievements?: boolean;
+  readonly enableSourcecast?: boolean;
+  readonly sourceChapter?: number;
+  readonly sourceVariant?: Variant;
+  readonly moduleHelpText?: string;
+  readonly assetsPrefix?: string;
+
+  readonly assessmentConfigurations?: AssessmentConfiguration[];
+  readonly userCourseRegistrations?: AdminPanelCourseRegistration[];
+
+  // For research data collection
+  readonly agreedToResearch?: boolean | null;
+  readonly sessionId: number;
+
+  readonly assessmentOverviews?: AssessmentOverview[];
+  readonly assessments: Map<number, Assessment>;
+  readonly gradingOverviews?: GradingOverview[];
+  readonly gradings: Map<number, Grading>;
   readonly notifications: Notification[];
   readonly googleUser?: string;
+  readonly githubAssessment?: MissionRepoData;
+  readonly githubOctokitObject: { octokit: Octokit | undefined };
+  readonly githubAccessToken?: string;
+  readonly remoteExecutionDevices?: Device[];
+  readonly remoteExecutionSession?: DeviceSession;
 };
 
 export type Tokens = {
