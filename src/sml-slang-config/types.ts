@@ -10,3 +10,7 @@ export interface Language {
     chapter: Chapter
     variant: Variant
 }
+
+// tslint:disable:no-any
+export type Value = any
+// tslint:enable:no-any
