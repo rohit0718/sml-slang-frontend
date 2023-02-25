@@ -4,7 +4,7 @@ import 'ace-builds/src-noconflict/ext-language_tools';
 import 'ace-builds/src-noconflict/ext-searchbox';
 import 'calc-slang/dist/editors/ace/theme/source';
 
-import { Chapter, Variant } from 'calc-slang/dist/types';
+import { Chapter, Variant } from '../../sml-slang-config'
 import * as React from 'react';
 import AceEditor, { IAceEditorProps, IEditorProps } from 'react-ace';
 import * as AceBuilds from 'ace-builds';
@@ -212,7 +212,7 @@ const EditorBase = React.memo((props: EditorProps & LocalStateProps) => {
   }, []);
 
   const [sourceChapter, sourceVariant, externalLibraryName] = [
-    props.sourceChapter || Chapter.CALC,
+    props.sourceChapter || Chapter.SMLSlang,
     props.sourceVariant || Variant.DEFAULT,
     props.externalLibraryName || 'NONE'
   ];
