@@ -1,12 +1,8 @@
-import { Chapter, Language, SourceError, Variant } from 'calc-slang/dist/types';
+import { Chapter, Language, Variant } from '../../sml-slang-config'
+import { SourceError } from 'sml-slang/src/errors/types'
 
-import { AcademyState } from '../../features/academy/AcademyTypes';
-import { AchievementState } from '../../features/achievement/AchievementTypes';
-import { DashboardState } from '../../features/dashboard/DashboardTypes';
-import { Grading } from '../../features/grading/GradingTypes';
 import { PlaygroundState } from '../../features/playground/PlaygroundTypes';
 import { PlaybackStatus, RecordingStatus } from '../../features/sourceRecorder/SourceRecorderTypes';
-import { Assessment } from '../assessment/AssessmentTypes';
 import Constants from '../utils/Constants';
 import { createContext } from '../utils/JsSlangHelper';
 import {
@@ -19,13 +15,10 @@ import { ExternalLibraryName } from './types/ExternalTypes';
 import { SessionState } from './types/SessionTypes';
 
 export type OverallState = {
-  readonly academy: AcademyState;
-  readonly achievement: AchievementState;
   readonly application: ApplicationState;
   readonly playground: PlaygroundState;
   readonly session: SessionState;
   readonly workspaces: WorkspaceManagerState;
-  readonly dashboard: DashboardState;
 };
 
 export type ApplicationState = {
@@ -110,7 +103,7 @@ export interface SALanguage extends Language {
 }
 
 const variantDisplay: Map<Variant, string> = new Map([
-  [Variant.DEFAULT, 'calc']
+  [Variant.DEFAULT, 'SML-Slang']
 ]);
 
 
@@ -121,7 +114,7 @@ export const styliseSublanguage = (chapter: Chapter, variant: Variant = Variant.
 };
 
 export const sublanguages: Language[] = [
-  { chapter: Chapter.CALC, variant: Variant.DEFAULT }
+  { chapter: Chapter.SMLSlang, variant: Variant.DEFAULT }
 ];
 
 export const sourceLanguages: SALanguage[] = sublanguages.map(sublang => {
@@ -140,7 +133,7 @@ export const variantLanguages = sourceLanguages.filter(
 );
 
 export const isSourceLanguage = (chapter: Chapter) =>
-  [Chapter.CALC].includes(chapter);
+  [Chapter.SMLSlang].includes(chapter);
 
 const currentEnvironment = (): ApplicationEnvironment => {
   switch (process.env.NODE_ENV) {
@@ -153,26 +146,8 @@ const currentEnvironment = (): ApplicationEnvironment => {
   }
 };
 
-export const defaultAcademy: AcademyState = {
-  gameCanvas: undefined
-};
-
 export const defaultApplication: ApplicationState = {
   environment: currentEnvironment()
-};
-
-export const defaultDashboard: DashboardState = {
-  gradingSummary: {
-    cols: [],
-    rows: []
-  }
-};
-
-export const defaultAchievement: AchievementState = {
-  achievements: [],
-  goals: [],
-  users: [],
-  assessmentOverviews: []
 };
 
 export const defaultPlayground: PlaygroundState = {
@@ -183,7 +158,7 @@ export const defaultEditorValue = '1+1';
 
 /**
  * Create a default IWorkspaceState for 'resetting' a workspace.
- * Takes in parameters to set the calc-slang library and chapter.
+ * Takes in parameters to set the sml-slang library and chapter.
  *
  * @param workspaceLocation the location of the workspace, used for context
  */
@@ -255,7 +230,7 @@ export const defaultWorkspaceManager: WorkspaceManagerState = {
     playbackData: {
       init: {
         editorValue: '',
-        chapter: Chapter.CALC,
+        chapter: Chapter.SMLSlang,
         externalLibrary: ExternalLibraryName.NONE
       },
       inputs: []
@@ -271,7 +246,7 @@ export const defaultWorkspaceManager: WorkspaceManagerState = {
     playbackData: {
       init: {
         editorValue: '',
-        chapter: Chapter.CALC,
+        chapter: Chapter.SMLSlang,
         externalLibrary: ExternalLibraryName.NONE
       },
       inputs: []
@@ -314,10 +289,7 @@ export const defaultSession: SessionState = {
 };
 
 export const defaultState: OverallState = {
-  academy: defaultAcademy,
-  achievement: defaultAchievement,
   application: defaultApplication,
-  dashboard: defaultDashboard,
   playground: defaultPlayground,
   session: defaultSession,
   workspaces: defaultWorkspaceManager
