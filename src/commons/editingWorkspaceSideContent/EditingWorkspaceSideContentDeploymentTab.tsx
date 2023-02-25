@@ -259,7 +259,7 @@ const chapterSelect = (
   >
     <Button
       className={Classes.MINIMAL}
-      text={styliseSublanguage(Chapter.CALC, variant)}
+      text={styliseSublanguage(Chapter.SMLSlang, variant)}
       rightIcon={IconNames.DOUBLE_CARET_VERTICAL}
     />
   </ChapterSelectComponent>

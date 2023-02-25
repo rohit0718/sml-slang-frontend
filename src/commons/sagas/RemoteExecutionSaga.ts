@@ -29,10 +29,10 @@ import { actions } from '../utils/ActionsHelper';
 import { fetchDevices, getDeviceWSEndpoint } from './RequestsSaga';
 import { safeTakeEvery as takeEvery, safeTakeLatest as takeLatest } from './SafeEffects';
 
-const dummyLocation = {
-  start: { line: 0, column: 0 },
-  end: { line: 0, column: 0 }
-};
+// const dummyLocation = {
+//   start: { line: 0, column: 0 },
+//   end: { line: 0, column: 0 }
+// };
 
 export function* remoteExecutionSaga(): SagaIterator {
   yield takeLatest(REMOTE_EXEC_FETCH_DEVICES, function* () {

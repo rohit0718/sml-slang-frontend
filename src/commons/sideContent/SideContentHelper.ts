@@ -39,21 +39,22 @@ export const getDynamicTabs = (debuggerContext: DebuggerContext): SideContentTab
  * @param debuggerContext - DebuggerContext object from redux store
  */
 export const getModuleTabs = (debuggerContext: DebuggerContext): ModuleSideContent[] => {
-  // Check if calc-slang's context object is null
-  if (debuggerContext.context == null) {
-    return [];
-  }
+  // // Check if calc-slang's context object is null
+  // if (debuggerContext.context == null) {
+  //   return [];
+  // }
 
-  // Get module contexts
-  const rawModuleContexts = debuggerContext.context.moduleContexts;
-  if (rawModuleContexts == null) {
-    return [];
-  }
+  // // Get module contexts
+  // const rawModuleContexts = debuggerContext.context.moduleContexts;
+  // if (rawModuleContexts == null) {
+  //   return [];
+  // }
 
-  // Pass React into functions
-  const moduleTabs: ModuleSideContent[] = Object.values(rawModuleContexts).flatMap(
-    context => context.tabs?.map((tab: any) => tab(React, ReactDOM)) ?? []
-  );
+  // // Pass React into functions
+  // const moduleTabs: ModuleSideContent[] = Object.values(rawModuleContexts).flatMap(
+  //   context => context.tabs?.map((tab: any) => tab(React, ReactDOM)) ?? []
+  // );
 
-  return moduleTabs;
+  // return moduleTabs;
+  return []
 };

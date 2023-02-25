@@ -1,5 +1,5 @@
 import { Label } from '@blueprintjs/core';
-import { Chapter } from 'calc-slang/dist/types';
+import { Chapter } from '../../../sml-slang-config';
 import React from 'react';
 
 import { SALanguage } from '../../application/ApplicationTypes';

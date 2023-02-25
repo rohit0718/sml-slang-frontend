@@ -76,7 +76,7 @@
     "redux-saga": "^1.1.3",
     "showdown": "^2.1.0",
     "sourceror": "^0.8.5",
-    "sml-slang": "github:sebastiantoh/sml-slang#bce8c136b85a95fc9256577a0ea6bb5924770550",
+    "sml-slang": "github:sebastiantoh/sml-slang#fc60e0f0be24ee52c78da00b6406076fd46242cf",
     "typesafe-actions": "^5.1.0",
     "uuid": "^8.3.2",
     "xml2js": "^0.4.23",

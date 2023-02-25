@@ -1,13 +1,13 @@
-import { Context } from 'calc-slang/dist/types';
+import { Context } from 'sml-slang/dist/types';
 
-import { handleConsoleLog } from '../application/actions/InterpreterActions';
+// import { handleConsoleLog } from '../application/actions/InterpreterActions';
 
 export function makeExternalBuiltins(context: Context): any {
   return {
     display: (v: string) => {
-      if (typeof (window as any).__REDUX_STORE__ !== 'undefined') {
-        (window as any).__REDUX_STORE__.dispatch(handleConsoleLog(context.externalContext, v));
-      }
+      // if (typeof (window as any).__REDUX_STORE__ !== 'undefined') {
+      //   (window as any).__REDUX_STORE__.dispatch(handleConsoleLog(null, v));
+      // }
     }
   };
 }

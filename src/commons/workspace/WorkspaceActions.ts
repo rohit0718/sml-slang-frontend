@@ -1,4 +1,4 @@
-import { Context } from 'calc-slang';
+import { Context } from 'sml-slang/dist/types';
 import { Chapter, Variant } from '../../sml-slang-config';
 import { action } from 'typesafe-actions';
 

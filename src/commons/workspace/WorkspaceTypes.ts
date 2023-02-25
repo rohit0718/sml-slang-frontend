@@ -1,4 +1,4 @@
-import { Context } from 'calc-slang';
+import { Context } from 'sml-slang/dist/types';
 
 import { GitHubAssessmentWorkspaceState } from '../../features/githubAssessment/GitHubAssessmentTypes';
 import { SourcecastWorkspaceState } from '../../features/sourceRecorder/sourcecast/SourcecastTypes';
@@ -90,7 +90,7 @@ export type EditorTabState = {
 
 export type WorkspaceState = {
   readonly autogradingResults: AutogradingResult[];
-  readonly context: Context;
+  readonly context: any; // TODO: change to Context?
   readonly activeEditorTabIndex: number | null;
   readonly editorTabs: EditorTabState[];
   readonly editorSessionId: string;

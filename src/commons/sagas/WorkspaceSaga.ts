@@ -1,15 +1,15 @@
 import {
   Context
-} from 'sml-slang/src/types';
+} from 'sml-slang/dist/types';
 import {
   run
-} from 'sml-slang/src';
+} from 'sml-slang/dist';
 import { Chapter, Variant } from '../../sml-slang-config';
 import { random } from 'lodash';
 import Phaser from 'phaser';
 import { SagaIterator } from 'redux-saga';
 import { call, put, race, select, StrictEffect, take } from 'redux-saga/effects';
-import EnvVisualizer from 'src/features/envVisualizer/EnvVisualizer';
+// import EnvVisualizer from 'src/features/envVisualizer/EnvVisualizer';
 
 import { EventType } from '../../features/achievement/AchievementTypes';
 import DataVisualizer from '../../features/dataVisualizer/dataVisualizer';
@@ -38,7 +38,7 @@ import {
   highlightClean,
   highlightLine,
   makeElevatedContext,
-  visualizeEnv
+  // visualizeEnv
 } from '../utils/JsSlangHelper';
 import { showSuccessMessage, showWarningMessage } from '../utils/NotificationsHelper';
 import { notifyProgramEvaluated } from '../workspace/WorkspaceActions';
@@ -239,7 +239,7 @@ export default function* WorkspaceSaga(): SagaIterator {
     BEGIN_CLEAR_CONTEXT,
     function* (action: ReturnType<typeof actions.beginClearContext>) {
       DataVisualizer.clear();
-      EnvVisualizer.clear();
+      // EnvVisualizer.clear();
       const globals: Array<[string, any]> = action.payload.library.globals as Array<[string, any]>;
       for (const [key, value] of globals) {
         window[key] = value;
@@ -308,7 +308,7 @@ function* updateInspector(workspaceLocation: WorkspaceLocation): SagaIterator {
     const start = lastDebuggerResult.context.runtime.nodes[0].loc.start.line - 1;
     const end = lastDebuggerResult.context.runtime.nodes[0].loc.end.line - 1;
     yield put(actions.highlightEditorLine([start, end], workspaceLocation));
-    visualizeEnv(lastDebuggerResult);
+    // visualizeEnv(lastDebuggerResult);
   } catch (e) {
     yield put(actions.highlightEditorLine([], workspaceLocation));
     // most likely harmless, we can pretty much ignore this.
@@ -498,13 +498,13 @@ export function* blockExtraMethods(
   unblockKey?: string
 ) {
   // Extract additional methods available in the elevated context relative to the context
-  const toBeBlocked = getDifferenceInMethods(elevatedContext, context);
+  // const toBeBlocked = getDifferenceInMethods(elevatedContext, context);
   if (unblockKey) {
-    const storeValues = getStoreExtraMethodsString(toBeBlocked, unblockKey);
+    const storeValues = getStoreExtraMethodsString([], unblockKey);
     yield call(evalCode, storeValues, elevatedContext, execTime, workspaceLocation, EVAL_SILENT);
   }
 
-  const nullifier = getBlockExtraMethodsString(toBeBlocked);
+  const nullifier = getBlockExtraMethodsString([]);
   yield call(evalCode, nullifier, elevatedContext, execTime, workspaceLocation, EVAL_SILENT);
 }
 
@@ -515,8 +515,8 @@ export function* restoreExtraMethods(
   workspaceLocation: WorkspaceLocation,
   unblockKey: string
 ) {
-  const toUnblock = getDifferenceInMethods(elevatedContext, context);
-  const restorer = getRestoreExtraMethodsString(toUnblock, unblockKey);
+  // const toUnblock = getDifferenceInMethods(elevatedContext, context);
+  const restorer = getRestoreExtraMethodsString([], unblockKey);
   yield call(evalCode, restorer, elevatedContext, execTime, workspaceLocation, EVAL_SILENT);
 }
 

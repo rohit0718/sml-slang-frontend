@@ -12499,9 +12499,9 @@ slice-ansi@^4.0.0:
     astral-regex "^2.0.0"
     is-fullwidth-code-point "^3.0.0"
 
-"sml-slang@github:sebastiantoh/sml-slang#bce8c136b85a95fc9256577a0ea6bb5924770550":
+"sml-slang@github:sebastiantoh/sml-slang#fc60e0f0be24ee52c78da00b6406076fd46242cf":
   version "1.0.0"
-  resolved "git+ssh://git@github.com/sebastiantoh/sml-slang.git#bce8c136b85a95fc9256577a0ea6bb5924770550"
+  resolved "git+ssh://git@github.com/sebastiantoh/sml-slang.git#fc60e0f0be24ee52c78da00b6406076fd46242cf"
   dependencies:
     "@types/estree" "^1.0.0"
     antlr4ts "^0.5.0-alpha.4"

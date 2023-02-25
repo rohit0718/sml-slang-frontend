@@ -42,7 +42,7 @@ const mapStateToProps: MapStateToProps<StateProps, {}, OverallState> = state => 
   replValue: state.workspaces.sourcecast.replValue,
   sideContentHeight: state.workspaces.sourcecast.sideContentHeight,
   sourcecastIndex: state.workspaces.sourcecast.sourcecastIndex,
-  sourceChapter: Chapter.CALC,
+  sourceChapter: Chapter.SMLSlang,
   sourceVariant: state.workspaces.sourcecast.context.variant,
   uid: state.workspaces.sourcecast.uid,
   courseId: state.session.courseId

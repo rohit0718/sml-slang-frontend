@@ -2,8 +2,8 @@
 // import createSlangContext from 'calc-slang/dist/createContext';
 // import { Context, Value, Variant } from 'calc-slang/dist/types';
 import { Value, Variant } from '../../sml-slang-config';
-import { Context } from 'sml-slang/src/types';
-import EnvVisualizer from 'src/features/envVisualizer/EnvVisualizer';
+import { Context } from 'sml-slang/dist/types';
+// import EnvVisualizer from 'src/features/envVisualizer/EnvVisualizer';
 
 import DataVisualizer from '../../features/dataVisualizer/dataVisualizer';
 import { Data } from '../../features/dataVisualizer/dataVisualizerTypes';
@@ -90,13 +90,13 @@ function visualizeData(...args: Data[]) {
   }
 }
 
-export function visualizeEnv({ context }: { context: Context }) {
-  try {
-    EnvVisualizer.drawEnv(context);
-  } catch (err) {
-    throw new Error('Env visualizer is not enabled');
-  }
-}
+// export function visualizeEnv({ context }: { context: Context }) {
+//   try {
+//     EnvVisualizer.drawEnv(context);
+//   } catch (err) {
+//     throw new Error('Env visualizer is not enabled');
+//   }
+// }
 
 export function highlightClean() {
   if ((window as any).Inspector) {

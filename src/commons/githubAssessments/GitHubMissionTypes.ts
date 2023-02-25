@@ -1,4 +1,4 @@
-import { Chapter } from 'calc-slang/dist/types';
+import { Chapter } from '../../sml-slang-config';
 
 import { Testcase } from '../assessment/AssessmentTypes';
 

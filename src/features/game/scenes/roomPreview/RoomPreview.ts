@@ -1,6 +1,6 @@
-import { run } from 'sml-slang/src';
-import { Context } from 'sml-slang/src/types';
-import { Variant } from 'calc-slang/dist/types';
+import { run } from 'sml-slang/dist';
+import { Context } from 'sml-slang/dist/types';
+import { Variant } from '../../../../sml-slang-config';
 import { createContext } from 'src/commons/utils/JsSlangHelper';
 
 import ImageAssets from '../../assets/ImageAssets';
@@ -171,7 +171,7 @@ export default class RoomPreview extends Phaser.Scene {
   }
 
   public createContext() {
-    this.context = createContext([], 'playground', Variant.DEFAULT);
+    // this.context = createContext([], 'playground', Variant.DEFAULT);
     // this.context.moduleContexts.game = {
     //   tabs: null,
     //   state: {

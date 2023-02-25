@@ -1,5 +1,5 @@
 import { mount, shallow } from 'enzyme';
-import { ErrorSeverity, ErrorType, SourceError } from 'calc-slang/dist/types';
+import { ErrorSeverity, ErrorType, SourceError } from 'sml-slang/dist/types';
 
 import { AutogradingResult, Testcase, TestcaseTypes } from '../../assessment/AssessmentTypes';
 import { mockGrading } from '../../mocks/GradingMocks';

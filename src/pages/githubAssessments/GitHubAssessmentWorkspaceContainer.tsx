@@ -28,7 +28,7 @@ const mapStateToProps: MapStateToProps<StateProps, {}, OverallState> = state => 
     output: state.workspaces.githubAssessment.output,
     replValue: state.workspaces.githubAssessment.replValue,
     sideContentHeight: state.workspaces.githubAssessment.sideContentHeight,
-    sourceChapter: Chapter.CALC
+    sourceChapter: Chapter.SMLSlang
   };
 };
 

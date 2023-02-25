@@ -1,5 +1,5 @@
 import { Ace } from 'ace-builds/ace';
-import { Chapter } from 'calc-slang/dist/types';
+import { Chapter } from '../../sml-slang-config';
 
 import { ExternalLibraryName } from '../../commons/application/types/ExternalTypes';
 import { Position } from '../../commons/editor/EditorTypes';

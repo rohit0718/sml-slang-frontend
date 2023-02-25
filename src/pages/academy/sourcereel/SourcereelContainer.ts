@@ -1,4 +1,4 @@
-import { Chapter, Variant } from '../../sml-slang-config';
+import { Chapter, Variant } from '../../../sml-slang-config';
 import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
 
@@ -39,7 +39,7 @@ const mapStateToProps: MapStateToProps<StateProps, {}, OverallState> = state => 
   replValue: state.workspaces.sourcereel.replValue,
   sideContentHeight: state.workspaces.sourcereel.sideContentHeight,
   sourcecastIndex: state.workspaces.sourcecast.sourcecastIndex,
-  sourceChapter: Chapter.CALC,
+  sourceChapter: Chapter.SMLSlang,
   sourceVariant: state.workspaces.sourcereel.context.variant,
   timeElapsedBeforePause: state.workspaces.sourcereel.timeElapsedBeforePause,
   timeResumed: state.workspaces.sourcereel.timeResumed,

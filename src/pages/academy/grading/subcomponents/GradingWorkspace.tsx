@@ -1,6 +1,6 @@
 import { Classes, NonIdealState, Spinner, SpinnerSize } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
-import { Chapter, Variant } from '../../sml-slang-config';
+import { Chapter, Variant } from '../../../../sml-slang-config';
 import classNames from 'classnames';
 import * as React from 'react';
 import SideContentToneMatrix from 'src/commons/sideContent/SideContentToneMatrix';
@@ -191,7 +191,7 @@ class GradingWorkspace extends React.Component<GradingWorkspaceProps, State> {
               handleEditorUpdateBreakpoints: this.props.handleEditorUpdateBreakpoints,
               handlePromptAutocomplete: this.props.handlePromptAutocomplete,
               isEditorAutorun: false,
-              sourceChapter: Chapter.CALC,
+              sourceChapter: Chapter.SMLSlang,
               sourceVariant: question?.library?.variant ?? Variant.DEFAULT,
               externalLibraryName: question?.library?.external?.name || 'NONE'
             }
@@ -213,7 +213,7 @@ class GradingWorkspace extends React.Component<GradingWorkspaceProps, State> {
         handleReplValueChange: this.props.handleReplValueChange,
         output: this.props.output,
         replValue: this.props.replValue,
-        sourceChapter: Chapter.CALC,
+        sourceChapter: Chapter.SMLSlang,
         sourceVariant: question?.library?.variant ?? Variant.DEFAULT,
         externalLibrary: question?.library?.external?.name || 'NONE',
         replButtons: this.replButtons()

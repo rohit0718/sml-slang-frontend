@@ -50,8 +50,8 @@ const Application: React.FC<ApplicationProps> = props => {
     defaultWorkspaceSettings
   );
 
-  const isLoggedIn = typeof props.name === 'string';
-  const isCourseLoaded = isLoggedIn && typeof props.role === 'string';
+  // const isLoggedIn = typeof props.name === 'string';
+  // const isCourseLoaded = isLoggedIn && typeof props.role === 'string';
 
   // Effect to fetch the latest user info and course configurations from the backend on refresh,
   // if the user was previously logged in
@@ -136,7 +136,7 @@ const Application: React.FC<ApplicationProps> = props => {
   //   ) : null
   // ];
 
-  const isDisabledEffective = !['staff', 'admin'].includes(props.role!) && isDisabled;
+  // const isDisabledEffective = !['staff', 'admin'].includes(props.role!) && isDisabled;
 
   return (
     <WorkspaceSettingsContext.Provider value={[workspaceSettings, setWorkspaceSettings]}>
@@ -173,8 +173,8 @@ const Application: React.FC<ApplicationProps> = props => {
   );
 };
 
-const redirectToLogin = () => <Redirect to="/login" />;
-const redirectToWelcome = () => <Redirect to="/welcome" />;
+// const redirectToLogin = () => <Redirect to="/login" />;
+// const redirectToWelcome = () => <Redirect to="/welcome" />;
 
 /**
  * A user routes to /academy,
@@ -189,8 +189,8 @@ const redirectToWelcome = () => <Redirect to="/welcome" />;
  *  1. If the user is logged in, render the specified component
  *  2. If the user is not logged in, redirect to /login
  */
-const ensureUserAndRouteTo = ({ name }: ApplicationProps, to: JSX.Element) =>
-  name === undefined ? redirectToLogin : () => to;
+// const ensureUserAndRouteTo = ({ name }: ApplicationProps, to: JSX.Element) =>
+//   name === undefined ? redirectToLogin : () => to;
 
 /**
  * Routes a user to the specified route,
@@ -199,8 +199,8 @@ const ensureUserAndRouteTo = ({ name }: ApplicationProps, to: JSX.Element) =>
  *  2. If the user is not logged in, redirect to /login
  *  3. If the user is logged in, but does not have a course, redirect to /welcome
  */
-const ensureUserAndRoleAndRouteTo = ({ name, role }: ApplicationProps, to: JSX.Element) =>
-  name === undefined ? redirectToLogin : role === undefined ? redirectToWelcome : () => to;
+// const ensureUserAndRoleAndRouteTo = ({ name, role }: ApplicationProps, to: JSX.Element) =>
+//   name === undefined ? redirectToLogin : role === undefined ? redirectToWelcome : () => to;
 
 function computeDisabledState() {
   const now = moment();

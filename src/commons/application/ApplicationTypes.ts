@@ -1,5 +1,5 @@
 import { Chapter, Language, Variant } from '../../sml-slang-config'
-import { SourceError } from 'sml-slang/src/types'
+import { SourceError } from 'sml-slang/dist/types'
 
 import { AcademyState } from '../../features/academy/AcademyTypes';
 import { AchievementState } from '../../features/achievement/AchievementTypes';

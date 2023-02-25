@@ -1,4 +1,5 @@
-import { SourceError, Variant } from 'calc-slang/dist/types';
+import { SourceError } from 'sml-slang/dist/types';
+import { Variant } from '../../sml-slang-config';
 
 import { ExternalLibrary, ExternalLibraryName } from '../application/types/ExternalTypes';
 

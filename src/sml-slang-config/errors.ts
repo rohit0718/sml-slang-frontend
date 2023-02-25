@@ -1,4 +1,4 @@
-import { SourceError } from 'sml-slang/src/types';
+import { SourceError } from 'sml-slang/dist/types';
 
 const verboseErrors = false;
 export function parseError(errors: SourceError[], verbose: boolean = verboseErrors): string {

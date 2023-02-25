@@ -642,7 +642,7 @@ const EditingWorkspace: React.FC<EditingWorkspaceProps> = props => {
       handleReplValueChange: props.handleReplValueChange,
       output: props.output,
       replValue: props.replValue,
-      sourceChapter: Chapter.CALC,
+      sourceChapter: Chapter.SMLSlang,
       sourceVariant: Variant.DEFAULT,
       externalLibrary: question?.library?.external?.name || 'NONE',
       replButtons: replButtons()
