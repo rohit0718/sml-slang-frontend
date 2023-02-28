@@ -257,7 +257,7 @@ const download = (filename: string, text: string) => {
 const exportLibrary = (library: Library) => {
   const deployment = {
     $: {
-      interpreter: Chapter.CALC.toString()
+      interpreter: Chapter.SML_SLANG.toString()
     },
     EXTERNAL: {
       $: {

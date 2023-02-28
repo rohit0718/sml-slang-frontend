@@ -121,7 +121,7 @@ export const styliseSublanguage = (chapter: Chapter, variant: Variant = Variant.
 };
 
 export const sublanguages: Language[] = [
-  { chapter: Chapter.CALC, variant: Variant.DEFAULT }
+  { chapter: Chapter.SML_SLANG, variant: Variant.DEFAULT }
 ];
 
 export const sourceLanguages: SALanguage[] = sublanguages.map(sublang => {
@@ -140,7 +140,7 @@ export const variantLanguages = sourceLanguages.filter(
 );
 
 export const isSourceLanguage = (chapter: Chapter) =>
-  [Chapter.CALC].includes(chapter);
+  [Chapter.SML_SLANG].includes(chapter);
 
 const currentEnvironment = (): ApplicationEnvironment => {
   switch (process.env.NODE_ENV) {
@@ -255,7 +255,7 @@ export const defaultWorkspaceManager: WorkspaceManagerState = {
     playbackData: {
       init: {
         editorValue: '',
-        chapter: Chapter.CALC,
+        chapter: Chapter.SML_SLANG,
         externalLibrary: ExternalLibraryName.NONE
       },
       inputs: []
@@ -271,7 +271,7 @@ export const defaultWorkspaceManager: WorkspaceManagerState = {
     playbackData: {
       init: {
         editorValue: '',
-        chapter: Chapter.CALC,
+        chapter: Chapter.SML_SLANG,
         externalLibrary: ExternalLibraryName.NONE
       },
       inputs: []

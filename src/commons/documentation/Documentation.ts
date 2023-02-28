@@ -1,4 +1,4 @@
-import { SourceDocumentation } from 'sml-slang/dist';
+import { SourceDocumentation } from 'sml-slang/dist/editor/docTooltip';
 import { deviceTypes } from 'src/features/remoteExecution/RemoteExecutionTypes';
 
 import { externalLibraries } from '../application/types/ExternalTypes';
@@ -16,12 +16,12 @@ function shortenCaption(name: string): string {
 }
 
 function mapExternalLibraryName(name: string) {
-  if (name in SourceDocumentation.ext_lib) {
+  if (name in SourceDocumentation.autocomplete) {
     return {
       caption: shortenCaption(name),
       value: name,
-      meta: SourceDocumentation.ext_lib[name].meta,
-      docHTML: SourceDocumentation.ext_lib[name].description
+      meta: SourceDocumentation.autocomplete[name].meta,
+      docHTML: SourceDocumentation.autocomplete[name].description
     };
   } else {
     return {

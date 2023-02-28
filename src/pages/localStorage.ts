@@ -61,7 +61,7 @@ export const saveState = (state: OverallState) => {
       // TODO: Hardcoded to make use of the first editor tab. Rewrite after editor tabs are added.
       playgroundEditorValue: state.workspaces.playground.editorTabs[0].value,
       playgroundIsEditorAutorun: state.workspaces.playground.isEditorAutorun,
-      playgroundSourceChapter: Chapter.CALC,
+      playgroundSourceChapter: Chapter.SML_SLANG,
       playgroundSourceVariant: state.workspaces.playground.context.variant,
       playgroundExternalLibrary: state.workspaces.playground.externalLibrary
     };

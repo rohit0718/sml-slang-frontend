@@ -317,7 +317,7 @@ const AssessmentWorkspace: React.FC<AssessmentWorkspaceProps> = props => {
       if (!sessionId) {
         setSessionId(
           initSession(`${(props.assessment as any).number}/${props.questionId}`, {
-            chapter: Chapter.CALC,
+            chapter: Chapter.SML_SLANG,
             externalLibrary: question?.library?.external?.name || 'NONE',
             editorValue
           })
@@ -637,7 +637,7 @@ const AssessmentWorkspace: React.FC<AssessmentWorkspaceProps> = props => {
     const chapterSelect = (
       <ControlBarChapterSelect
         handleChapterSelect={handleChapterSelect}
-        sourceChapter={Chapter.CALC}
+        sourceChapter={Chapter.SML_SLANG}
         sourceVariant={
           props.assessment!.questions[questionId].library.variant ?? Constants.defaultSourceVariant
         }
@@ -773,7 +773,7 @@ const AssessmentWorkspace: React.FC<AssessmentWorkspaceProps> = props => {
           editorVariant: 'normal',
           editorTabs: props.editorTabs.map(convertEditorTabStateToProps),
           editorSessionId: '',
-          sourceChapter: Chapter.CALC,
+          sourceChapter: Chapter.SML_SLANG,
           sourceVariant: question.library.variant ?? Variant.DEFAULT,
           externalLibraryName: question.library.external.name || 'NONE',
           handleDeclarationNavigate: (cursorPosition: Position) =>
@@ -803,7 +803,7 @@ const AssessmentWorkspace: React.FC<AssessmentWorkspaceProps> = props => {
       dispatch(updateReplValue(newValue, workspaceLocation)),
     output: props.output,
     replValue: props.replValue,
-    sourceChapter: Chapter.CALC,
+    sourceChapter: Chapter.SML_SLANG,
     sourceVariant: question.library.variant ?? Variant.DEFAULT,
     externalLibrary: question?.library?.external?.name || 'NONE',
     replButtons: replButtons()

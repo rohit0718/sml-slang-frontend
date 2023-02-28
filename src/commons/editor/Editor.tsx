@@ -212,7 +212,7 @@ const EditorBase = React.memo((props: EditorProps & LocalStateProps) => {
   }, []);
 
   const [sourceChapter, sourceVariant, externalLibraryName] = [
-    props.sourceChapter || Chapter.CALC,
+    props.sourceChapter || Chapter.SML_SLANG,
     props.sourceVariant || Variant.DEFAULT,
     props.externalLibraryName || 'NONE'
   ];

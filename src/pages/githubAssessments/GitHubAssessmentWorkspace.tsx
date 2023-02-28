@@ -1091,7 +1091,7 @@ const GitHubAssessmentWorkspace: React.FC<GitHubAssessmentWorkspaceProps> = prop
       dispatch(updateReplValue(newValue, workspaceLocation)),
     output: props.output,
     replValue: props.replValue,
-    sourceChapter: missionMetadata.sourceVersion || Chapter.CALC,
+    sourceChapter: missionMetadata.sourceVersion || Chapter.SML_SLANG,
     sourceVariant: Variant.DEFAULT,
     externalLibrary: ExternalLibraryName.NONE,
     replButtons: replButtons()

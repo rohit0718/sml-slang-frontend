@@ -79,7 +79,7 @@ function loadStore(loadedStore: SavedState | undefined) {
           ...defaultState.workspaces.playground.context,
           chapter: loadedStore.playgroundSourceChapter
             ? loadedStore.playgroundSourceChapter
-            : Chapter.CALC,
+            : Chapter.SML_SLANG,
           variant: loadedStore.playgroundSourceVariant
             ? loadedStore.playgroundSourceVariant
             : defaultState.workspaces.playground.context.variant

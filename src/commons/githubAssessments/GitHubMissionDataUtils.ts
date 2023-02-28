@@ -271,7 +271,7 @@ function convertMetadataStringToMissionMetadata(metadataString: string) {
   } catch (err) {
     console.error(err);
     return {
-      sourceVersion: Chapter.CALC
+      sourceVersion: Chapter.SML_SLANG
     } as MissionMetadata;
   }
 }
@@ -450,7 +450,7 @@ export function convertToMCQQuestionIfMCQText(possibleMCQText: string): [boolean
     content: '',
     grade: 0,
     id: 0,
-    library: { chapter: Chapter.CALC, external: { name: 'NONE', symbols: [] }, globals: [] },
+    library: { chapter: Chapter.SML_SLANG, external: { name: 'NONE', symbols: [] }, globals: [] },
     maxGrade: 0,
     xp: 0,
     maxXp: 0

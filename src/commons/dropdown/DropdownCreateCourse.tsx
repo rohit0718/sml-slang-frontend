@@ -35,7 +35,7 @@ const DropdownCreateCourse: React.FC<DialogProps> = props => {
     enableGame: true,
     enableAchievements: true,
     enableSourcecast: true,
-    sourceChapter: Chapter.CALC,
+    sourceChapter: Chapter.SML_SLANG,
     sourceVariant: Variant.DEFAULT,
     moduleHelpText: ''
   });
@@ -44,7 +44,7 @@ const DropdownCreateCourse: React.FC<DialogProps> = props => {
     React.useState<CourseHelpTextEditorTab>(CourseHelpTextEditorTab.WRITE);
 
   const sourceChapterOptions = [
-    { value: Chapter.CALC }
+    { value: Chapter.SML_SLANG }
   ];
 
   const sourceVariantOptions = (chapter: Chapter) =>

@@ -130,7 +130,7 @@ export const mockCourseConfigurations: CourseConfiguration[] = [
     enableGame: false,
     enableAchievements: true,
     enableSourcecast: true,
-    sourceChapter: Chapter.CALC,
+    sourceChapter: Chapter.SML_SLANG,
     sourceVariant: Variant.DEFAULT,
     moduleHelpText: '',
     assetsPrefix: ''
@@ -142,7 +142,7 @@ export const mockCourseConfigurations: CourseConfiguration[] = [
     enableGame: false,
     enableAchievements: false,
     enableSourcecast: false,
-    sourceChapter: Chapter.CALC,
+    sourceChapter: Chapter.SML_SLANG,
     sourceVariant: Variant.DEFAULT,
     moduleHelpText: 'Help Text!',
     assetsPrefix: ''

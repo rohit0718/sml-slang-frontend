@@ -39,7 +39,7 @@ const mapStateToProps: MapStateToProps<StateProps, {}, OverallState> = state => 
   replValue: state.workspaces.sourcereel.replValue,
   sideContentHeight: state.workspaces.sourcereel.sideContentHeight,
   sourcecastIndex: state.workspaces.sourcecast.sourcecastIndex,
-  sourceChapter: Chapter.CALC,
+  sourceChapter: Chapter.SML_SLANG,
   sourceVariant: state.workspaces.sourcereel.context.variant,
   timeElapsedBeforePause: state.workspaces.sourcereel.timeElapsedBeforePause,
   timeResumed: state.workspaces.sourcereel.timeResumed,
