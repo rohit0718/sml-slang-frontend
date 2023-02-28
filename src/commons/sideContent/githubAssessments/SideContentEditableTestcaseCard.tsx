@@ -1,6 +1,7 @@
 import { Button, Card, Classes, Elevation, InputGroup } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
-import { parseError } from '../../../sml-slang-config';
+import { parseError } from 'sml-slang/dist';
+import { stringify } from 'sml-slang/dist/utils/stringify';
 import classNames from 'classnames';
 import * as React from 'react';
 
@@ -35,7 +36,7 @@ const SideContentEditableTestcaseCard: React.FunctionComponent<
   // TODO (Refactor): testcase type seems unused in GitHub Assessments
   const extraClasses = React.useMemo(() => {
     const isEvaluated = testcase.result !== undefined || testcase.errors;
-    const isEqual = testcase.result.toString() === testcase.answer;
+    const isEqual = stringify(testcase.result) === testcase.answer;
 
     return {
       correct: isEvaluated && isEqual,
@@ -68,7 +69,7 @@ const SideContentEditableTestcaseCard: React.FunctionComponent<
       answer = parseError(testcase.errors);
     } else {
       if (testcase.result !== undefined) {
-        answer = testcase.result.toString() as string;
+        answer = stringify(testcase.result) as string;
       }
     }
     return answer;

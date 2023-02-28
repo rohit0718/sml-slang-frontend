@@ -1,4 +1,4 @@
-import { Chapter } from '../sml-slang-config'
+import { Chapter } from 'sml-slang/dist/types';
 import { throttle } from 'lodash';
 import { applyMiddleware, compose, createStore as _createStore } from 'redux';
 import createSagaMiddleware from 'redux-saga';
@@ -79,7 +79,7 @@ function loadStore(loadedStore: SavedState | undefined) {
           ...defaultState.workspaces.playground.context,
           chapter: loadedStore.playgroundSourceChapter
             ? loadedStore.playgroundSourceChapter
-            : Chapter.SMLSlang,
+            : Chapter.CALC,
           variant: loadedStore.playgroundSourceVariant
             ? loadedStore.playgroundSourceVariant
             : defaultState.workspaces.playground.context.variant

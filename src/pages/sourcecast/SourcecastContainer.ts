@@ -1,4 +1,4 @@
-import { Chapter, Variant } from '../../sml-slang-config';
+import { Chapter, Variant } from 'sml-slang/dist/types';
 import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
 import { withRouter } from 'react-router';
 import { bindActionCreators, Dispatch } from 'redux';
@@ -42,7 +42,7 @@ const mapStateToProps: MapStateToProps<StateProps, {}, OverallState> = state => 
   replValue: state.workspaces.sourcecast.replValue,
   sideContentHeight: state.workspaces.sourcecast.sideContentHeight,
   sourcecastIndex: state.workspaces.sourcecast.sourcecastIndex,
-  sourceChapter: Chapter.SMLSlang,
+  sourceChapter: Chapter.CALC,
   sourceVariant: state.workspaces.sourcecast.context.variant,
   uid: state.workspaces.sourcecast.uid,
   courseId: state.session.courseId

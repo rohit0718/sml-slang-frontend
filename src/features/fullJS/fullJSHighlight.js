@@ -1,6 +1,6 @@
 /* eslint-disable */
 import * as ace from 'ace-builds/src-noconflict/ace';
-import { Variant } from '../../sml-slang-config';
+import { Variant } from 'sml-slang/dist/types';
 
 export function HighlightRulesSelector_native(
   id,

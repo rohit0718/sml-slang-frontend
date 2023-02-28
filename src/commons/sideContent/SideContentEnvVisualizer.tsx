@@ -1,7 +1,7 @@
 import { Classes } from '@blueprintjs/core';
 import { debounce } from 'lodash';
 import * as React from 'react';
-// import EnvVisualizer from 'src/features/envVisualizer/EnvVisualizer';
+import EnvVisualizer from 'src/features/envVisualizer/EnvVisualizer';
 
 import Constants, { Links } from '../utils/Constants';
 
@@ -22,11 +22,11 @@ class SideContentEnvVisualizer extends React.Component<
       width: this.calculateWidth(props.editorWidth),
       height: this.calculateHeight(props.sideContentHeight)
     };
-    // EnvVisualizer.init(
-    //   visualization => this.setState({ visualization }),
-    //   this.state.width,
-    //   this.state.height
-    // );
+    EnvVisualizer.init(
+      visualization => this.setState({ visualization }),
+      this.state.width,
+      this.state.height
+    );
   }
 
   private calculateWidth(editorWidth?: string) {
@@ -67,14 +67,14 @@ class SideContentEnvVisualizer extends React.Component<
         height: newHeight,
         width: newWidth
       });
-      // EnvVisualizer.updateDimensions(newWidth, newHeight);
+      EnvVisualizer.updateDimensions(newWidth, newHeight);
     }
   }, 300);
 
   componentDidMount() {
     this.handleResize();
     window.addEventListener('resize', this.handleResize);
-    // EnvVisualizer.redraw();
+    EnvVisualizer.redraw();
   }
   componentWillUnmount() {
     this.handleResize.cancel();

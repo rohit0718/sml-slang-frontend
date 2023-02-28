@@ -9,7 +9,7 @@ import {
 } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
 import { GetResponseTypeFromEndpointMethod } from '@octokit/types';
-import { Chapter, Variant } from '../../sml-slang-config';
+import { Chapter, Variant } from 'sml-slang/dist/types';
 import classNames from 'classnames';
 import { isEqual } from 'lodash';
 import React, { useCallback, useEffect, useMemo } from 'react';
@@ -1091,7 +1091,7 @@ const GitHubAssessmentWorkspace: React.FC<GitHubAssessmentWorkspaceProps> = prop
       dispatch(updateReplValue(newValue, workspaceLocation)),
     output: props.output,
     replValue: props.replValue,
-    sourceChapter: missionMetadata.sourceVersion || Chapter.SMLSlang,
+    sourceChapter: missionMetadata.sourceVersion || Chapter.CALC,
     sourceVariant: Variant.DEFAULT,
     externalLibrary: ExternalLibraryName.NONE,
     replButtons: replButtons()

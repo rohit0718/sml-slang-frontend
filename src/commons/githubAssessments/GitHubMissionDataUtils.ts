@@ -3,7 +3,7 @@ import {
   GetResponseDataTypeFromEndpointMethod,
   GetResponseTypeFromEndpointMethod
 } from '@octokit/types';
-import { Chapter } from '../../sml-slang-config';
+import { Chapter } from 'sml-slang/dist/types';
 import { isEqual } from 'lodash';
 
 import { IMCQQuestion, Testcase } from '../assessment/AssessmentTypes';
@@ -271,7 +271,7 @@ function convertMetadataStringToMissionMetadata(metadataString: string) {
   } catch (err) {
     console.error(err);
     return {
-      sourceVersion: Chapter.SMLSlang
+      sourceVersion: Chapter.CALC
     } as MissionMetadata;
   }
 }
@@ -450,7 +450,7 @@ export function convertToMCQQuestionIfMCQText(possibleMCQText: string): [boolean
     content: '',
     grade: 0,
     id: 0,
-    library: { chapter: Chapter.SMLSlang, external: { name: 'NONE', symbols: [] }, globals: [] },
+    library: { chapter: Chapter.CALC, external: { name: 'NONE', symbols: [] }, globals: [] },
     maxGrade: 0,
     xp: 0,
     maxXp: 0

@@ -1,6 +1,5 @@
-import { run } from 'sml-slang/dist';
-import { Context } from 'sml-slang/dist/types';
-import { Variant } from '../../../../sml-slang-config';
+import { Context, runInContext } from 'sml-slang/dist';
+import { Variant } from 'sml-slang/dist/types';
 import { createContext } from 'src/commons/utils/JsSlangHelper';
 
 import ImageAssets from '../../assets/ImageAssets';
@@ -171,24 +170,24 @@ export default class RoomPreview extends Phaser.Scene {
   }
 
   public createContext() {
-    // this.context = createContext([], 'playground', Variant.DEFAULT);
-    // this.context.moduleContexts.game = {
-    //   tabs: null,
-    //   state: {
-    //     scene: this,
-    //     preloadImageMap: this.preloadImageMap,
-    //     preloadSoundMap: this.preloadSoundMap,
-    //     preloadSpritesheetMap: this.preloadSpritesheetMap,
-    //     remotePath: (file: string) => toS3Path(file, true),
-    //     screenSize: screenSize,
-    //     createAward: (x: number, y: number, key: ItemId) => this.createAward(x, y, key)
-    //   }
-    // };
+    this.context = createContext([], 'playground', Variant.DEFAULT);
+    this.context.moduleContexts.game = {
+      tabs: null,
+      state: {
+        scene: this,
+        preloadImageMap: this.preloadImageMap,
+        preloadSoundMap: this.preloadSoundMap,
+        preloadSpritesheetMap: this.preloadSpritesheetMap,
+        remotePath: (file: string) => toS3Path(file, true),
+        screenSize: screenSize,
+        createAward: (x: number, y: number, key: ItemId) => this.createAward(x, y, key)
+      }
+    };
   }
 
   private async eval(code: string) {
     // runInContext also automatically updates the context
-    await run(code, this.context!);
+    await runInContext(code, this.context!);
   }
 
   /**

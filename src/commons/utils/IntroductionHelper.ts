@@ -1,4 +1,4 @@
-import { Chapter, Variant } from '../../sml-slang-config';
+import { Chapter, Variant } from 'sml-slang/dist/types';
 
 import { Links } from './Constants';
 

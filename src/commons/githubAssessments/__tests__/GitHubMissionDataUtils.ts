@@ -1,5 +1,5 @@
 import { Octokit } from '@octokit/rest';
-import { Chapter } from '../../sml-slang-config';
+import { Chapter } from 'sml-slang/dist/types';
 
 import { IMCQQuestion } from '../../assessment/AssessmentTypes';
 import * as GitHubMissionDataUtils from '../GitHubMissionDataUtils';

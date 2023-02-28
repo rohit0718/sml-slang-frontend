@@ -1,7 +1,7 @@
 import { Button, Classes, Divider, MenuItem, Switch } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
 import { ItemRenderer, Select } from '@blueprintjs/select';
-import { Chapter, Variant } from '../../sml-slang-config';
+import { Chapter, Variant } from 'sml-slang/dist/types';
 import * as React from 'react';
 
 import { SALanguage, sourceLanguages, styliseSublanguage } from '../application/ApplicationTypes';
@@ -259,7 +259,7 @@ const chapterSelect = (
   >
     <Button
       className={Classes.MINIMAL}
-      text={styliseSublanguage(Chapter.SMLSlang, variant)}
+      text={styliseSublanguage(Chapter.CALC, variant)}
       rightIcon={IconNames.DOUBLE_CARET_VERTICAL}
     />
   </ChapterSelectComponent>

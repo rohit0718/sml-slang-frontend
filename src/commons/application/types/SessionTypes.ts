@@ -1,5 +1,5 @@
 import { Octokit } from '@octokit/rest';
-import { Chapter, Variant } from '../../../sml-slang-config'
+import { Chapter, Variant } from 'sml-slang/dist/types';
 
 import { Grading, GradingOverview } from '../../../features/grading/GradingTypes';
 import { Device, DeviceSession } from '../../../features/remoteExecution/RemoteExecutionTypes';

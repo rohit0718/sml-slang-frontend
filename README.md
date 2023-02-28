@@ -6,7 +6,7 @@
 
 The Source Academy ([https://sourceacademy.org/](https://sourceacademy.org/)) is an immersive online experiential environment for learning programming. It is developed by a community of learners (also called "Source Academy") who use the book [Structure and Interpretation of Computer Programs, JavaScript Adaptation](https://sourceacademy.org/sicpjs) (SICP JS). This repository houses the sources for the frontend of the Source Academy, written in ReactJS with Redux.
 
-## [Update] Before building this project, see [calc-slang README](https://github.com/yangdinglou/calc-slang#using-your-xx-slang-in-your-local-source-academy) to link the language for the use.
+## [Update] Before building this project, see [sml-slang README](https://github.com/yangdinglou/sml-slang#using-your-xx-slang-in-your-local-source-academy) to link the language for the use.
 
 ## Features
 
@@ -100,7 +100,7 @@ Before pushing to Github, ensure that your code is formatted and your tests are 
 
 ### Running your own js-slang
 
-See [calc-slang README](https://github.com/yangdinglou/calc-slang#using-your-xx-slang-in-your-local-source-academy) for instructions how to run your own xx-slang in the frontend.
+See [sml-slang README](https://github.com/yangdinglou/sml-slang#using-your-xx-slang-in-your-local-source-academy) for instructions how to run your own xx-slang in the frontend.
 
 ### Contribution Guidelines
 

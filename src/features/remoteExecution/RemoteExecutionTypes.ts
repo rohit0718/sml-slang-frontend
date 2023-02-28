@@ -1,5 +1,5 @@
 import { SlingClient } from '@sourceacademy/sling-client';
-import { Chapter } from '../../sml-slang-config';
+import { Chapter } from 'sml-slang/dist/types';
 import { ExternalLibraryName } from 'src/commons/application/types/ExternalTypes';
 import { WorkspaceLocation } from 'src/commons/workspace/WorkspaceTypes';
 
@@ -98,7 +98,7 @@ export const deviceTypes: DeviceType[] = [
       'ev3_ledGetBrightness',
       'ev3_ledSetBrightness'
     ],
-    languageChapter: Chapter.SMLSlang,
+    languageChapter: Chapter.CALC,
     deviceLibraryName: ExternalLibraryName.EV3
   }
 ];

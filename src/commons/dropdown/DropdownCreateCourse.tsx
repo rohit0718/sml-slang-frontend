@@ -12,7 +12,7 @@ import {
   TextArea
 } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
-import { Chapter, Variant } from '../../sml-slang-config';
+import { Chapter, Variant } from 'sml-slang/dist/types';
 import * as React from 'react';
 
 import { CourseHelpTextEditorTab } from '../../pages/academy/adminPanel/subcomponents/CourseConfigPanel';
@@ -35,7 +35,7 @@ const DropdownCreateCourse: React.FC<DialogProps> = props => {
     enableGame: true,
     enableAchievements: true,
     enableSourcecast: true,
-    sourceChapter: Chapter.SMLSlang,
+    sourceChapter: Chapter.CALC,
     sourceVariant: Variant.DEFAULT,
     moduleHelpText: ''
   });
@@ -44,7 +44,7 @@ const DropdownCreateCourse: React.FC<DialogProps> = props => {
     React.useState<CourseHelpTextEditorTab>(CourseHelpTextEditorTab.WRITE);
 
   const sourceChapterOptions = [
-    { value: Chapter.SMLSlang }
+    { value: Chapter.CALC }
   ];
 
   const sourceVariantOptions = (chapter: Chapter) =>

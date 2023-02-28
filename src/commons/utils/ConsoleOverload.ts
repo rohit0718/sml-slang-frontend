@@ -1,4 +1,4 @@
-// import { stringify } from 'calc-slang/dist/utils/stringify';
+import { stringify } from 'sml-slang/dist/utils/stringify';
 
 type DisplayBufferCallback = (log: string) => void;
 
@@ -14,6 +14,6 @@ export const consoleOverloads: ConsoleOverload = {
   log:
     (bufferCallback: DisplayBufferCallback) =>
     (...args: any[]) => {
-      bufferCallback(args.map(log => (typeof log === 'string' ? log : log.toString())).join(' '));
+      bufferCallback(args.map(log => (typeof log === 'string' ? log : stringify(log))).join(' '));
     }
 };

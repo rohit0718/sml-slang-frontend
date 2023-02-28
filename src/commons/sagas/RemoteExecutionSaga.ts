@@ -1,6 +1,5 @@
 import { SlingClient } from '@sourceacademy/sling-client';
-// import { ExceptionError } from 'calc-slang/dist/errors/errors';
-import { Variant } from '../../sml-slang-config';
+import { Variant } from 'sml-slang/dist/types';
 import _ from 'lodash';
 import { SagaIterator } from 'redux-saga';
 import { call, put, race, select, take } from 'redux-saga/effects';
@@ -29,10 +28,10 @@ import { actions } from '../utils/ActionsHelper';
 import { fetchDevices, getDeviceWSEndpoint } from './RequestsSaga';
 import { safeTakeEvery as takeEvery, safeTakeLatest as takeLatest } from './SafeEffects';
 
-// const dummyLocation = {
-//   start: { line: 0, column: 0 },
-//   end: { line: 0, column: 0 }
-// };
+const dummyLocation = {
+  start: { line: 0, column: 0 },
+  end: { line: 0, column: 0 }
+};
 
 export function* remoteExecutionSaga(): SagaIterator {
   yield takeLatest(REMOTE_EXEC_FETCH_DEVICES, function* () {
@@ -159,7 +158,7 @@ export function* remoteExecutionSaga(): SagaIterator {
             store.dispatch(actions.handleConsoleLog(workspace, `${message}`));
             break;
           case 'error': {
-            // TODO: handle this?
+            // TODO: handle exception errors?
             // const error = new ExceptionError(new Error(`${message}`), dummyLocation);
             // store.dispatch(actions.evalInterpreterError([error], workspace));
             break;

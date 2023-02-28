@@ -1,4 +1,4 @@
-import { Variant } from '../../sml-slang-config';
+import { Variant } from 'sml-slang/dist/types';
 import { compressToEncodedURIComponent } from 'lz-string';
 import * as qs from 'query-string';
 import { SagaIterator } from 'redux-saga';

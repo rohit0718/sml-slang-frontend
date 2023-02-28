@@ -1,4 +1,4 @@
-import { Chapter } from '../../sml-slang-config';
+import { Chapter } from 'sml-slang/dist/types';
 import { Builder } from 'xml2js';
 
 import { ExternalLibraryName } from '../application/types/ExternalTypes';
@@ -257,7 +257,7 @@ const download = (filename: string, text: string) => {
 const exportLibrary = (library: Library) => {
   const deployment = {
     $: {
-      interpreter: Chapter.SMLSlang.toString()
+      interpreter: Chapter.CALC.toString()
     },
     EXTERNAL: {
       $: {

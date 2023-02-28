@@ -10,8 +10,8 @@ import {
   SpinnerSize
 } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
-import { Chapter, Variant } from '../../sml-slang-config';
-// import { stringify } from 'calc-slang/dist/utils/stringify';
+import { Chapter, Variant } from 'sml-slang/dist/types';
+import { stringify } from 'sml-slang/dist/utils/stringify';
 import classNames from 'classnames';
 import { isEqual } from 'lodash';
 import * as React from 'react';
@@ -317,7 +317,7 @@ const AssessmentWorkspace: React.FC<AssessmentWorkspaceProps> = props => {
       if (!sessionId) {
         setSessionId(
           initSession(`${(props.assessment as any).number}/${props.questionId}`, {
-            chapter: Chapter.SMLSlang,
+            chapter: Chapter.CALC,
             externalLibrary: question?.library?.external?.name || 'NONE',
             editorValue
           })
@@ -568,7 +568,7 @@ const AssessmentWorkspace: React.FC<AssessmentWorkspaceProps> = props => {
           }
         } else if (question.type === QuestionTypes.programming) {
           const isCorrect = props.editorTestcases.reduce((acc, testcase) => {
-            return acc && testcase.result.toString() === testcase.answer;
+            return acc && stringify(testcase.result) === testcase.answer;
           }, true);
           if (!isCorrect) {
             return showWarningMessage('Your solution has not passed all testcases!', 750);
@@ -637,7 +637,7 @@ const AssessmentWorkspace: React.FC<AssessmentWorkspaceProps> = props => {
     const chapterSelect = (
       <ControlBarChapterSelect
         handleChapterSelect={handleChapterSelect}
-        sourceChapter={Chapter.SMLSlang}
+        sourceChapter={Chapter.CALC}
         sourceVariant={
           props.assessment!.questions[questionId].library.variant ?? Constants.defaultSourceVariant
         }
@@ -773,7 +773,7 @@ const AssessmentWorkspace: React.FC<AssessmentWorkspaceProps> = props => {
           editorVariant: 'normal',
           editorTabs: props.editorTabs.map(convertEditorTabStateToProps),
           editorSessionId: '',
-          sourceChapter: Chapter.SMLSlang,
+          sourceChapter: Chapter.CALC,
           sourceVariant: question.library.variant ?? Variant.DEFAULT,
           externalLibraryName: question.library.external.name || 'NONE',
           handleDeclarationNavigate: (cursorPosition: Position) =>
@@ -803,7 +803,7 @@ const AssessmentWorkspace: React.FC<AssessmentWorkspaceProps> = props => {
       dispatch(updateReplValue(newValue, workspaceLocation)),
     output: props.output,
     replValue: props.replValue,
-    sourceChapter: Chapter.SMLSlang,
+    sourceChapter: Chapter.CALC,
     sourceVariant: question.library.variant ?? Variant.DEFAULT,
     externalLibrary: question?.library?.external?.name || 'NONE',
     replButtons: replButtons()

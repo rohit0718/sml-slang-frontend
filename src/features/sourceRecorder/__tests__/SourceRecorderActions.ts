@@ -1,4 +1,4 @@
-import { Chapter } from '../../sml-slang-config';
+import { Chapter } from 'sml-slang/dist/types';
 
 import { ExternalLibraryName } from '../../../commons/application/types/ExternalTypes';
 import { WorkspaceLocation } from '../../../commons/workspace/WorkspaceTypes';

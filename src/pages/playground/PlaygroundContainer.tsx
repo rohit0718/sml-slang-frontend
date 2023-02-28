@@ -1,4 +1,4 @@
-import { Chapter, Variant } from '../../sml-slang-config';
+import { Chapter, Variant } from 'sml-slang/dist/types';
 import _ from 'lodash';
 import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
 import { withRouter } from 'react-router';
@@ -37,7 +37,7 @@ const mapStateToProps: MapStateToProps<StateProps, {}, OverallState> = state => 
   ),
   queryString: state.playground.queryString,
   shortURL: state.playground.shortURL,
-  playgroundSourceChapter: Chapter.SMLSlang,
+  playgroundSourceChapter: Chapter.CALC,
   playgroundSourceVariant: state.workspaces.playground.context.variant,
   courseSourceChapter: state.session.sourceChapter,
   courseSourceVariant: state.session.sourceVariant,

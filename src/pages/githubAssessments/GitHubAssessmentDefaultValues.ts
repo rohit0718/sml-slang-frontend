@@ -1,4 +1,4 @@
-import { Chapter } from '../../sml-slang-config';
+import { Chapter } from 'sml-slang/dist/types';
 
 import { IMCQQuestion } from '../../commons/assessment/AssessmentTypes';
 import { MissionMetadata, TaskData } from '../../commons/githubAssessments/GitHubMissionTypes';
@@ -72,7 +72,7 @@ If you need a more detailed cheatsheet, please click [here](https://www.markdown
 export const defaultStarterCode = '// Your program here!\n';
 
 export const defaultMissionMetadata = {
-  sourceVersion: Chapter.SMLSlang
+  sourceVersion: Chapter.CALC
 } as MissionMetadata;
 
 export const defaultTask = {
@@ -93,7 +93,7 @@ export const defaultMCQQuestion = {
   content: '',
   grade: 0,
   id: 0,
-  library: { chapter: Chapter.SMLSlang, external: { name: 'NONE', symbols: [] }, globals: [] },
+  library: { chapter: Chapter.CALC, external: { name: 'NONE', symbols: [] }, globals: [] },
   maxGrade: 0,
   xp: 0,
   maxXp: 0

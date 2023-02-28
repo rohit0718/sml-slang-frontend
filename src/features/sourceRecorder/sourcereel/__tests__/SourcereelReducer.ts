@@ -1,4 +1,4 @@
-import { Chapter } from '../../sml-slang-config';
+import { Chapter } from 'sml-slang/dist/types';
 import { action as generateAction } from 'typesafe-actions';
 
 import { defaultWorkspaceManager } from '../../../../commons/application/ApplicationTypes';

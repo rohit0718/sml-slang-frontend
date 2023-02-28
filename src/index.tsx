@@ -1,7 +1,7 @@
 import 'src/styles/index.scss';
 
 import * as Sentry from '@sentry/browser';
-// import { setModulesStaticURL } from 'calc-slang/dist/modules/moduleLoader';
+// import { setModulesStaticURL } from 'sml-slang/dist/modules/moduleLoader';
 import { render } from 'react-dom';
 import { Provider } from 'react-redux';
 import { Router } from 'react-router-dom';

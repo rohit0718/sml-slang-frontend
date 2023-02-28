@@ -1,4 +1,4 @@
-import { Chapter, Variant } from '../../sml-slang-config';
+import { Chapter, Variant } from 'sml-slang/dist/types';
 import { Role } from 'src/commons/application/ApplicationTypes';
 import { UpdateCourseConfiguration } from 'src/commons/application/types/SessionTypes';
 import { UsernameRoleGroup } from 'src/pages/academy/adminPanel/subcomponents/AddUserPanel';

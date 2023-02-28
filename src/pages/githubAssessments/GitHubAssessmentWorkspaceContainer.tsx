@@ -1,4 +1,4 @@
-import { Chapter, Variant } from '../../sml-slang-config';
+import { Chapter, Variant } from 'sml-slang/dist/types';
 import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
 import { withRouter } from 'react-router';
 import { bindActionCreators, Dispatch } from 'redux';
@@ -28,7 +28,7 @@ const mapStateToProps: MapStateToProps<StateProps, {}, OverallState> = state => 
     output: state.workspaces.githubAssessment.output,
     replValue: state.workspaces.githubAssessment.replValue,
     sideContentHeight: state.workspaces.githubAssessment.sideContentHeight,
-    sourceChapter: Chapter.SMLSlang
+    sourceChapter: Chapter.CALC
   };
 };
 

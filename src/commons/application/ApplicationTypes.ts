@@ -1,5 +1,4 @@
-import { Chapter, Language, Variant } from '../../sml-slang-config'
-import { SourceError } from 'sml-slang/dist/types'
+import { Chapter, Language, SourceError, Variant } from 'sml-slang/dist/types';
 
 import { AcademyState } from '../../features/academy/AcademyTypes';
 import { AchievementState } from '../../features/achievement/AchievementTypes';
@@ -122,7 +121,7 @@ export const styliseSublanguage = (chapter: Chapter, variant: Variant = Variant.
 };
 
 export const sublanguages: Language[] = [
-  { chapter: Chapter.SMLSlang, variant: Variant.DEFAULT }
+  { chapter: Chapter.CALC, variant: Variant.DEFAULT }
 ];
 
 export const sourceLanguages: SALanguage[] = sublanguages.map(sublang => {
@@ -141,7 +140,7 @@ export const variantLanguages = sourceLanguages.filter(
 );
 
 export const isSourceLanguage = (chapter: Chapter) =>
-  [Chapter.SMLSlang].includes(chapter);
+  [Chapter.CALC].includes(chapter);
 
 const currentEnvironment = (): ApplicationEnvironment => {
   switch (process.env.NODE_ENV) {
@@ -184,7 +183,7 @@ export const defaultEditorValue = '1+1';
 
 /**
  * Create a default IWorkspaceState for 'resetting' a workspace.
- * Takes in parameters to set the calc-slang library and chapter.
+ * Takes in parameters to set the sml-slang library and chapter.
  *
  * @param workspaceLocation the location of the workspace, used for context
  */
@@ -256,7 +255,7 @@ export const defaultWorkspaceManager: WorkspaceManagerState = {
     playbackData: {
       init: {
         editorValue: '',
-        chapter: Chapter.SMLSlang,
+        chapter: Chapter.CALC,
         externalLibrary: ExternalLibraryName.NONE
       },
       inputs: []
@@ -272,7 +271,7 @@ export const defaultWorkspaceManager: WorkspaceManagerState = {
     playbackData: {
       init: {
         editorValue: '',
-        chapter: Chapter.SMLSlang,
+        chapter: Chapter.CALC,
         externalLibrary: ExternalLibraryName.NONE
       },
       inputs: []

@@ -1,5 +1,5 @@
-// import { ModeSelector } from 'calc-slang/dist/editors/ace/modes/source';
-import { Chapter, Variant } from '../../sml-slang-config';
+import { ModeSelector } from 'sml-slang/dist/editor/modes/source';
+import { Chapter, Variant } from 'sml-slang/dist/types';
 
 import { HighlightRulesSelector_native } from '../../features/fullJS/fullJSHighlight';
 import { Documentation } from '../documentation/Documentation';
@@ -24,7 +24,7 @@ export const selectMode = (chapter: Chapter, variant: Variant, library: string) 
     library,
     Documentation.externalLibraries[library]
   );
-  // ModeSelector(chapter, variant, library);
+  ModeSelector(chapter, variant, library);
 };
 
 export const getModeString = (chapter: Chapter, variant: Variant, library: string) => {

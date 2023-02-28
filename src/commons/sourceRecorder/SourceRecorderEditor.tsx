@@ -1,5 +1,6 @@
 import 'ace-builds/src-noconflict/ext-searchbox';
 import 'ace-builds/src-noconflict/mode-javascript';
+import 'sml-slang/dist/editor/theme/source';
 
 import { Ace } from 'ace-builds';
 import { isEqual } from 'lodash';

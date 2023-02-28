@@ -1,4 +1,4 @@
-import { Chapter } from '../../sml-slang-config';
+import { Chapter } from 'sml-slang/dist/types';
 import { v4 as uuid } from 'uuid';
 
 import { ExternalLibraryName } from '../../commons/application/types/ExternalTypes';

@@ -1,4 +1,4 @@
-import { Chapter, Variant } from '../../sml-slang-config';
+import { Chapter, Variant } from 'sml-slang/dist/types';
 
 import { Grading, GradingOverview } from '../../../../features/grading/GradingTypes';
 import {
@@ -96,7 +96,7 @@ test('SET_COURSE_CONFIGURATION works correctly', () => {
     enableGame: true,
     enableAchievements: true,
     enableSourcecast: true,
-    sourceChapter: Chapter.SMLSlang,
+    sourceChapter: Chapter.CALC,
     sourceVariant: Variant.DEFAULT,
     moduleHelpText: 'Help text',
     assessmentTypes: ['Missions', 'Quests', 'Paths', 'Contests', 'Others']
