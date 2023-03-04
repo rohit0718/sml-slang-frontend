@@ -1,5 +1,6 @@
 import { Intent } from '@blueprintjs/core';
 import { mount } from 'enzyme';
+import React from 'react';
 
 import { ConfirmDialog, ConfirmDialogProps } from '../ConfirmDialog';
 

@@ -7,7 +7,8 @@
 /coverage
 
 # production
-/build
+build/*
+!build/.keep
 src/styles/*.css
 /.env
 
@@ -24,12 +25,9 @@ terraform*
 .env.test.local
 .env.production.local
 .idea/
-.vscode/
 cadet-frontend.iml
 
 npm-debug.log*
-.eslintcache
-yarn-error.log
 
 # emacs backup files
 

@@ -1,13 +1,6 @@
 import 'ag-grid-community/dist/styles/ag-grid.css';
 
-import {
-  Divider,
-  FormGroup,
-  InputGroup,
-  NonIdealState,
-  Spinner,
-  SpinnerSize
-} from '@blueprintjs/core';
+import { Divider, FormGroup, InputGroup, NonIdealState, Spinner } from '@blueprintjs/core';
 import { ColDef, GridApi, GridReadyEvent } from 'ag-grid-community';
 import { AgGridReact } from 'ag-grid-react';
 import { sortBy } from 'lodash';
@@ -31,7 +24,6 @@ type OwnProps = {
     playbackData: PlaybackData
   ) => void;
   sourcecastIndex: SourcecastData[] | null;
-  courseId?: number;
 };
 
 /**
@@ -60,7 +52,7 @@ class SourcecastTable extends React.Component<SourceRecorderTableProps, State> {
           cellRendererParams: {
             handleSetSourcecastData: this.props.handleSetSourcecastData
           },
-          minWidth: 200,
+          width: 300,
           suppressMovable: true,
           suppressMenu: true,
           cellStyle: {
@@ -71,7 +63,7 @@ class SourcecastTable extends React.Component<SourceRecorderTableProps, State> {
         {
           headerName: 'Title',
           field: 'title',
-          minWidth: 100,
+          width: 100,
           suppressMovable: true,
           suppressMenu: true,
           hide: !!this.props.handleSetSourcecastData
@@ -79,7 +71,7 @@ class SourcecastTable extends React.Component<SourceRecorderTableProps, State> {
         {
           headerName: 'Uploader',
           field: 'uploader.name',
-          minWidth: 150,
+          width: 200,
           suppressMovable: true,
           suppressMenu: true,
           cellStyle: {
@@ -89,7 +81,7 @@ class SourcecastTable extends React.Component<SourceRecorderTableProps, State> {
         {
           headerName: 'Date',
           valueGetter: params => getStandardDate(params.data.inserted_at),
-          minWidth: 150,
+          maxWidth: 200,
           suppressMovable: true,
           suppressMenu: true
         },
@@ -97,10 +89,7 @@ class SourcecastTable extends React.Component<SourceRecorderTableProps, State> {
           headerName: 'Share',
           field: 'uid',
           cellRendererFramework: SourceRecorderShareCell,
-          cellRendererParams: {
-            courseId: this.props.courseId
-          },
-          minWidth: 80,
+          width: 100,
           suppressMovable: true,
           suppressMenu: true
         },
@@ -111,7 +100,7 @@ class SourcecastTable extends React.Component<SourceRecorderTableProps, State> {
           cellRendererParams: {
             handleDeleteSourcecastEntry: this.props.handleDeleteSourcecastEntry
           },
-          minWidth: 100,
+          width: 100,
           maxWidth: 100,
           sortable: false,
           suppressMovable: true,
@@ -145,7 +134,7 @@ class SourcecastTable extends React.Component<SourceRecorderTableProps, State> {
       <NonIdealState
         className="Sourcecast"
         description="Fetching sourcecast index..."
-        icon={<Spinner size={SpinnerSize.LARGE} />}
+        icon={<Spinner size={Spinner.SIZE_LARGE} />}
       />
     );
     const data = sortBy(this.props.sourcecastIndex, [(a: SourcecastData) => -a.id]);

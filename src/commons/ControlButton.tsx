@@ -1,22 +1,14 @@
-import { Button, Icon, IconName, Intent } from '@blueprintjs/core';
-import React from 'react';
+import { Button, IButtonProps, Icon, IconName, Intent } from '@blueprintjs/core';
+import * as React from 'react';
 
-type ButtonOptions = {
-  className: string;
-  fullWidth: boolean;
+type controlButtonOptionals = {
+  className?: string;
+  fullWidth?: boolean;
   iconColor?: string;
-  iconOnRight: boolean;
-  intent: Intent;
-  minimal: boolean;
+  iconOnRight?: boolean;
+  intent?: Intent;
+  minimal?: boolean;
   type?: 'submit' | 'reset' | 'button';
-};
-
-type ControlButtonProps = {
-  label?: string;
-  icon?: IconName;
-  onClick?: () => void;
-  options?: Partial<ButtonOptions>;
-  isDisabled?: boolean;
 };
 
 const defaultOptions = {
@@ -27,31 +19,34 @@ const defaultOptions = {
   minimal: true
 };
 
-const ControlButton: React.FC<ControlButtonProps> = ({
-  label = '',
-  icon,
-  onClick,
-  options = {},
-  isDisabled = false
-}) => {
-  const buttonOptions: ButtonOptions = { ...defaultOptions, ...options };
-  const iconElement = icon && <Icon icon={icon} color={buttonOptions.iconColor} />;
+const controlButton = (
+  label: string,
+  icon: IconName | null,
+  onClick: (() => void) | null = null,
+  options: controlButtonOptionals = {},
+  disabled: boolean = false
+) => {
+  const opts: controlButtonOptionals = { ...defaultOptions, ...options };
+  const props: IButtonProps = { disabled };
 
-  return (
-    <Button
-      disabled={isDisabled}
-      fill={buttonOptions.fullWidth}
-      intent={buttonOptions.intent}
-      minimal={buttonOptions.minimal}
-      className={buttonOptions.className}
-      type={buttonOptions.type}
-      onClick={onClick}
-      icon={!buttonOptions.iconOnRight && iconElement}
-      rightIcon={buttonOptions.iconOnRight && iconElement}
-    >
-      {label}
-    </Button>
-  );
+  props.fill = opts.fullWidth !== undefined && opts.fullWidth;
+  props.intent = opts.intent === undefined ? Intent.NONE : opts.intent;
+  props.minimal = opts.minimal !== undefined && opts.minimal;
+  props.className = opts.className;
+  props.type = opts.type;
+
+  if (icon) {
+    const ic: JSX.Element = (
+      <Icon icon={icon} color={opts.iconColor ? opts.iconColor : undefined} />
+    );
+    opts.iconOnRight ? (props.rightIcon = ic) : (props.icon = ic);
+  }
+
+  if (onClick) {
+    props.onClick = onClick;
+  }
+
+  return <Button {...props}>{label}</Button>;
 };
 
-export default ControlButton;
+export default controlButton;

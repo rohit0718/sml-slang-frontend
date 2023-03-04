@@ -1,52 +1,74 @@
-import { Card, Elevation, H2, H3, H5 } from '@blueprintjs/core';
-import React, { useEffect, useState } from 'react';
+import { Card, Elevation } from '@blueprintjs/core';
+import { H2, H3, H5 } from '@blueprintjs/core';
+import * as React from 'react';
 
-import { Contributor, Repo } from '../../../features/contributors/ContributorsTypes';
+import {
+  Contributor,
+  ContributorsState,
+  Repo
+} from '../../../features/contributors/ContributorsTypes';
 import { fetchContributors, fetchRepos } from './ContributorsGithubApi';
 
-const ContributorsList: React.FC = () => {
-  const [repos, setRepos] = useState<Repo[]>([]);
-  const [contributors, setContributors] = useState<Contributor[][]>([]);
+class ContributorsList extends React.Component<{}, ContributorsState> {
+  constructor(props: {}) {
+    super(props);
 
-  useEffect(() => {
-    fetchRepos().then((repos: Repo[]) => {
-      fetchContributors(repos).then((contributors: Contributor[][]) => {
-        setRepos(repos);
-        setContributors(contributors);
+    this.state = {
+      repos: [],
+      contributors: []
+    };
+  }
+
+  public componentDidMount() {
+    fetchRepos()
+      .then((repos: Repo[]) => {
+        this.setState({
+          repos
+        });
+        return repos;
+      })
+      .then((repos: Repo[]) => {
+        fetchContributors(repos).then((contributors: Contributor[][]) => {
+          this.setState({
+            contributors
+          });
+        });
       });
-    });
-  }, []);
+  }
 
-  const contributorList = contributors.length ? (
-    contributors.map((array: Contributor[], index: number) => {
-      const repo = repos[index];
-      const arrayMapped = array.map((contributor: Contributor) => {
+  public render() {
+    const { contributors, repos } = this.state;
+    const contributorList = contributors.length ? (
+      contributors.map((array: Contributor[], index: number) => {
+        const repo = repos[index];
+        const arrayMapped = array.map((contributor: Contributor) => {
+          return (
+            <div key={contributor.key}>
+              <img src={contributor.photo} alt="Contributor" />
+              <p>
+                <a href={contributor.githubPage} rel="noopener noreferrer" target="_blank">
+                  {contributor.githubName}
+                </a>
+              </p>
+              <p>Commits: {contributor.commits}</p>
+            </div>
+          );
+        });
         return (
-          <div key={contributor.key}>
-            <img src={contributor.photo} alt="Contributor" />
-            <p>
-              <a href={contributor.githubPage} rel="noopener noreferrer" target="_blank">
-                {contributor.githubName}
-              </a>
-            </p>
-            <p>Commits: {contributor.commits}</p>
-          </div>
+          <Card key={repo.key} className="containerPermalink" elevation={Elevation.ONE}>
+            <div className="repoDetailsPermalink">
+              <H3>{repo.name}</H3>
+              <H5>{repo.description}</H5>
+            </div>
+            <div className="inPermalink">{arrayMapped}</div>
+          </Card>
         );
-      });
-      return (
-        <Card key={repo.key} className="containerPermalink" elevation={Elevation.ONE}>
-          <div className="repoDetailsPermalink">
-            <H3>{repo.name}</H3>
-            <H5>{repo.description}</H5>
-          </div>
-          <div className="inPermalink">{arrayMapped}</div>
-        </Card>
-      );
-    })
-  ) : (
-    <H2>Loading...</H2>
-  );
-  return <div>{contributorList}</div>;
-};
+      })
+    ) : (
+      <H2>Loading...</H2>
+    );
+    return <div>{contributorList}</div>;
+  }
+}
 
 export default ContributorsList;

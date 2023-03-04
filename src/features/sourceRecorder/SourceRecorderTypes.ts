@@ -1,9 +1,8 @@
 import { Ace } from 'ace-builds/ace';
-import { Chapter } from 'sml-slang/dist/types';
+import { SideContentType } from 'src/commons/sideContent/SideContentTypes';
+import { Variant } from 'src/sml-integration';
 
-import { ExternalLibraryName } from '../../commons/application/types/ExternalTypes';
 import { Position } from '../../commons/editor/EditorTypes';
-import { SideContentType } from '../../commons/sideContent/SideContentTypes';
 
 export const SAVE_SOURCECAST_DATA = 'SAVE_SOURCECAST_DATA';
 export const SET_CURRENT_PLAYER_TIME = 'SET_CURRENT_PLAYER_TIME';
@@ -15,13 +14,12 @@ export const SET_SOURCECAST_PLAYBACK_STATUS = 'SET_SOURCECAST_PLAYBACK_STATUS';
 
 export type InputTypeShape = {
   activeTabChange: SideContentType;
-  chapterSelect: number;
   cursorPositionChange: Position;
   codeDelta: CodeDelta;
-  externalLibrarySelect: ExternalLibraryName;
   forcePause: null;
   keyboardCommand: KeyboardCommand;
   selectionRangeData: SelectionData;
+  variantSelect: Variant;
 };
 
 export enum KeyboardCommand {
@@ -52,8 +50,7 @@ export type Input = keyof InputTypeShape extends infer K
 
 export type PlaybackData = {
   init: {
-    chapter: Chapter;
-    externalLibrary: ExternalLibraryName;
+    variant: Variant;
     editorValue: string;
   };
   inputs: Input[];

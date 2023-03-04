@@ -1,76 +1,48 @@
-import { Classes } from '@blueprintjs/core';
-import { Ace } from 'ace-builds';
-import { Chapter, Variant } from 'sml-slang/dist/types';
-import classNames from 'classnames';
 import * as React from 'react';
 import AceEditor from 'react-ace';
-import ReactAce from 'react-ace/lib/ace';
-import MediaQuery from 'react-responsive';
+import { Variant } from 'src/sml-integration';
 
-import { ExternalLibraryName } from '../application/types/ExternalTypes';
 import { getModeString, selectMode } from '../utils/AceHelper';
 // source mode and chapter imported in Editor.tsx
 
-export type ReplInputProps = DispatchProps & StateProps & OwnProps;
+export type ReplInputProps = DispatchProps & StateProps;
 
 type DispatchProps = {
   handleBrowseHistoryDown: () => void;
   handleBrowseHistoryUp: () => void;
   handleReplValueChange: (newCode: string) => void;
   handleReplEval: () => void;
-  onFocus?: (editor: Ace.Editor) => void;
-  onBlur?: () => void;
 };
 
 type StateProps = {
   replValue: string;
-  sourceChapter: Chapter;
   sourceVariant: Variant;
-  externalLibrary: ExternalLibraryName;
-  disableScrolling?: boolean;
 };
 
-type OwnProps = {
-  replButtons: Array<JSX.Element | null>;
-};
+class ReplInput extends React.PureComponent<ReplInputProps, {}> {
+  private replInputBottom?: HTMLDivElement;
+  private execBrowseHistoryDown: () => void;
+  private execBrowseHistoryUp: () => void;
+  private execEvaluate: () => void;
 
-export const ReplInput: React.FC<ReplInputProps> = (props: ReplInputProps) => {
-  const { onFocus, onBlur } = props;
+  constructor(props: ReplInputProps) {
+    super(props);
+    this.execBrowseHistoryDown = props.handleBrowseHistoryDown;
+    this.execBrowseHistoryUp = props.handleBrowseHistoryUp;
+    this.execEvaluate = () => {
+      if (!this.replInputBottom) {
+        return;
+      }
+      this.replInputBottom.scrollIntoView();
+      this.props.handleReplEval();
+    };
+  }
 
-  const replInput = React.useRef<ReactAce>(null);
-  const replInputBottom = React.useRef<HTMLDivElement>(null);
-
-  const execBrowseHistoryDown: () => void = props.handleBrowseHistoryDown;
-  const execBrowseHistoryUp: () => void = props.handleBrowseHistoryUp;
-  const execEvaluate = () => {
-    props.handleReplEval();
-    if (replInputBottom.current && !props.disableScrolling) {
-      /**
-       * Ensures the REPL AceEditor input is always in view even after multiple REPL eval calls.
-       * This feature is disabled in the mobile workspace as it interferes with the UX of the DraggableRepl.
-       */
-      replInputBottom.current.scrollIntoView();
-    }
-  };
-
-  React.useEffect(() => {
-    if (!replInput.current) {
+  public componentDidUpdate() {
+    if (!this.replInputBottom) {
       return;
     }
-    const editor = replInput.current.editor;
-    if (onFocus) {
-      editor.on('focus', () => onFocus(editor));
-    }
-    if (onBlur) {
-      editor.on('blur', onBlur);
-    }
-  });
-
-  React.useEffect(() => {
-    if (!replInputBottom.current || props.disableScrolling) {
-      return;
-    }
-    if (replInputBottom.current.clientWidth >= window.innerWidth - 50) {
+    if (this.replInputBottom.clientWidth >= window.innerWidth - 50) {
       /* There is a bug where
        *   if the workspace has been resized via re-resizable such that the
        *   has disappeared off the screen, width 63
@@ -81,66 +53,64 @@ export const ReplInput: React.FC<ReplInputProps> = (props: ReplInputProps) => {
        * Fix: the if condition is true when the Repl has dissapeared off-screen.
        *   (-15 to account for the scrollbar */
     } else {
-      replInputBottom.current.scrollIntoView();
+      this.replInputBottom.scrollIntoView();
     }
-  });
+  }
 
-  // see the comment above this same call in Editor.tsx
-  selectMode(props.sourceChapter, props.sourceVariant, props.externalLibrary);
+  public render() {
+    // see the comment above this same call in Editor.tsx
+    selectMode(this.props.sourceVariant);
 
-  const replButtons = () => props.replButtons;
+    return (
+      <>
+        <AceEditor
+          className="repl-react-ace react-ace"
+          mode={getModeString(this.props.sourceVariant)}
+          theme="source"
+          height="1px"
+          width="100%"
+          value={this.props.replValue}
+          onChange={this.props.handleReplValueChange}
+          commands={[
+            {
+              name: 'browseHistoryDown',
+              bindKey: {
+                win: 'Down',
+                mac: 'Down'
+              },
+              exec: this.execBrowseHistoryDown
+            },
+            {
+              name: 'browseHistoryUp',
+              bindKey: {
+                win: 'Up',
+                mac: 'Up'
+              },
+              exec: this.execBrowseHistoryUp
+            },
+            {
+              name: 'evaluate',
+              bindKey: {
+                win: 'Shift-Enter',
+                mac: 'Shift-Enter'
+              },
+              exec: this.execEvaluate
+            }
+          ]}
+          minLines={1}
+          maxLines={20}
+          fontSize={17}
+          highlightActiveLine={false}
+          showGutter={false}
+          showPrintMargin={false}
+          setOptions={{
+            fontFamily: "'Inconsolata', 'Consolas', monospace"
+          }}
+        />
+        <div className="replInputBottom" ref={e => (this.replInputBottom = e!)} />
+      </>
+    );
+  }
+}
 
-  return (
-    <>
-      <AceEditor
-        className="repl-react-ace react-ace"
-        mode={getModeString(props.sourceChapter, props.sourceVariant, props.externalLibrary)}
-        theme="source"
-        height="1px"
-        width="100%"
-        value={props.replValue}
-        onChange={props.handleReplValueChange}
-        commands={[
-          {
-            name: 'browseHistoryDown',
-            bindKey: {
-              win: 'Down',
-              mac: 'Down'
-            },
-            exec: execBrowseHistoryDown
-          },
-          {
-            name: 'browseHistoryUp',
-            bindKey: {
-              win: 'Up',
-              mac: 'Up'
-            },
-            exec: execBrowseHistoryUp
-          },
-          {
-            name: 'evaluate',
-            bindKey: {
-              win: 'Shift-Enter',
-              mac: 'Shift-Enter'
-            },
-            exec: execEvaluate
-          }
-        ]}
-        minLines={1}
-        maxLines={20}
-        fontSize={17}
-        highlightActiveLine={false}
-        showGutter={false}
-        showPrintMargin={false}
-        setOptions={{
-          fontFamily: "'Inconsolata', 'Consolas', monospace"
-        }}
-        ref={replInput}
-      />
-      <div className={classNames(Classes.BUTTON_GROUP, Classes.DARK)}>{replButtons()}</div>
-      <MediaQuery minWidth={769}>
-        <div ref={replInputBottom} />
-      </MediaQuery>
-    </>
-  );
-};
+export default ReplInput;

@@ -147,3 +147,8 @@ export type ContributorsProps = {
   handleFetchRepos: () => Repo[];
   handleFetchContributors: (repos: Repo[]) => Contributor[][];
 };
+
+export type ContributorsState = {
+  repos: Repo[];
+  contributors: Contributor[][];
+};

@@ -1,9 +1,8 @@
 import { Switch } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
-import React from 'react';
+import * as React from 'react';
 
-import ControlButton from '../ControlButton';
-import { useResponsive } from '../utils/Hooks';
+import controlButton from '../ControlButton';
 import { ControlBarRunButton } from './ControlBarRunButton';
 
 type ControlBarAutorunButtonProps = DispatchProps & StateProps;
@@ -24,57 +23,10 @@ type StateProps = {
   key: string;
   autorunDisabled?: boolean;
   pauseDisabled?: boolean;
-  sourceChapter?: number;
 };
 
-export const ControlBarAutorunButtons: React.FC<ControlBarAutorunButtonProps> = props => {
-  const showRunButton = !props.isDebugging && (
-    <ControlBarRunButton
-      handleEditorEval={props.handleEditorEval}
-      // Neon Green: #39FF14
-      color={props.isRunning ? '#39FF14' : undefined}
-      className={props.isRunning ? 'WaitingCursor' : undefined}
-      key="run"
-    />
-  );
-
-  const showAutoRunIndicator = props.isEditorAutorun && (
-    <ControlButton label="Auto" icon={IconNames.AUTOMATIC_UPDATES} />
-  );
-
-  // stop button does not do anything due to the blocking nature of eval methods (e.g. runInContext)
-  // to prevent "flickering", we will just disable Stop Button for now
-  const showStopButton = false && (
-    <ControlButton label="Stop" icon={IconNames.STOP} onClick={props.handleInterruptEval} />
-  );
-
-  const showDebuggerPause = !props.pauseDisabled && props.isRunning && !props.isDebugging && (
-    <ControlButton label="Pause" icon={IconNames.STOP} onClick={props.handleDebuggerPause} />
-  );
-
-  const showDebuggerResume = !props.isRunning && props.isDebugging && (
-    <ControlButton
-      label="Resume"
-      icon={IconNames.CHEVRON_RIGHT}
-      onClick={props.handleDebuggerResume}
-    />
-  );
-
-  const showDebuggerReset = (label: string) =>
-    props.isDebugging && (
-      <ControlButton label={label} icon={IconNames.STOP} onClick={props.handleDebuggerReset} />
-    );
-
-  const { isMobileBreakpoint } = useResponsive();
-
-  return isMobileBreakpoint ? (
-    <>
-      {showStopButton}
-      {showDebuggerPause}
-      {showDebuggerResume}
-      {showDebuggerReset('Stop')}
-    </>
-  ) : (
+export function ControlBarAutorunButtons(props: ControlBarAutorunButtonProps) {
+  return (
     <>
       {!props.autorunDisabled && (
         <div className="Switch">
@@ -85,10 +37,20 @@ export const ControlBarAutorunButtons: React.FC<ControlBarAutorunButtonProps> = 
           />
         </div>
       )}
-      {showAutoRunIndicator || showStopButton || showRunButton}
-      {showDebuggerPause}
-      {showDebuggerResume}
-      {showDebuggerReset('Stop Debugger')}
+      {(props.isEditorAutorun && controlButton('Auto', IconNames.AUTOMATIC_UPDATES)) ||
+        (props.isRunning && controlButton('Stop', IconNames.STOP, props.handleInterruptEval)) ||
+        (!props.isDebugging && (
+          <ControlBarRunButton handleEditorEval={props.handleEditorEval} key="run" />
+        ))}
+      {(!props.pauseDisabled &&
+        props.isRunning &&
+        !props.isDebugging &&
+        controlButton('Pause', IconNames.STOP, props.handleDebuggerPause)) ||
+        (!props.isRunning &&
+          props.isDebugging &&
+          controlButton('Resume', IconNames.CHEVRON_RIGHT, props.handleDebuggerResume))}
+      {props.isDebugging &&
+        controlButton('Stop Debugger', IconNames.STOP, props.handleDebuggerReset)}
     </>
   );
-};
+}

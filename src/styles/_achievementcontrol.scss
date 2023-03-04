@@ -1,16 +1,4 @@
 .AchievementControl {
-  // Cover aspect ratio 2:1
-  $cover-height: 18em;
-  $cover-width: 36em;
-  // Card aspect ratio 2:1
-  $card-height: 7em;
-  $card-width: 30em;
-  // View aspect ratio 18:25
-  $view-height: 50em;
-  $view-width: $cover-width;
-
-  $cover-spacing: 0.3em;
-  $content-spacing: 0.5em;
   $default-spacing: 1em;
 
   background: black url(#{$achievement-assets}/background.png) center/cover no-repeat fixed;
@@ -28,29 +16,21 @@
     margin: 0 auto;
     min-width: max-content;
     overflow: hidden;
-    padding: $default-spacing math.div($default-spacing, 2);
+    padding: $default-spacing;
   }
 
   // Command buttons on top of the interfaces, e.g. Add A Task, Publish Changes, etc.
-  .command {
+  %command {
     display: flex;
     flex-direction: row;
     justify-content: center;
-
-    .command-button {
-      display: flex;
-      height: 1em;
-      margin: $default-spacing;
-    }
   }
 
   // Unordered list container, has a vertical scrollbar
   %container {
-    align-items: center;
     background: rgba(0, 0, 0, 0.5);
     display: flex;
     flex-direction: column;
-    height: 90%;
     list-style-type: none;
     margin: 0;
     overflow-y: auto;
@@ -68,15 +48,35 @@
   }
 
   .achievement-preview {
+    $canvas-spacing: 0.3em;
+    $content-spacing: 0.5em;
+    // Canvas aspect ratio 2:1
+    $canvas-height: 18em;
+    $canvas-width: 36em;
+    // Card aspect ratio 2:1
+    $card-height: 5em;
+    $card-width: 30em;
+    // View aspect ratio 18:25
+    $view-height: 50em;
+    $view-width: $canvas-width;
+
     @extend %platform;
+
+    .command-button {
+      display: flex;
+      flex-direction: row;
+      height: 1em;
+      margin: $default-spacing auto;
+    }
 
     .preview-container {
       @extend %container;
+      align-items: center;
+      height: 90%;
       width: $view-width + $default-spacing * 2;
 
       .no-view {
         align-items: center;
-        text-shadow: black 1px 1px;
         color: white;
         display: flex;
         flex-direction: column;
@@ -84,7 +84,6 @@
       }
 
       .view {
-        text-shadow: black 1px 1px;
         color: white;
         display: flex;
         flex-direction: column;
@@ -92,27 +91,27 @@
         min-height: $view-height;
         width: $view-width;
 
-        .cover {
+        .canvas {
           display: flex;
           flex-direction: column;
-          height: $cover-height;
-          text-align: center;
-          width: $cover-width;
+          height: $canvas-height;
+          width: $canvas-width;
 
           h1 {
             margin: 0.5em auto 0;
-            padding: $cover-spacing;
+            padding: $canvas-spacing;
           }
 
           p {
             margin: 0 auto;
-            padding: $cover-spacing;
+            padding: $canvas-spacing;
           }
 
           .description {
             color: yellow;
             font-size: 0.85em;
             margin: auto auto 1em;
+            text-align: center;
             width: 80%;
           }
         }
@@ -200,7 +199,7 @@
               align-items: center;
               display: flex;
               flex-direction: row;
-              height: math.div($card-height * 3, 5);
+              height: $card-height * 3 / 5;
             }
 
             .details {
@@ -219,7 +218,7 @@
               }
 
               .deadline,
-              .xp {
+              .exp {
                 align-items: center;
                 display: flex;
                 flex: 1 1 25%;
@@ -247,9 +246,8 @@
           $shrink-factor: 0.9;
           $line-width: 1em;
           // remaining-width is the empty space between line and card
-          $remaining-width: math.div((1 - $shrink-factor) * $card-width - 2 * $line-width, 2);
+          $remaining-width: ((1 - $shrink-factor) * $card-width - 2 * $line-width) / 2;
           $top-spacing: 0.2em;
-          $line-extension: 0.1em;
 
           display: flex;
           flex-direction: column;
@@ -260,9 +258,8 @@
             max-width: $card-width;
 
             .dropdown-lines {
-              height: $top-spacing + $card-height + $remaining-width + $line-extension;
-              margin: -#{math.div($card-height, 1.6)} -#{$line-width + $remaining-width} 0
-                $line-width;
+              height: $top-spacing + $card-height;
+              margin: -#{$card-height / 2} -#{$line-width + $remaining-width} 0 $line-width;
               min-width: $line-width;
             }
 
@@ -274,7 +271,7 @@
 
           .prerequisite:first-child {
             .dropdown-lines {
-              height: $top-spacing + math.div($card-height, 2) + $remaining-width;
+              height: $top-spacing + $card-height / 2;
               margin-top: 0;
             }
           }
@@ -286,48 +283,122 @@
   .achievement-editor {
     @extend %platform;
 
+    .achievement-command {
+      @extend %command;
+    }
+
     .achievement-container {
       @extend %container;
-      width: $card-width + $default-spacing * 2;
 
-      .editable-card {
+      .editable-achievement {
+        width: 90%;
+        background-color: #d9d9d9;
+
+        height: 20%;
+        margin-bottom: 10px;
+
         display: flex;
-        flex-direction: row;
-        height: $card-height;
-        width: $card-width;
+        flex-direction: column;
 
-        .action-button {
-          align-items: center;
+        .top-bar {
           display: flex;
           flex-direction: row;
-          height: $card-height;
-          justify-content: center;
-          width: $card-height;
+          justify-content: space-between;
         }
 
-        .content {
-          display: flex;
-          flex-direction: column;
-          height: $card-height;
-          justify-content: space-evenly;
-          width: $card-width * 0.64;
-
-          .title {
-            align-items: center;
-            display: flex;
-            margin: 0;
-          }
-
-          .details {
-            display: flex;
-          }
-        }
-
-        .content-button {
+        .bp3-dialog-container {
           align-items: center;
+          justify-content: center;
+
+          .goal {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-evenly;
+
+            .goal-medal {
+              display: flex;
+              flex-direction: column;
+              flex-basis: 25%;
+
+              text-align: center;
+              align-items: center;
+              justify-content: center;
+            }
+
+            .goal-text {
+              display: flex;
+              text-align: center;
+              align-items: center;
+              justify-content: center;
+            }
+          }
+
+          .view-editor {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            text-align: center;
+
+            .background-card {
+              max-width: 100%;
+              background-color: #333e50;
+            }
+
+            .view-img {
+              max-width: 100%;
+            }
+          }
+        }
+
+        .main {
           display: flex;
-          margin: $default-spacing;
-          margin-left: auto;
+          flex-direction: row;
+          flex-basis: 80%;
+
+          .dropdown {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-basis: 10%;
+          }
+
+          .icon {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-basis: 10%;
+          }
+
+          .display {
+            display: flex;
+            justify-content: center;
+            margin-left: 10%;
+            width: 100%;
+            flex-direction: column;
+
+            .details {
+              display: flex;
+              flex-direction: row;
+              justify-content: space-evenly;
+
+              .ability {
+                flex-basis: 40%;
+              }
+
+              .deadline {
+                display: flex;
+                flex-direction: row;
+                flex-basis: 30%;
+              }
+
+              .exp {
+                display: flex;
+                margin-left: 5%;
+                flex-direction: row;
+                flex-basis: 30%;
+              }
+            }
+          }
         }
       }
     }
@@ -338,26 +409,16 @@
 
     .goal-container {
       @extend %container;
-      width: $card-width + $default-spacing * 2;
-
-      .editable-goal {
-        background: white;
-        display: flex;
-        flex-direction: column;
-        padding: $content-spacing;
-        width: $card-width;
-
-        .action-button {
-          align-items: center;
-          display: flex;
-          justify-content: center;
-        }
-
-        h3 {
-          margin: $default-spacing;
-        }
-      }
     }
+  }
+
+  .bp3-dialog-container {
+    align-items: flex-start;
+    justify-content: flex-start;
+  }
+
+  .panel-disabler {
+    pointer-events: none;
   }
 
   // Scroll Bar

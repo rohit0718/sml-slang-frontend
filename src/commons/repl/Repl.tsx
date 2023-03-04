@@ -1,17 +1,17 @@
 import { Card, Classes, Pre } from '@blueprintjs/core';
-import { Ace } from 'ace-builds';
-import { parseError } from 'sml-slang/dist';
-import { Chapter, Variant } from 'sml-slang/dist/types';
 import classNames from 'classnames';
 import * as React from 'react';
 import { HotKeys } from 'react-hotkeys';
+import { Finished } from 'sml-slang/types';
+import { formatFinishedForRepl } from 'sml-slang/utils/formatters';
+import { parseError, Variant } from 'src/sml-integration';
 
-import { InterpreterOutput } from '../application/ApplicationTypes';
-import { ExternalLibraryName } from '../application/types/ExternalTypes';
-import { ReplInput } from './ReplInput';
+import { InterpreterOutput, ResultOutput } from '../application/ApplicationTypes';
+import SideContentCanvasOutput from '../sideContent/SideContentCanvasOutput';
+import ReplInput from './ReplInput';
 import { OutputProps } from './ReplTypes';
 
-export type ReplProps = DispatchProps & StateProps & OwnProps;
+export type ReplProps = DispatchProps & StateProps;
 
 type StateProps = {
   output: InterpreterOutput[];
@@ -19,10 +19,7 @@ type StateProps = {
   hidden?: boolean;
   inputHidden?: boolean;
   usingSubst?: boolean;
-  sourceChapter: Chapter;
   sourceVariant: Variant;
-  externalLibrary: ExternalLibraryName;
-  disableScrolling?: boolean;
 };
 
 type DispatchProps = {
@@ -30,72 +27,60 @@ type DispatchProps = {
   handleBrowseHistoryUp: () => void;
   handleReplEval: () => void;
   handleReplValueChange: (newCode: string) => void;
-  onFocus?: (editor: Ace.Editor) => void;
-  onBlur?: () => void;
 };
 
-type OwnProps = {
-  replButtons: Array<JSX.Element | null>;
-};
+class Repl extends React.PureComponent<ReplProps, {}> {
+  public constructor(props: ReplProps) {
+    super(props);
+  }
 
-const Repl: React.FC<ReplProps> = (props: ReplProps) => {
-  const cards = props.output.map((slice, index) => (
-    <Output
-      output={slice}
-      key={index}
-      usingSubst={props.usingSubst ?? false}
-    />
-  ));
-  return (
-    <div className="Repl" style={{ display: props.hidden ? 'none' : undefined }}>
-      <div className="repl-output-parent">
-        {cards}
-        {!props.inputHidden && (
-          <HotKeys
-            className={classNames('repl-input-parent', 'row', Classes.CARD, Classes.ELEVATION_0)}
-            handlers={handlers}
-          >
-            <ReplInput {...props} />
-          </HotKeys>
-        )}
+  public render() {
+    const cards = this.props.output.map((slice, index) => <Output output={slice} key={index} />);
+    return (
+      <div className="Repl" style={{ display: this.props.hidden ? 'none' : undefined }}>
+        <div className="repl-output-parent">
+          {cards}
+          {!this.props.inputHidden && (
+            <HotKeys
+              className={classNames('repl-input-parent', 'row', Classes.CARD, Classes.ELEVATION_0)}
+              handlers={handlers}
+            >
+              <ReplInput {...this.props} />
+            </HotKeys>
+          )}
+        </div>
       </div>
-    </div>
-  );
-};
+    );
+  }
+}
 
 export const Output: React.FC<OutputProps> = (props: OutputProps) => {
   switch (props.output.type) {
     case 'code':
       return (
         <Card>
-          <Pre className="code-output">{props.output.value}</Pre>
+          <Pre className="codeOutput">{props.output.value}</Pre>
         </Card>
       );
     case 'running':
       return (
         <Card>
-          <Pre className="log-output">{props.output.consoleLogs.join('\n')}</Pre>
+          <Pre className="logOutput">{props.output.consoleLogs.join('\n')}</Pre>
         </Card>
       );
     case 'result':
-      // We check if we are using Stepper, so we can process the REPL results properly
-      if (props.usingSubst && props.output.value instanceof Array) {
+      console.dir(props.output, { depth: 4 });
+      if (props.output.consoleLogs.length === 0) {
         return (
           <Card>
-            <Pre className="log-output">Check out the Stepper tab!</Pre>
-          </Card>
-        );
-      } else if (props.output.consoleLogs.length === 0) {
-        return (
-          <Card>
-            <Pre className="result-output">{props.output.value}</Pre>
+            <Pre className="resultOutput">{renderResult(props.output)}</Pre>
           </Card>
         );
       } else {
         return (
           <Card>
-            <Pre className="log-output">{props.output.consoleLogs.join('\n')}</Pre>
-            <Pre className="result-output">{props.output.value}</Pre>
+            <Pre className="logOutput">{props.output.consoleLogs.join('\n')}</Pre>
+            <Pre className="resultOutput">{renderResult(props.output)}</Pre>
           </Card>
         );
       }
@@ -103,20 +88,30 @@ export const Output: React.FC<OutputProps> = (props: OutputProps) => {
       if (props.output.consoleLogs.length === 0) {
         return (
           <Card>
-            <Pre className="error-output">{parseError(props.output.errors)}</Pre>
+            <Pre className="errorOutput">{parseError(props.output.errors)}</Pre>
           </Card>
         );
       } else {
         return (
           <Card>
-            <Pre className="log-output">{props.output.consoleLogs.join('\n')}</Pre>
+            <Pre className="logOutput">{props.output.consoleLogs.join('\n')}</Pre>
             <br />
-            <Pre className="error-output">{parseError(props.output.errors)}</Pre>
+            <Pre className="errorOutput">{parseError(props.output.errors)}</Pre>
           </Card>
         );
       }
     default:
       return <Card>''</Card>;
+  }
+};
+
+const renderResult = (output: ResultOutput) => {
+  /** A class which is the output of the show() function */
+  const ShapeDrawn = (window as any).ShapeDrawn;
+  if (typeof ShapeDrawn !== 'undefined' && output.value instanceof ShapeDrawn) {
+    return <SideContentCanvasOutput canvas={output.value.$canvas} />;
+  } else {
+    return formatFinishedForRepl(output.value as Finished);
   }
 };
 

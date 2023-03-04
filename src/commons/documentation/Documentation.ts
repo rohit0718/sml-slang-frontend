@@ -1,11 +1,8 @@
-import { SourceDocumentation } from 'sml-slang/dist/editor/docTooltip';
-import { deviceTypes } from 'src/features/remoteExecution/RemoteExecutionTypes';
-
-import { externalLibraries } from '../application/types/ExternalTypes';
+import { SourceDocumentation } from 'src/sml-integration';
 
 const externalLibrariesDocumentation = {};
 
-const MAX_CAPTION_LENGTH = 27;
+const MAX_CAPTION_LENGTH = 25;
 
 function shortenCaption(name: string): string {
   if (name.length <= MAX_CAPTION_LENGTH) {
@@ -13,33 +10,6 @@ function shortenCaption(name: string): string {
   }
 
   return (name = name.substring(0, MAX_CAPTION_LENGTH - 3) + '...');
-}
-
-function mapExternalLibraryName(name: string) {
-  if (name in SourceDocumentation.autocomplete) {
-    return {
-      caption: shortenCaption(name),
-      value: name,
-      meta: SourceDocumentation.autocomplete[name].meta,
-      docHTML: SourceDocumentation.autocomplete[name].description
-    };
-  } else {
-    return {
-      caption: shortenCaption(name),
-      value: name,
-      meta: 'const'
-    };
-  }
-}
-
-for (const [lib, names] of externalLibraries) {
-  externalLibrariesDocumentation[lib] = names.map(mapExternalLibraryName);
-}
-
-// Add remote device libraries
-for (const deviceType of deviceTypes) {
-  externalLibrariesDocumentation[deviceType.deviceLibraryName] =
-    deviceType.internalFunctions.map(mapExternalLibraryName);
 }
 
 const builtinDocumentation = {};
@@ -57,7 +27,41 @@ Object.entries(SourceDocumentation.builtins).forEach((chapterDoc: any) => {
   });
 });
 
+const keywords = {};
+const KEYWORD_SCORE = 20000;
+
+Object.entries(SourceDocumentation.keywords).forEach((chapterDoc: any) => {
+  const [chapter, docs] = chapterDoc;
+  keywords[chapter] = Object.entries(docs).map((entry: any) => {
+    const [name, info] = entry;
+    return {
+      caption: shortenCaption(name),
+      value: name,
+      meta: info.meta,
+      score: KEYWORD_SCORE
+    };
+  });
+});
+
+const types = {};
+const TYPE_SCORE = 21000;
+
+Object.entries(SourceDocumentation.types).forEach((chapterDoc: any) => {
+  const [chapter, docs] = chapterDoc;
+  types[chapter] = Object.entries(docs).map((entry: any) => {
+    const [name, info] = entry;
+    return {
+      caption: shortenCaption(name),
+      value: name,
+      meta: info.meta,
+      score: TYPE_SCORE
+    };
+  });
+});
+
 export const Documentation = {
   builtins: builtinDocumentation,
+  keywords,
+  types,
   externalLibraries: externalLibrariesDocumentation
 };

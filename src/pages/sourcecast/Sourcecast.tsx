@@ -1,60 +1,25 @@
 import { Classes, Pre } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
-import { Chapter, Variant } from 'sml-slang/dist/types';
 import classNames from 'classnames';
 import * as React from 'react';
-import { useDispatch } from 'react-redux';
 import { RouteComponentProps } from 'react-router';
-import {
-  beginDebuggerPause,
-  beginInterruptExecution,
-  debuggerReset,
-  debuggerResume
-} from 'src/commons/application/actions/InterpreterActions';
-import { useResponsive } from 'src/commons/utils/Hooks';
-import {
-  browseReplHistoryDown,
-  browseReplHistoryUp,
-  changeSideContentHeight,
-  clearReplOutput,
-  navigateToDeclaration,
-  promptAutocomplete,
-  setEditorBreakpoint,
-  setIsEditorReadonly,
-  toggleEditorAutorun,
-  updateReplValue
-} from 'src/commons/workspace/WorkspaceActions';
-import { WorkspaceLocation } from 'src/commons/workspace/WorkspaceTypes';
-import { fetchSourcecastIndex } from 'src/features/sourceRecorder/sourcecast/SourcecastActions';
-import {
-  setCodeDeltasToApply,
-  setCurrentPlayerTime,
-  setInputToApply,
-  setSourcecastDuration
-} from 'src/features/sourceRecorder/SourceRecorderActions';
+import { Variant } from 'src/sml-integration';
 
 import { InterpreterOutput } from '../../commons/application/ApplicationTypes';
-import { ExternalLibraryName } from '../../commons/application/types/ExternalTypes';
 import { ControlBarAutorunButtons } from '../../commons/controlBar/ControlBarAutorunButtons';
-import { ControlBarChapterSelect } from '../../commons/controlBar/ControlBarChapterSelect';
 import { ControlBarClearButton } from '../../commons/controlBar/ControlBarClearButton';
 import { ControlBarEvalButton } from '../../commons/controlBar/ControlBarEvalButton';
-import {
-  convertEditorTabStateToProps,
-  SourcecastEditorContainerProps
-} from '../../commons/editor/EditorContainer';
-import MobileWorkspace, {
-  MobileWorkspaceProps
-} from '../../commons/mobileWorkspace/MobileWorkspace';
-import SideContentDataVisualizer from '../../commons/sideContent/SideContentDataVisualizer';
-import SideContentEnvVisualizer from '../../commons/sideContent/SideContentEnvVisualizer';
-import { SideContentTab, SideContentType } from '../../commons/sideContent/SideContentTypes';
+import { ControlBarVariantSelect } from '../../commons/controlBar/ControlBarVariantSelect';
+import { HighlightedLines, Position } from '../../commons/editor/EditorTypes';
+import { SideContentType } from '../../commons/sideContent/SideContentTypes';
 import SourceRecorderControlBar, {
   SourceRecorderControlBarProps
 } from '../../commons/sourceRecorder/SourceRecorderControlBar';
+import SourceRecorderEditor, {
+  SourceRecorderEditorProps
+} from '../../commons/sourceRecorder/SourceRecorderEditor';
 import SourceRecorderTable from '../../commons/sourceRecorder/SourceRecorderTable';
 import Workspace, { WorkspaceProps } from '../../commons/workspace/Workspace';
-import { EditorTabState } from '../../commons/workspace/WorkspaceTypes';
 import {
   CodeDelta,
   Input,
@@ -68,11 +33,29 @@ export type SourcecastProps = DispatchProps &
   RouteComponentProps<{ sourcecastId: string }>;
 
 export type DispatchProps = {
-  handleChapterSelect: (chapter: Chapter) => void;
+  handleActiveTabChange: (activeTab: SideContentType) => void;
+  handleBrowseHistoryDown: () => void;
+  handleBrowseHistoryUp: () => void;
+  handleVariantSelect: (variant: Variant) => void;
+  handleDebuggerPause: () => void;
+  handleDebuggerResume: () => void;
+  handleDebuggerReset: () => void;
+  handleDeclarationNavigate: (cursorPosition: Position) => void;
   handleEditorEval: () => void;
+  handleEditorHeightChange: (height: number) => void;
   handleEditorValueChange: (val: string) => void;
-  handleExternalSelect: (externalLibraryName: ExternalLibraryName) => void;
+  handlePromptAutocomplete: (row: number, col: number, callback: any) => void;
+  handleEditorWidthChange: (widthChange: number) => void;
+  handleEditorUpdateBreakpoints: (breakpoints: string[]) => void;
+  handleFetchSourcecastIndex: () => void;
+  handleInterruptEval: () => void;
   handleReplEval: () => void;
+  handleReplOutputClear: () => void;
+  handleReplValueChange: (newValue: string) => void;
+  handleSetCurrentPlayerTime: (playTime: number) => void;
+  handleSetCodeDeltasToApply: (delta: CodeDelta[]) => void;
+  handleSetEditorReadonly: (editorReadonly: boolean) => void;
+  handleSetInputToApply: (inputToApply: Input) => void;
   handleSetSourcecastData: (
     title: string,
     description: string,
@@ -80,7 +63,10 @@ export type DispatchProps = {
     audioUrl: string,
     playbackData: PlaybackData
   ) => void;
+  handleSetSourcecastDuration: (duration: number) => void;
   handleSetSourcecastStatus: (PlaybackStatus: PlaybackStatus) => void;
+  handleSideContentHeightChange: (heightChange: number) => void;
+  handleToggleEditorAutorun: () => void;
 };
 
 export type StateProps = {
@@ -89,48 +75,195 @@ export type StateProps = {
   codeDeltasToApply: CodeDelta[] | null;
   title: string | null;
   description: string | null;
-  activeEditorTabIndex: number | null;
-  editorTabs: EditorTabState[];
-  externalLibraryName: ExternalLibraryName;
+  editorReadonly: boolean;
+  editorValue: string;
+  editorHeight?: number;
+  editorWidth: string;
+  breakpoints: string[];
+  highlightedLines: HighlightedLines[];
   isEditorAutorun: boolean;
-  isEditorReadonly: boolean;
   inputToApply: Input | null;
   isRunning: boolean;
   isDebugging: boolean;
   enableDebugging: boolean;
+  newCursorPosition?: Position;
   output: InterpreterOutput[];
   playbackDuration: number;
   playbackData: PlaybackData;
   playbackStatus: PlaybackStatus;
   replValue: string;
+  sideContentActiveTab: SideContentType;
   sideContentHeight?: number;
   sourcecastIndex: SourcecastData[] | null;
-  sourceChapter: Chapter;
   sourceVariant: Variant;
   uid: string | null;
-  courseId?: number;
 };
 
-const workspaceLocation: WorkspaceLocation = 'sourcecast';
+class Sourcecast extends React.Component<SourcecastProps> {
+  public componentDidMount() {
+    this.props.handleFetchSourcecastIndex();
+  }
 
-const Sourcecast: React.FC<SourcecastProps> = props => {
-  const { isMobileBreakpoint } = useResponsive();
+  public componentDidUpdate(prevProps: SourcecastProps) {
+    this.handleQueryParam();
 
-  const dispatch = useDispatch();
+    const { inputToApply } = this.props;
 
-  /**
-   * The default selected tab for the Sourcecast workspace is the introduction tab,
-   * which contains the ag-grid table of available Sourcecasts. This is intentional
-   * to avoid an ag-grid console warning. For more info, see issue #1152 in frontend.
-   */
-  const [selectedTab, setSelectedTab] = React.useState(SideContentType.introduction);
+    if (!inputToApply || inputToApply === prevProps.inputToApply) {
+      return;
+    }
 
-  const handleQueryParam = React.useCallback(() => {
-    const newUid = props.match.params.sourcecastId;
-    if (newUid && newUid !== props.uid && props.sourcecastIndex) {
-      const cast = props.sourcecastIndex.find(data => data.uid === newUid);
+    switch (inputToApply.type) {
+      case 'activeTabChange':
+        this.props.handleActiveTabChange(inputToApply.data);
+        break;
+      case 'variantSelect':
+        this.props.handleVariantSelect(inputToApply.data);
+        break;
+      case 'forcePause':
+        this.props.handleSetSourcecastStatus(PlaybackStatus.forcedPaused);
+        break;
+    }
+  }
+
+  public render() {
+    const autorunButtons = (
+      <ControlBarAutorunButtons
+        handleDebuggerPause={this.props.handleDebuggerPause}
+        handleDebuggerReset={this.props.handleDebuggerReset}
+        handleDebuggerResume={this.props.handleDebuggerResume}
+        handleEditorEval={this.props.handleEditorEval}
+        handleInterruptEval={this.props.handleInterruptEval}
+        handleToggleEditorAutorun={this.props.handleToggleEditorAutorun}
+        isDebugging={this.props.isDebugging}
+        isEditorAutorun={this.props.isEditorAutorun}
+        isRunning={this.props.isRunning}
+        key="autorun"
+      />
+    );
+
+    const variantSelectHandler = ({ variant }: { variant: Variant }, _: any) =>
+      this.props.handleVariantSelect(variant);
+
+    const variantSelect = (
+      <ControlBarVariantSelect
+        handleVariantSelect={variantSelectHandler}
+        sourceVariant={this.props.sourceVariant}
+        key="variant"
+      />
+    );
+
+    const clearButton = (
+      <ControlBarClearButton
+        handleReplOutputClear={this.props.handleReplOutputClear}
+        key="clear_repl"
+      />
+    );
+
+    const evalButton = (
+      <ControlBarEvalButton
+        handleReplEval={this.props.handleReplEval}
+        isRunning={this.props.isRunning}
+        key="eval_repl"
+      />
+    );
+
+    const editorProps: SourceRecorderEditorProps = {
+      codeDeltasToApply: this.props.codeDeltasToApply,
+      editorReadonly: this.props.editorReadonly,
+      editorValue: this.props.editorValue,
+      editorSessionId: '',
+      handleDeclarationNavigate: this.props.handleDeclarationNavigate,
+      handleEditorEval: this.props.handleEditorEval,
+      handleEditorValueChange: this.props.handleEditorValueChange,
+      isEditorAutorun: this.props.isEditorAutorun,
+      inputToApply: this.props.inputToApply,
+      isPlaying: this.props.playbackStatus === PlaybackStatus.playing,
+      breakpoints: this.props.breakpoints,
+      highlightedLines: this.props.highlightedLines,
+      newCursorPosition: this.props.newCursorPosition,
+      handleEditorUpdateBreakpoints: this.props.handleEditorUpdateBreakpoints
+    };
+    const workspaceProps: WorkspaceProps = {
+      controlBarProps: {
+        editorButtons: [autorunButtons, variantSelect],
+        replButtons: [evalButton, clearButton]
+      },
+      customEditor: <SourceRecorderEditor {...editorProps} />,
+      editorHeight: this.props.editorHeight,
+      editorWidth: this.props.editorWidth,
+      handleEditorHeightChange: this.props.handleEditorHeightChange,
+      handleEditorWidthChange: this.props.handleEditorWidthChange,
+      handleSideContentHeightChange: this.props.handleSideContentHeightChange,
+      replProps: {
+        output: this.props.output,
+        replValue: this.props.replValue,
+        handleBrowseHistoryDown: this.props.handleBrowseHistoryDown,
+        handleBrowseHistoryUp: this.props.handleBrowseHistoryUp,
+        handleReplEval: this.props.handleReplEval,
+        handleReplValueChange: this.props.handleReplValueChange,
+        sourceVariant: this.props.sourceVariant
+      },
+      sideContentHeight: this.props.sideContentHeight,
+      sideContentProps: {
+        handleActiveTabChange: this.props.handleActiveTabChange,
+        selectedTabId: this.props.sideContentActiveTab,
+        tabs: [
+          {
+            label: 'Sourcecast Table',
+            iconName: IconNames.COMPASS,
+            body: (
+              <div>
+                <span className="Multi-line">
+                  <Pre>
+                    {this.props.title
+                      ? 'Title: ' + this.props.title + '\nDescription: ' + this.props.description
+                      : INTRODUCTION}
+                  </Pre>
+                </span>
+                <SourceRecorderTable
+                  handleSetSourcecastData={this.props.handleSetSourcecastData}
+                  sourcecastIndex={this.props.sourcecastIndex}
+                />
+              </div>
+            ),
+            id: SideContentType.introduction,
+            toSpawn: () => true
+          }
+        ],
+        workspaceLocation: 'sourcecast'
+      }
+    };
+    const sourcecastControlbarProps: SourceRecorderControlBarProps = {
+      handleEditorValueChange: this.props.handleEditorValueChange,
+      handlePromptAutocomplete: this.props.handlePromptAutocomplete,
+      handleSetCurrentPlayerTime: this.props.handleSetCurrentPlayerTime,
+      handleSetCodeDeltasToApply: this.props.handleSetCodeDeltasToApply,
+      handleSetEditorReadonly: this.props.handleSetEditorReadonly,
+      handleSetInputToApply: this.props.handleSetInputToApply,
+      handleSetSourcecastDuration: this.props.handleSetSourcecastDuration,
+      handleSetSourcecastStatus: this.props.handleSetSourcecastStatus,
+      audioUrl: this.props.audioUrl,
+      currentPlayerTime: this.props.currentPlayerTime,
+      duration: this.props.playbackDuration,
+      playbackData: this.props.playbackData,
+      playbackStatus: this.props.playbackStatus,
+      handleVariantSelect: this.props.handleVariantSelect
+    };
+    return (
+      <div className={classNames('Sourcecast', Classes.DARK)}>
+        <SourceRecorderControlBar {...sourcecastControlbarProps} />
+        <Workspace {...workspaceProps} />
+      </div>
+    );
+  }
+
+  private handleQueryParam() {
+    const newUid = this.props.match.params.sourcecastId;
+    if (newUid && newUid !== this.props.uid && this.props.sourcecastIndex) {
+      const cast = this.props.sourcecastIndex.find(data => data.uid === newUid);
       if (cast) {
-        props.handleSetSourcecastData(
+        this.props.handleSetSourcecastData(
           cast.title,
           cast.description,
           cast.uid,
@@ -139,258 +272,9 @@ const Sourcecast: React.FC<SourcecastProps> = props => {
         );
       }
     }
-  }, [props]);
-
-  React.useEffect(() => {
-    dispatch(fetchSourcecastIndex(workspaceLocation));
-    // This effect should only fire once on component mount
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  React.useEffect(() => {
-    handleQueryParam();
-
-    const { inputToApply } = props;
-
-    if (!inputToApply) {
-      return;
-    }
-
-    switch (inputToApply.type) {
-      case 'activeTabChange':
-        setSelectedTab(inputToApply.data);
-        break;
-      case 'chapterSelect':
-        props.handleChapterSelect(inputToApply.data);
-        break;
-      case 'externalLibrarySelect':
-        props.handleExternalSelect(inputToApply.data);
-        break;
-      case 'forcePause':
-        props.handleSetSourcecastStatus(PlaybackStatus.forcedPaused);
-        break;
-    }
-    // This effect should only fire when props.inputToApply changes
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [handleQueryParam, props.inputToApply]);
-
-  /**
-   * Handles toggling of relevant SideContentTabs when exiting the mobile breakpoint
-   */
-  React.useEffect(() => {
-    if (
-      !isMobileBreakpoint &&
-      (selectedTab === SideContentType.mobileEditor ||
-        selectedTab === SideContentType.mobileEditorRun)
-    ) {
-      setSelectedTab(SideContentType.introduction);
-    }
-  }, [isMobileBreakpoint, props, selectedTab]);
-
-  const autorunButtons = (
-    <ControlBarAutorunButtons
-      handleDebuggerPause={() => dispatch(beginDebuggerPause(workspaceLocation))}
-      handleDebuggerReset={() => dispatch(debuggerReset(workspaceLocation))}
-      handleDebuggerResume={() => dispatch(debuggerResume(workspaceLocation))}
-      handleEditorEval={props.handleEditorEval}
-      handleInterruptEval={() => dispatch(beginInterruptExecution(workspaceLocation))}
-      handleToggleEditorAutorun={() => dispatch(toggleEditorAutorun(workspaceLocation))}
-      isDebugging={props.isDebugging}
-      isEditorAutorun={props.isEditorAutorun}
-      isRunning={props.isRunning}
-      key="autorun"
-    />
-  );
-
-  const chapterSelectHandler = ({ chapter }: { chapter: Chapter }, e: any) =>
-    props.handleChapterSelect(chapter);
-
-  const chapterSelect = (
-    <ControlBarChapterSelect
-      handleChapterSelect={chapterSelectHandler}
-      sourceChapter={props.sourceChapter}
-      sourceVariant={props.sourceVariant}
-      key="chapter"
-    />
-  );
-
-  const clearButton = (
-    <ControlBarClearButton
-      handleReplOutputClear={() => dispatch(clearReplOutput(workspaceLocation))}
-      key="clear_repl"
-    />
-  );
-
-  const evalButton = (
-    <ControlBarEvalButton
-      handleReplEval={props.handleReplEval}
-      isRunning={props.isRunning}
-      key="eval_repl"
-    />
-  );
-
-  const tabs: SideContentTab[] = [
-    {
-      label: 'Sourcecast Table',
-      iconName: IconNames.HOME,
-      body: (
-        <div>
-          <span className="Multi-line">
-            <Pre>
-              {props.title
-                ? 'Title: ' + props.title + '\nDescription: ' + props.description
-                : INTRODUCTION}
-            </Pre>
-          </span>
-          <SourceRecorderTable
-            handleSetSourcecastData={props.handleSetSourcecastData}
-            sourcecastIndex={props.sourcecastIndex}
-            courseId={props.courseId}
-          />
-        </div>
-      ),
-      id: SideContentType.introduction
-    },
-    dataVisualizerTab,
-    envVisualizerTab
-  ];
-
-  const onChangeTabs = (
-    newTabId: SideContentType,
-    prevTabId: SideContentType,
-    event: React.MouseEvent<HTMLElement>
-  ) => {
-    if (newTabId === prevTabId) {
-      return;
-    }
-    setSelectedTab(newTabId);
-  };
-
-  const editorContainerProps: SourcecastEditorContainerProps = {
-    editorVariant: 'sourcecast',
-    editorTabs: props.editorTabs.map(convertEditorTabStateToProps),
-    codeDeltasToApply: props.codeDeltasToApply,
-    isEditorReadonly: props.isEditorReadonly,
-    editorSessionId: '',
-    handleDeclarationNavigate: cursorPosition =>
-      dispatch(navigateToDeclaration(workspaceLocation, cursorPosition)),
-    handleEditorEval: props.handleEditorEval,
-    handleEditorValueChange: props.handleEditorValueChange,
-    isEditorAutorun: props.isEditorAutorun,
-    inputToApply: props.inputToApply,
-    isPlaying: props.playbackStatus === PlaybackStatus.playing,
-    handleEditorUpdateBreakpoints: breakpoints =>
-      dispatch(setEditorBreakpoint(breakpoints, workspaceLocation))
-  };
-
-  const replProps = {
-    output: props.output,
-    replValue: props.replValue,
-    handleBrowseHistoryDown: () => dispatch(browseReplHistoryDown(workspaceLocation)),
-    handleBrowseHistoryUp: () => dispatch(browseReplHistoryUp(workspaceLocation)),
-    handleReplEval: props.handleReplEval,
-    handleReplValueChange: (newValue: string) =>
-      dispatch(updateReplValue(newValue, workspaceLocation)),
-    sourceChapter: props.sourceChapter,
-    sourceVariant: props.sourceVariant,
-    externalLibrary: props.externalLibraryName,
-    replButtons: [evalButton, clearButton]
-  };
-
-  const sideBarProps = {
-    tabs: []
-  };
-
-  const workspaceProps: WorkspaceProps = {
-    controlBarProps: {
-      editorButtons: [autorunButtons, chapterSelect]
-    },
-    editorContainerProps: editorContainerProps,
-    handleSideContentHeightChange: change =>
-      dispatch(changeSideContentHeight(change, workspaceLocation)),
-    replProps: replProps,
-    sideBarProps: sideBarProps,
-    sideContentHeight: props.sideContentHeight,
-    sideContentProps: {
-      selectedTabId: selectedTab,
-      onChange: onChangeTabs,
-      tabs: {
-        beforeDynamicTabs: tabs,
-        afterDynamicTabs: []
-      },
-      workspaceLocation: 'sourcecast',
-      sideContentHeight: props.sideContentHeight
-    }
-  };
-  const mobileWorkspaceProps: MobileWorkspaceProps = {
-    editorContainerProps: editorContainerProps,
-    replProps: replProps,
-    sideBarProps: sideBarProps,
-    mobileSideContentProps: {
-      mobileControlBarProps: {
-        editorButtons: [autorunButtons, chapterSelect]
-      },
-      selectedTabId: selectedTab,
-      onChange: onChangeTabs,
-      tabs: {
-        beforeDynamicTabs: tabs,
-        afterDynamicTabs: []
-      },
-      workspaceLocation: 'sourcecast'
-    }
-  };
-
-  const sourcecastControlbarProps: SourceRecorderControlBarProps = {
-    handleEditorValueChange: props.handleEditorValueChange,
-    handlePromptAutocomplete: (row, col, callback) =>
-      dispatch(promptAutocomplete(workspaceLocation, row, col, callback)),
-    handleSetCurrentPlayerTime: (playerTime: number) =>
-      dispatch(setCurrentPlayerTime(playerTime, workspaceLocation)),
-    handleSetCodeDeltasToApply: (deltas: CodeDelta[]) =>
-      dispatch(setCodeDeltasToApply(deltas, workspaceLocation)),
-    handleSetIsEditorReadonly: (editorReadonly: boolean) =>
-      dispatch(setIsEditorReadonly(workspaceLocation, editorReadonly)),
-    handleSetInputToApply: inputToApply =>
-      dispatch(setInputToApply(inputToApply, workspaceLocation)),
-    handleSetSourcecastDuration: (duration: number) =>
-      dispatch(setSourcecastDuration(duration, workspaceLocation)),
-    handleSetSourcecastStatus: props.handleSetSourcecastStatus,
-    audioUrl: props.audioUrl,
-    currentPlayerTime: props.currentPlayerTime,
-    duration: props.playbackDuration,
-    playbackData: props.playbackData,
-    playbackStatus: props.playbackStatus,
-    handleChapterSelect: props.handleChapterSelect,
-    handleExternalSelect: props.handleExternalSelect,
-    setSelectedTab: setSelectedTab
-  };
-
-  return (
-    <div className={classNames('Sourcecast', Classes.DARK)}>
-      <SourceRecorderControlBar {...sourcecastControlbarProps} />
-      {isMobileBreakpoint ? (
-        <MobileWorkspace {...mobileWorkspaceProps} />
-      ) : (
-        <Workspace {...workspaceProps} />
-      )}
-    </div>
-  );
-};
+  }
+}
 
 const INTRODUCTION = 'Welcome to Sourcecast!';
-
-const dataVisualizerTab: SideContentTab = {
-  label: 'Data Visualizer',
-  iconName: IconNames.EYE_OPEN,
-  body: <SideContentDataVisualizer />,
-  id: SideContentType.dataVisualizer
-};
-
-const envVisualizerTab: SideContentTab = {
-  label: 'Env Visualizer',
-  iconName: IconNames.GLOBE,
-  body: <SideContentEnvVisualizer />,
-  id: SideContentType.envVisualizer
-};
 
 export default Sourcecast;

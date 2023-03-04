@@ -7,9 +7,8 @@
     "lib": ["dom", "dom.iterable", "esnext", "es6", "es2015", "es2017"],
     "sourceMap": true,
     "allowJs": true,
-    "jsx": "react-jsx",
+    "jsx": "react",
     "strict": true,
-    "useUnknownInCatchVariables": false,
     "moduleResolution": "node",
     "rootDir": "src",
     "forceConsistentCasingInFileNames": true,
@@ -24,8 +23,7 @@
     "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "noEmit": true,
-    "noFallthroughCasesInSwitch": true
+    "noEmit": true
   },
   "include": ["src"],
   "exclude": ["src/setupTests.ts"]

@@ -12,7 +12,6 @@
   margin-top: 20px;
   margin-bottom: 20px;
   text-align: center;
-  width: 100%;
 
   .fullpage-content {
     padding: 10px 20px 10px 20px;
@@ -38,18 +37,16 @@
     padding: 1% 1% 1% 1%;
 
     h3 {
+      text-transform: capitalize;
       font-weight: bold;
       font-style: oblique;
     }
 
     p {
-      margin-right: 0.5%;
-      margin-left: 0.5%;
-    }
-
-    p.description {
       text-align: justify;
       text-align-last: center;
+      margin-right: 0.5%;
+      margin-left: 0.5%;
     }
 
     span.dot {
@@ -64,11 +61,9 @@
         vertical-align: top;
         display: inline-block;
         width: 120px;
+
         &.wider {
           width: 140px;
-        }
-        &.evenWider {
-          width: 180px;
         }
       }
     }
@@ -104,13 +99,13 @@ div.inPermalink {
     text-align: center;
     vertical-align: top;
     display: inline-block;
-    width: 20%;
-    height: 20%;
+    width: (100% / 5);
+    height: (100% / 5);
     margin-top: 1%;
     margin-bottom: 0.5%;
     @include mQ(1000px) {
-      width: 33.3%;
-      height: 33.3%;
+      width: (100% / 3);
+      height: (100% / 3);
     }
   }
 

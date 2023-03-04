@@ -1,21 +1,19 @@
 import { IconNames } from '@blueprintjs/icons';
-import React from 'react';
 
-import ControlButton from '../ControlButton';
+import controlButton from '../ControlButton';
 
-type ControlBarReturnToAcademyButtonProps = {
+type ControlBarReturnToAcademyButtonProps = DispatchProps & StateProps;
+
+type DispatchProps = {
   onClick?(): any;
 };
 
-export const ControlBarReturnToAcademyButton: React.FC<ControlBarReturnToAcademyButtonProps> = ({
-  onClick
-}) => {
-  return (
-    <ControlButton
-      label="Return to Academy"
-      icon={IconNames.ARROW_RIGHT}
-      onClick={onClick}
-      options={{ iconOnRight: true }}
-    />
-  );
+type StateProps = {
+  key: string;
 };
+
+export function ControlBarReturnToAcademyButton(props: ControlBarReturnToAcademyButtonProps) {
+  return controlButton('Return to Academy', IconNames.ARROW_RIGHT, props.onClick, {
+    iconOnRight: true
+  });
+}

@@ -9,25 +9,10 @@ html {
   background-image: url('#{$images-path}/academy_background.jpg');
   background-repeat: no-repeat;
   background-attachment: fixed;
-  ::-webkit-scrollbar {
-    height: 5px;
-    width: 6px;
-  }
-  ::-webkit-scrollbar-track {
-    border-radius: 3px;
-  }
-  ::-webkit-scrollbar-thumb {
-    background: $cadet-color-4;
-    border-radius: 3px;
-  }
-}
-
-body {
-  overflow: hidden;
 }
 
 .Application {
-  height: var(--application-height, 100vh);
+  height: 100vh;
   display: flex;
   flex-direction: column;
 }
@@ -36,5 +21,4 @@ body {
   height: 100%;
   display: flex;
   flex: 1 1 100%;
-  overflow: auto;
 }

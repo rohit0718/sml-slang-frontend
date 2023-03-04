@@ -2,22 +2,11 @@ $pure-green: #00ff00;
 $dark-green: #00e000;
 .GreenScreen {
   // Hide NavigationBar
-  position: absolute;
   height: 100vh;
-  width: 100vw;
   margin-top: -50px;
-  z-index: 15;
-  background: $pure-green !important;
+  z-index: 1000;
 
   .workspace {
-    background: $pure-green !important;
-  }
-
-  #ace-editor {
-    background: $pure-green !important;
-  }
-
-  .side-content-tooltip {
     background: $pure-green !important;
   }
 
@@ -27,32 +16,6 @@ $dark-green: #00e000;
 
   .ace_print-margin {
     background: $dark-green !important;
-  }
-
-  /* individual components */
-  .bp4-button {
-    background: $pure-green !important;
-    box-shadow: none !important;
-  }
-
-  .bp4-input {
-    background: $pure-green !important;
-    box-shadow: none !important;
-  }
-
-  .bp4-control-indicator {
-    background: $pure-green !important;
-    border: 0.1rem solid $dark-green !important;
-  }
-
-  .bp4-control-indicator::before {
-    background: $pure-green !important;
-    border: 0.1rem solid $dark-green !important;
-    box-shadow: none !important;
-  }
-
-  .ace_gutter-active-line {
-    background: $pure-green !important;
   }
 
   /* editor specific */

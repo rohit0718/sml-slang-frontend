@@ -1,6 +1,5 @@
-import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
-import { configure } from 'enzyme';
-configure({ adapter: new Adapter() });
+import 'jest-canvas-mock';
 
-// Mock ResizeObserver in tests
-global.ResizeObserver = require('resize-observer-polyfill');
+import { configure } from 'enzyme';
+import Adapter from 'enzyme-adapter-react-16';
+configure({ adapter: new Adapter() });

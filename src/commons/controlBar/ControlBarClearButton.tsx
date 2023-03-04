@@ -1,14 +1,17 @@
 import { IconNames } from '@blueprintjs/icons';
-import React from 'react';
 
-import ControlButton from '../ControlButton';
+import controlButton from '../ControlButton';
 
-type ControlBarClearButtonProps = {
+type ControlBarClearButtonProps = DispatchProps & StateProps;
+
+type DispatchProps = {
   handleReplOutputClear: () => void;
 };
 
-export const ControlBarClearButton: React.FC<ControlBarClearButtonProps> = ({
-  handleReplOutputClear
-}) => {
-  return <ControlButton label="Clear" icon={IconNames.REMOVE} onClick={handleReplOutputClear} />;
+type StateProps = {
+  key: string;
 };
+
+export function ControlBarClearButton(props: ControlBarClearButtonProps) {
+  return controlButton('Clear', IconNames.REMOVE, props.handleReplOutputClear);
+}

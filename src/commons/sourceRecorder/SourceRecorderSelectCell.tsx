@@ -1,9 +1,9 @@
+import { Tooltip } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
-import { Tooltip2 } from '@blueprintjs/popover2';
 import * as React from 'react';
 
 import { PlaybackData, SourcecastData } from '../../features/sourceRecorder/SourceRecorderTypes';
-import ControlButton from '../ControlButton';
+import controlButton from '../ControlButton';
 
 type SourceRecorderSelectCellProps = DispatchProps & StateProps;
 
@@ -28,13 +28,9 @@ class SourceRecorderSelectCell extends React.Component<SourceRecorderSelectCellP
 
   public render() {
     return (
-      <Tooltip2 content="Load Sourcecast Recording">
-        <ControlButton
-          label={`${this.props.data.title}`}
-          icon={IconNames.PAPERCLIP}
-          onClick={this.handleSelect}
-        />
-      </Tooltip2>
+      <Tooltip content="Load Sourcecast Recording">
+        {controlButton(`${this.props.data.title}`, IconNames.PAPERCLIP, this.handleSelect)}
+      </Tooltip>
     );
   }
 

@@ -1,5 +1,5 @@
 .ContentDisplay {
-  height: fit-content;
+  height: 100%;
   width: 100%;
 
   &.row {
@@ -91,8 +91,4 @@
   flex-direction: row;
   align-items: center;
   justify-content: space-evenly;
-}
-
-.WaitingCursor {
-  cursor: wait;
 }

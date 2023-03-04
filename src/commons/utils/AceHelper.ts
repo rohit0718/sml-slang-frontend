@@ -1,32 +1,22 @@
-import { ModeSelector } from 'sml-slang/dist/editor/modes/source';
-import { Chapter, Variant } from 'sml-slang/dist/types';
+import { HighlightRulesSelector, ModeSelector } from 'src/commons/editor/ace/mode';
+import { Variant } from 'src/sml-integration';
 
-import { HighlightRulesSelector_native } from '../../features/fullJS/fullJSHighlight';
-import { Documentation } from '../documentation/Documentation';
 /**
  * This _modifies global state_ and defines a new Ace mode globally, if it does not already exist.
  *
  * You can call this directly in render functions.
  */
-export const selectMode = (chapter: Chapter, variant: Variant, library: string) => {
+export const selectMode = (variant: Variant) => {
   if (
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    typeof ace.define.modules[`ace/mode/${getModeString(chapter, variant, library)}`]?.Mode ===
-    'function'
+    typeof ace.define.modules[`ace/mode/${getModeString(variant)}`]?.Mode === 'function'
   ) {
     return;
   }
 
-  HighlightRulesSelector_native(
-    chapter,
-    variant,
-    library,
-    Documentation.externalLibraries[library]
-  );
-  ModeSelector(chapter, variant, library);
+  HighlightRulesSelector(0, variant, undefined, []);
+  ModeSelector(0, variant, undefined);
 };
 
-export const getModeString = (chapter: Chapter, variant: Variant, library: string) => {
-  return `source${chapter}${variant}${library}`;
-};
+export const getModeString = (variant: Variant) => `source${variant}`;

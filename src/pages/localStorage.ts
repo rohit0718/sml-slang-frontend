@@ -1,20 +1,16 @@
-import { Chapter, Variant } from 'sml-slang/dist/types';
 import { compressToUTF16, decompressFromUTF16 } from 'lz-string';
+import Constants from 'src/commons/utils/Constants';
+import { Variant } from 'src/sml-integration';
 
 import { OverallState } from '../commons/application/ApplicationTypes';
-import { ExternalLibraryName } from '../commons/application/types/ExternalTypes';
 import { SessionState } from '../commons/application/types/SessionTypes';
 import { showWarningMessage } from '../commons/utils/NotificationsHelper';
-import { AchievementItem } from '../features/achievement/AchievementTypes';
 
 export type SavedState = {
   session: Partial<SessionState>;
-  achievements: AchievementItem[];
-  playgroundEditorValue: string;
+  playgroundEditorValue: string | null;
   playgroundIsEditorAutorun: boolean;
-  playgroundSourceChapter: number;
   playgroundSourceVariant: Variant;
-  playgroundExternalLibrary: ExternalLibraryName;
 };
 
 export const loadStoredState = (): SavedState | undefined => {
@@ -40,30 +36,13 @@ export const saveState = (state: OverallState) => {
       session: {
         accessToken: state.session.accessToken,
         refreshToken: state.session.refreshToken,
-        courseRegId: state.session.courseRegId,
         role: state.session.role,
         name: state.session.name,
-        userId: state.session.userId,
-        courses: state.session.courses,
-        courseId: state.session.courseId,
-        courseName: state.session.courseName,
-        courseShortName: state.session.courseShortName,
-        viewable: state.session.viewable,
-        enableGame: state.session.enableGame,
-        enableAchievements: state.session.enableAchievements,
-        enableSourcecast: state.session.enableSourcecast,
-        moduleHelpText: state.session.moduleHelpText,
-        assetsPrefix: state.session.assetsPrefix,
-        assessmentConfigurations: state.session.assessmentConfigurations,
-        githubAccessToken: state.session.githubAccessToken
+        userId: state.session.userId
       },
-      achievements: state.achievement.achievements,
-      // TODO: Hardcoded to make use of the first editor tab. Rewrite after editor tabs are added.
-      playgroundEditorValue: state.workspaces.playground.editorTabs[0].value,
+      playgroundEditorValue: state.workspaces.playground.editorValue,
       playgroundIsEditorAutorun: state.workspaces.playground.isEditorAutorun,
-      playgroundSourceChapter: Chapter.SML_SLANG,
-      playgroundSourceVariant: state.workspaces.playground.context.variant,
-      playgroundExternalLibrary: state.workspaces.playground.externalLibrary
+      playgroundSourceVariant: Constants.defaultSourceVariant
     };
     const serialized = compressToUTF16(JSON.stringify(stateToBeSaved));
     localStorage.setItem('storedState', serialized);

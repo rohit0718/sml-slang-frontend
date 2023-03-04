@@ -1,5 +1,6 @@
 import { Intent } from '@blueprintjs/core';
 import { mount, ReactWrapper } from 'enzyme';
+import React from 'react';
 
 import { PromptDialog, PromptDialogProps } from '../PromptDialog';
 

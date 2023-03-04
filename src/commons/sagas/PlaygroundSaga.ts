@@ -1,8 +1,8 @@
-import { Variant } from 'sml-slang/dist/types';
 import { compressToEncodedURIComponent } from 'lz-string';
 import * as qs from 'query-string';
 import { SagaIterator } from 'redux-saga';
 import { call, delay, put, race, select } from 'redux-saga/effects';
+import { Variant } from 'src/sml-integration';
 
 import {
   changeQueryString,
@@ -11,7 +11,6 @@ import {
 } from '../../features/playground/PlaygroundActions';
 import { GENERATE_LZ_STRING, SHORTEN_URL } from '../../features/playground/PlaygroundTypes';
 import { defaultEditorValue, OverallState } from '../application/ApplicationTypes';
-import { ExternalLibraryName } from '../application/types/ExternalTypes';
 import Constants from '../utils/Constants';
 import { showSuccessMessage, showWarningMessage } from '../utils/NotificationsHelper';
 import { safeTakeEvery as takeEvery } from './SafeEffects';
@@ -19,8 +18,8 @@ import { safeTakeEvery as takeEvery } from './SafeEffects';
 export default function* PlaygroundSaga(): SagaIterator {
   yield takeEvery(GENERATE_LZ_STRING, updateQueryString);
 
-  yield takeEvery(SHORTEN_URL, function* (action: ReturnType<typeof shortenURL>): any {
-    const queryString = yield select((state: OverallState) => state.playground.queryString);
+  yield takeEvery(SHORTEN_URL, function* (action: ReturnType<typeof shortenURL>) {
+    const queryString: string = yield select((state: OverallState) => state.playground.queryString);
     const keyword = action.payload;
     const errorMsg = 'ERROR';
 
@@ -39,43 +38,41 @@ export default function* PlaygroundSaga(): SagaIterator {
 
     if (!resp || timeout) {
       yield put(updateShortURL(errorMsg));
-      return yield call(showWarningMessage, 'Something went wrong trying to create the link.');
+      return (yield call(
+        showWarningMessage,
+        'Something went wrong trying to create the link.'
+      )) as string;
     }
 
     if (resp.status !== 'success' && !resp.shorturl) {
       yield put(updateShortURL(errorMsg));
-      return yield call(showWarningMessage, resp.message);
+      return (yield call(showWarningMessage, resp.message)) as string;
     }
 
     if (resp.status !== 'success') {
       yield call(showSuccessMessage, resp.message);
     }
-    yield put(updateShortURL(Constants.urlShortenerBase + resp.url.keyword));
+    yield put(updateShortURL(resp.shorturl));
+    return '';
   });
 }
 
 function* updateQueryString() {
-  const code: string = yield select(
-    // TODO: Hardcoded to make use of the first editor tab. Rewrite after editor tabs are added.
-    (state: OverallState) => state.workspaces.playground.editorTabs[0].value
+  const code: string | null = yield select(
+    (state: OverallState) => state.workspaces.playground.editorValue
   );
   if (!code || code === defaultEditorValue) {
     yield put(changeQueryString(''));
     return;
   }
-  const variant: Variant = yield select(
-    (state: OverallState) => state.workspaces.playground.context.variant
-  );
-  const external: ExternalLibraryName = yield select(
-    (state: OverallState) => state.workspaces.playground.externalLibrary
-  );
+  const codeString: string = code as string;
+  const variant: Variant = Constants.defaultSourceVariant;
   const execTime: number = yield select(
     (state: OverallState) => state.workspaces.playground.execTime
   );
   const newQueryString: string = qs.stringify({
-    prgrm: compressToEncodedURIComponent(code),
+    prgrm: compressToEncodedURIComponent(codeString),
     variant,
-    ext: external,
     exec: execTime
   });
   yield put(changeQueryString(newQueryString));
@@ -89,28 +86,5 @@ export async function shortenURLRequest(
   queryString: string,
   keyword: string
 ): Promise<Response | null> {
-  const url = `${window.location.protocol}//${window.location.host}/playground#${queryString}`;
-
-  const params = {
-    signature: Constants.urlShortenerSignature,
-    action: 'shorturl',
-    format: 'json',
-    keyword,
-    url
-  };
-  const fetchOpts: RequestInit = {
-    method: 'POST',
-    body: Object.entries(params).reduce((formData, [k, v]) => {
-      formData.append(k, v!);
-      return formData;
-    }, new FormData())
-  };
-
-  const resp = await fetch(`${Constants.urlShortenerBase}yourls-api.php`, fetchOpts);
-  if (!resp || !resp.ok) {
-    return null;
-  }
-
-  const res = await resp.json();
-  return res;
+  return null;
 }

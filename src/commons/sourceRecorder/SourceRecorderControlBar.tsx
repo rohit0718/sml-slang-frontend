@@ -1,7 +1,7 @@
-import { ButtonGroup, Slider } from '@blueprintjs/core';
+import { Slider } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
-import { Chapter } from 'sml-slang/dist/types';
 import * as React from 'react';
+import { Variant } from 'src/sml-integration';
 
 import {
   CodeDelta,
@@ -10,22 +10,19 @@ import {
   PlaybackStatus,
   SourcecastData
 } from '../../features/sourceRecorder/SourceRecorderTypes';
-import { ExternalLibraryName } from '../application/types/ExternalTypes';
-import ControlButton from '../ControlButton';
-import { SideContentType } from '../sideContent/SideContentTypes';
+import controlButton from '../ControlButton';
 
-export type SourceRecorderControlBarProps = DispatchProps & StateProps & OwnProps;
+export type SourceRecorderControlBarProps = DispatchProps & StateProps;
 
 type DispatchProps = {
   handleEditorValueChange: (newCode: string) => void;
   handleSetCurrentPlayerTime: (playTime: number) => void;
   handleSetCodeDeltasToApply: (deltas: CodeDelta[]) => void;
-  handleSetIsEditorReadonly: (isEditorReadonly: boolean) => void;
+  handleSetEditorReadonly: (editorReadonly: boolean) => void;
   handleSetInputToApply: (inputToApply: Input) => void;
   handleSetSourcecastDuration: (duration: number) => void;
   handleSetSourcecastStatus: (playbackStatus: PlaybackStatus) => void;
-  handleChapterSelect: (chapter: Chapter) => void;
-  handleExternalSelect: (name: ExternalLibraryName) => void;
+  handleVariantSelect: (variant: Variant) => void;
   handlePromptAutocomplete: (row: number, col: number, callback: any) => void;
 };
 
@@ -35,14 +32,6 @@ type StateProps = {
   duration: number;
   playbackData: PlaybackData;
   playbackStatus: PlaybackStatus;
-};
-
-type OwnProps = {
-  /**
-   * setSelectedTab is optional since it is only used in Sourcecast and not Sourcereel
-   * due to the addition of the MobileWorkspace to Sourcecast.
-   */
-  setSelectedTab?: (newTab: SideContentType) => void;
 };
 
 type State = {
@@ -67,19 +56,16 @@ class SourceRecorderControlBar extends React.PureComponent<SourceRecorderControl
   }
 
   public render() {
-    const PlayerPlayButton = (
-      <ControlButton
-        label="Play"
-        icon={IconNames.PLAY}
-        onClick={this.handlePlayerPlaying}
-        isDisabled={!this.props.duration}
-      />
+    const PlayerPlayButton = controlButton(
+      'Play',
+      IconNames.PLAY,
+      this.handlePlayerPlaying,
+      {},
+      !this.props.duration
     );
-    const PlayerPauseButton = (
-      <ControlButton label="Pause" icon={IconNames.PAUSE} onClick={this.handlePlayerPausing} />
-    );
+    const PlayerPauseButton = controlButton('Pause', IconNames.PAUSE, this.handlePlayerPausing);
     return (
-      <div className="SourcecastControlBar">
+      <div className="Bar">
         <audio
           src={this.props.audioUrl}
           ref={this.audio}
@@ -91,11 +77,13 @@ class SourceRecorderControlBar extends React.PureComponent<SourceRecorderControl
           // controls={true}
         />
         <br />
-        <div className="PlayerControl">
-          <ButtonGroup className="PlayerControlButton">
-            {this.props.playbackStatus === PlaybackStatus.paused && PlayerPlayButton}
-            {this.props.playbackStatus === PlaybackStatus.playing && PlayerPauseButton}
-          </ButtonGroup>
+        <div>
+          <div className="PlayerControl">
+            <div className="PlayerControl">
+              {this.props.playbackStatus === PlaybackStatus.paused && PlayerPlayButton}
+              {this.props.playbackStatus === PlaybackStatus.playing && PlayerPauseButton}
+            </div>
+          </div>
           <div className="Slider">
             <Slider
               min={0}
@@ -107,6 +95,7 @@ class SourceRecorderControlBar extends React.PureComponent<SourceRecorderControl
             />
           </div>
         </div>
+        <br />
       </div>
     );
   }
@@ -138,8 +127,7 @@ class SourceRecorderControlBar extends React.PureComponent<SourceRecorderControl
     const currentRevision = this.state.currentDeltaRevision;
     let currentTime = this.audio.current!.currentTime * 1000;
     this.props.handleEditorValueChange(playbackData.init.editorValue);
-    this.props.handleExternalSelect(playbackData.init.externalLibrary);
-    this.props.handleChapterSelect(playbackData.init.chapter);
+    this.props.handleVariantSelect(playbackData.init.variant);
     const codeDeltasToApply = playbackData.inputs
       .filter(
         deltaWithTime => deltaWithTime.time <= currentTime && deltaWithTime.type === 'codeDelta'
@@ -172,7 +160,7 @@ class SourceRecorderControlBar extends React.PureComponent<SourceRecorderControl
   private handlePlayerPausing = () => {
     const audio = this.audio.current;
     audio!.pause();
-    this.props.handleSetIsEditorReadonly(false);
+    this.props.handleSetEditorReadonly(false);
     this.props.handleSetSourcecastStatus(PlaybackStatus.paused);
     this.stopCurrentPlayback();
   };
@@ -180,16 +168,13 @@ class SourceRecorderControlBar extends React.PureComponent<SourceRecorderControl
   private handlePlayerPlaying = () => {
     const audio = this.audio.current;
     audio!.play();
-    this.props.handleSetIsEditorReadonly(true);
+    this.props.handleSetEditorReadonly(true);
     this.props.handleSetSourcecastStatus(PlaybackStatus.playing);
     this.stopPreviousPlaybackAndApplyFromStart(this.props.playbackData);
-    if (this.props.setSelectedTab) {
-      this.props.setSelectedTab(SideContentType.mobileEditor);
-    }
   };
 
   private handlePlayerStopping = () => {
-    this.props.handleSetIsEditorReadonly(false);
+    this.props.handleSetEditorReadonly(false);
     this.props.handleSetSourcecastStatus(PlaybackStatus.paused);
     this.props.handleSetCurrentPlayerTime(0);
     this.setState({

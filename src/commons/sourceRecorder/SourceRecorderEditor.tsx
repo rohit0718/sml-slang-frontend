@@ -1,8 +1,7 @@
 import 'ace-builds/src-noconflict/ext-searchbox';
 import 'ace-builds/src-noconflict/mode-javascript';
-import 'sml-slang/dist/editor/theme/source';
+import 'src/commons/editor/ace/theme';
 
-import { Ace } from 'ace-builds';
 import { isEqual } from 'lodash';
 import * as React from 'react';
 import AceEditor, { IAceEditorProps } from 'react-ace';
@@ -14,8 +13,7 @@ import {
   KeyboardCommand,
   SelectionRange
 } from '../../features/sourceRecorder/SourceRecorderTypes';
-import { EditorTabStateProps } from '../editor/Editor';
-import { Position } from '../editor/EditorTypes';
+import { HighlightedLines, Position } from '../editor/EditorTypes';
 
 /**
  * @property editorValue - The string content of the react-ace editor
@@ -23,12 +21,9 @@ import { Position } from '../editor/EditorTypes';
  *           for the react-ace editor's `onChange`
  * @property handleEvalEditor  - A callback function for evaluation
  *           of the editor's content, using `slang`
- * @property isEditorReadonly - Used for sourcecast only
+ * @property editorReadonly - Used for sourcecast only
  */
-export type SourceRecorderEditorProps = DispatchProps &
-  EditorStateProps &
-  EditorTabStateProps &
-  OwnProps;
+export type SourceRecorderEditorProps = DispatchProps & StateProps;
 
 type DispatchProps = {
   getTimerDuration?: () => number;
@@ -38,22 +33,20 @@ type DispatchProps = {
   handleEditorUpdateBreakpoints: (breakpoints: string[]) => void;
   handleRecordInput?: (input: Input) => void;
   handleUpdateHasUnsavedChanges?: (hasUnsavedChanges: boolean) => void;
-  onFocus?: (event: any, editor?: Ace.Editor) => void;
-  onBlur?: (event: any, editor?: Ace.Editor) => void;
 };
 
-type EditorStateProps = {
+type StateProps = {
+  breakpoints: string[];
   codeDeltasToApply?: CodeDelta[] | null;
+  editorReadonly?: boolean;
   editorSessionId: string;
+  editorValue: string;
+  highlightedLines: HighlightedLines[];
   isEditorAutorun: boolean;
-  isEditorReadonly: boolean;
   inputToApply?: Input | null;
   isPlaying?: boolean;
   isRecording?: boolean;
-};
-
-type OwnProps = {
-  setDraggableReplPosition?: () => void; // for the mobile Sourcecast Workspace
+  newCursorPosition?: Position;
 };
 
 class SourcecastEditor extends React.PureComponent<SourceRecorderEditorProps, {}> {
@@ -144,10 +137,6 @@ class SourcecastEditor extends React.PureComponent<SourceRecorderEditorProps, {}
         switch (keyboardCommand) {
           case 'run':
             this.props.handleEditorEval();
-            // Popup mobile draggable repl when there is a recorded 'run' evaluation
-            if (this.props.setDraggableReplPosition) {
-              this.props.setDraggableReplPosition();
-            }
             break;
         }
         break;
@@ -169,14 +158,6 @@ class SourcecastEditor extends React.PureComponent<SourceRecorderEditorProps, {}
 
     // Change all info annotations to error annotations
     session.on('changeAnnotation' as any, this.handleAnnotationChange(session));
-
-    const { onFocus, onBlur } = this.props;
-    if (onFocus) {
-      editor.on('focus', (event: Event) => onFocus(event, editor));
-    }
-    if (onBlur) {
-      editor.on('blur', (event: Event) => onBlur(event, editor));
-    }
   }
 
   public componentWillUnmount() {
@@ -204,7 +185,7 @@ class SourcecastEditor extends React.PureComponent<SourceRecorderEditorProps, {}
 
   public render() {
     return (
-      <HotKeys className="Editor bp4-card bp4-elevation-0" handlers={handlers}>
+      <HotKeys className="Editor" handlers={handlers}>
         <div className="row editor-react-ace">
           <AceEditor
             className="react-ace"
@@ -238,7 +219,7 @@ class SourcecastEditor extends React.PureComponent<SourceRecorderEditorProps, {}
             onChange={this.onChangeMethod}
             onCursorChange={this.onCursorChange}
             onSelectionChange={this.onSelectionChange}
-            readOnly={this.props.isEditorReadonly}
+            readOnly={this.props.editorReadonly ? this.props.editorReadonly : false}
             theme="source"
             value={this.props.editorValue}
             width="100%"

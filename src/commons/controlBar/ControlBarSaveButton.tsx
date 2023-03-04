@@ -1,8 +1,7 @@
 import { Intent } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
-import React from 'react';
 
-import ControlButton from '../ControlButton';
+import controlButton from '../ControlButton';
 
 type ControlBarSaveButtonProps = DispatchProps & StateProps;
 
@@ -15,15 +14,8 @@ type StateProps = {
   hasUnsavedChanges?: boolean;
 };
 
-export const ControlButtonSaveButton: React.FC<ControlBarSaveButtonProps> = props => {
+export function ControlButtonSaveButton(props: ControlBarSaveButtonProps) {
   const saveButtonOpts = props.hasUnsavedChanges ? { intent: Intent.WARNING, minimal: false } : {};
 
-  return (
-    <ControlButton
-      label="Save"
-      icon={IconNames.FLOPPY_DISK}
-      onClick={props.onClickSave}
-      options={saveButtonOpts}
-    />
-  );
-};
+  return controlButton('Save', IconNames.FLOPPY_DISK, props.onClickSave, saveButtonOpts);
+}

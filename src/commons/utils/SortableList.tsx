@@ -1,5 +1,5 @@
 import { Button } from '@blueprintjs/core';
-import { arrayMoveImmutable } from 'array-move';
+import arrayMove from 'array-move';
 import React from 'react';
 import { SortableContainer, SortableElement } from 'react-sortable-hoc';
 
@@ -28,7 +28,7 @@ export const useSortableList = () => {
   const [items, setItems] = React.useState<string[]>([]);
 
   const onSortEnd = React.useCallback(({ oldIndex, newIndex }: any) => {
-    setItems(prevState => arrayMoveImmutable(prevState, oldIndex, newIndex));
+    setItems(prevState => arrayMove(prevState, oldIndex, newIndex));
   }, []);
 
   return {

@@ -1,45 +1,29 @@
-import { Chapter, Language, SourceError, Variant } from 'sml-slang/dist/types';
+import { SourceError } from 'sml-slang/types';
+import { Variant } from 'src/sml-integration';
 
-import { AcademyState } from '../../features/academy/AcademyTypes';
-import { AchievementState } from '../../features/achievement/AchievementTypes';
-import { DashboardState } from '../../features/dashboard/DashboardTypes';
-import { Grading } from '../../features/grading/GradingTypes';
 import { PlaygroundState } from '../../features/playground/PlaygroundTypes';
 import { PlaybackStatus, RecordingStatus } from '../../features/sourceRecorder/SourceRecorderTypes';
-import { Assessment } from '../assessment/AssessmentTypes';
+import { SideContentType } from '../sideContent/SideContentTypes';
 import Constants from '../utils/Constants';
-import { createContext } from '../utils/JsSlangHelper';
+import { createContext } from '../utils/XSlangHelper';
 import {
   DebuggerContext,
   WorkspaceLocation,
   WorkspaceManagerState,
   WorkspaceState
 } from '../workspace/WorkspaceTypes';
-import { ExternalLibraryName } from './types/ExternalTypes';
 import { SessionState } from './types/SessionTypes';
 
 export type OverallState = {
-  readonly academy: AcademyState;
-  readonly achievement: AchievementState;
   readonly application: ApplicationState;
   readonly playground: PlaygroundState;
   readonly session: SessionState;
   readonly workspaces: WorkspaceManagerState;
-  readonly dashboard: DashboardState;
 };
 
 export type ApplicationState = {
+  readonly title: string;
   readonly environment: ApplicationEnvironment;
-};
-
-export type Story = {
-  story: string;
-  playStory: boolean;
-};
-
-export type GameState = {
-  collectibles: { [id: string]: string };
-  completed_quests: string[];
 };
 
 /**
@@ -101,46 +85,28 @@ export enum Role {
 }
 
 /**
- * Defines the languages available for use on Source Academy,
- * including Source sublanguages and other languages e.g. full JS.
+ * Defines the Source sublanguages available for use.
  * For external libraries, see ExternalLibrariesTypes.ts
  */
-export interface SALanguage extends Language {
+export type SourceLanguage = {
+  variant: Variant;
   displayName: string;
-}
-
-const variantDisplay: Map<Variant, string> = new Map([
-  [Variant.DEFAULT, 'calc']
-]);
-
-
-export const styliseSublanguage = (chapter: Chapter, variant: Variant = Variant.DEFAULT) => {
-  return `Source \xa7${chapter}${
-    variantDisplay.has(variant) ? ` ${variantDisplay.get(variant)}` : ''
-  }`;
 };
 
-export const sublanguages: Language[] = [
-  { chapter: Chapter.SML_SLANG, variant: Variant.DEFAULT }
-];
+const variantDisplay: Map<Variant, string> = new Map([['sml-slang', 'SMLSlang']]);
 
-export const sourceLanguages: SALanguage[] = sublanguages.map(sublang => {
+export const styliseSublanguage = (variant: Variant = Constants.defaultSourceVariant) => {
+  return `Source \xa7${variantDisplay.has(variant) ? ` ${variantDisplay.get(variant)}` : ''}`;
+};
+
+const sublanguages: { variant: Variant }[] = [{ variant: 'sml-slang' }];
+
+export const sourceLanguages = sublanguages.map(sublang => {
   return {
     ...sublang,
-    displayName: styliseSublanguage(sublang.chapter, sublang.variant)
+    displayName: styliseSublanguage(sublang.variant)
   };
 });
-
-export const defaultLanguages = sourceLanguages.filter(
-  sublang => sublang.variant === Variant.DEFAULT
-);
-
-export const variantLanguages = sourceLanguages.filter(
-  sublang => sublang.variant !== Variant.DEFAULT
-);
-
-export const isSourceLanguage = (chapter: Chapter) =>
-  [Chapter.SML_SLANG].includes(chapter);
 
 const currentEnvironment = (): ApplicationEnvironment => {
   switch (process.env.NODE_ENV) {
@@ -153,64 +119,37 @@ const currentEnvironment = (): ApplicationEnvironment => {
   }
 };
 
-export const defaultAcademy: AcademyState = {
-  gameCanvas: undefined
-};
-
 export const defaultApplication: ApplicationState = {
+  title: 'Cadet',
   environment: currentEnvironment()
 };
 
-export const defaultDashboard: DashboardState = {
-  gradingSummary: {
-    cols: [],
-    rows: []
-  }
-};
+export const defaultPlayground: PlaygroundState = {};
 
-export const defaultAchievement: AchievementState = {
-  achievements: [],
-  goals: [],
-  users: [],
-  assessmentOverviews: []
-};
-
-export const defaultPlayground: PlaygroundState = {
-  githubSaveInfo: { repoName: '', filePath: '' }
-};
-
-export const defaultEditorValue = '1+1';
+export const defaultEditorValue = '1 + 1;;';
 
 /**
  * Create a default IWorkspaceState for 'resetting' a workspace.
- * Takes in parameters to set the sml-slang library and chapter.
+ * Takes in parameters to set the x-slang library.
  *
  * @param workspaceLocation the location of the workspace, used for context
  */
 export const createDefaultWorkspace = (workspaceLocation: WorkspaceLocation): WorkspaceState => ({
-  autogradingResults: [],
+  breakpoints: [],
   context: createContext<WorkspaceLocation>(
     [],
     workspaceLocation,
-    Constants.defaultSourceVariant
+    Constants.defaultSourceVariant as Variant
   ),
-  activeEditorTabIndex: 0,
-  editorTabs: [
-    {
-      value: ['playground', 'sourcecast', 'githubAssessments'].includes(workspaceLocation)
-        ? defaultEditorValue
-        : '',
-      prependValue: '',
-      postpendValue: '',
-      highlightedLines: [],
-      breakpoints: []
-    }
-  ],
+  editorPrepend: '',
   editorSessionId: '',
-  isEditorReadonly: false,
-  editorTestcases: [],
-  externalLibrary: ExternalLibraryName.NONE,
+  editorValue: workspaceLocation === 'playground' || 'sourcecast' ? defaultEditorValue : '',
+  editorPostpend: '',
+  editorReadonly: false,
+  editorHeight: 150,
+  editorWidth: '50%',
   execTime: 1000,
+  highlightedLines: [],
   output: [],
   replHistory: {
     browseIndex: null,
@@ -219,6 +158,7 @@ export const createDefaultWorkspace = (workspaceLocation: WorkspaceLocation): Wo
   },
   replValue: '',
   sharedbConnected: false,
+  sideContentActiveTab: SideContentType.introduction,
   stepLimit: 1000,
   globals: [],
   isEditorAutorun: false,
@@ -228,19 +168,9 @@ export const createDefaultWorkspace = (workspaceLocation: WorkspaceLocation): Wo
   debuggerContext: {} as DebuggerContext
 });
 
+export const defaultRoomId = null;
+
 export const defaultWorkspaceManager: WorkspaceManagerState = {
-  assessment: {
-    ...createDefaultWorkspace('assessment'),
-    currentAssessment: undefined,
-    currentQuestion: undefined,
-    hasUnsavedChanges: false
-  },
-  grading: {
-    ...createDefaultWorkspace('grading'),
-    currentSubmission: undefined,
-    currentQuestion: undefined,
-    hasUnsavedChanges: false
-  },
   playground: {
     ...createDefaultWorkspace('playground'),
     usingSubst: false
@@ -255,8 +185,7 @@ export const defaultWorkspaceManager: WorkspaceManagerState = {
     playbackData: {
       init: {
         editorValue: '',
-        chapter: Chapter.SML_SLANG,
-        externalLibrary: ExternalLibraryName.NONE
+        variant: Constants.defaultSourceVariant
       },
       inputs: []
     },
@@ -271,53 +200,31 @@ export const defaultWorkspaceManager: WorkspaceManagerState = {
     playbackData: {
       init: {
         editorValue: '',
-        chapter: Chapter.SML_SLANG,
-        externalLibrary: ExternalLibraryName.NONE
+        variant: Constants.defaultSourceVariant
       },
       inputs: []
     },
     recordingStatus: RecordingStatus.notStarted,
     timeElapsedBeforePause: 0,
     timeResumed: 0
-  },
-  sicp: {
-    ...createDefaultWorkspace('sicp'),
-    usingSubst: false
-  },
-  githubAssessment: {
-    ...createDefaultWorkspace('githubAssessment'),
-    hasUnsavedChanges: false
   }
 };
 
 export const defaultSession: SessionState = {
-  courses: [],
+  accessToken: undefined,
   group: null,
-  gameState: {
-    completed_quests: [],
-    collectibles: {}
+  historyHelper: {
+    lastAcademyLocations: [null, null],
+    lastGeneralLocations: [null, null]
   },
-  xp: 0,
-  allUserXp: undefined,
-  story: {
-    story: '',
-    playStory: false
-  },
-  assessments: new Map<number, Assessment>(),
-  assessmentOverviews: undefined,
-  agreedToResearch: undefined,
-  sessionId: Date.now(),
-  githubOctokitObject: { octokit: undefined },
-  gradingOverviews: undefined,
-  gradings: new Map<number, Grading>(),
+  refreshToken: undefined,
+  role: undefined,
+  name: undefined,
   notifications: []
 };
 
 export const defaultState: OverallState = {
-  academy: defaultAcademy,
-  achievement: defaultAchievement,
   application: defaultApplication,
-  dashboard: defaultDashboard,
   playground: defaultPlayground,
   session: defaultSession,
   workspaces: defaultWorkspaceManager

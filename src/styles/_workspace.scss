@@ -7,15 +7,10 @@ $code-color-error: #ff4444;
   height: 100%;
   background-color: $cadet-color-1;
   display: flex;
+  padding-top: 0.5rem;
   flex: 1 1 auto;
   flex-direction: column;
 
-  // Hides scrollbar in mobile workspace
-  @media screen and (max-width: 768px) {
-    ::-webkit-scrollbar {
-      display: none;
-    }
-  }
   .row {
     margin-right: 0px;
     margin-left: 0px;
@@ -36,35 +31,16 @@ $code-color-error: #ff4444;
     justify-content: space-between;
     margin-left: 0.5rem;
     margin-right: 0.5rem;
-    margin-top: 0.5rem;
     margin-bottom: 0.6rem;
-
-    @media screen and (max-width: 768px) {
-      overflow-x: auto;
-      overflow-y: hidden;
-    }
-
-    @media screen and (min-width: 769px) {
-      .ControlBar_editingWorkspace {
-        width: 10%;
-      }
-    }
   }
 
   .workspace-parent {
     height: 100%;
     width: 100%;
     display: flex;
-    flex-direction: row;
-    overflow: hidden;
-  }
-
-  .content-parent {
-    height: 100%;
-    width: 100%;
-    display: flex;
     flex: 1 1 100%;
     flex-direction: row;
+    overflow: hidden;
 
     > div {
       height: inherit; // Fix for Firefox not autoscrolling when repl overflows
@@ -93,6 +69,10 @@ $code-color-error: #ff4444;
     height: 100%;
   }
 
+  .editor-content-divider {
+    flex: initial;
+  }
+
   .editor-divider {
     flex: initial;
   }
@@ -104,15 +84,14 @@ $code-color-error: #ff4444;
   .Editor {
     display: flex;
     flex-direction: column;
-    height: 100%;
-    width: 100%;
-    padding: 0;
-    background-color: $cadet-color-2;
+    height: auto;
+    margin: 0 0.6rem 0.6rem 0.6rem;
+    padding-bottom: 0.6rem;
+    padding-left: 0.6rem;
 
     .editor-react-ace {
       flex: 1;
       height: 100%;
-      margin: 2px;
 
       #brace-editor {
         height: 100%;
@@ -383,6 +362,32 @@ $code-color-error: #ff4444;
       }
     }
 
+    ##{$ns}-tab-panel_side-content-tabs_inspector {
+      overflow: hidden;
+      .inspect-scope-table {
+        width: 100%;
+        white-space: nowrap;
+        table-layout: fixed;
+
+        tbody {
+          .inspect-table-obj-name {
+            width: 20%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
+
+          .inspect-table-obj-details {
+            display: block;
+            code {
+              overflow: hidden;
+              text-overflow: ellipsis;
+              display: block;
+            }
+          }
+        }
+      }
+    }
+
     // Specific CSS for the Stepper tab, since REPL is hidden
     ##{$ns}-tab-panel_side-content-tabs_subst_visualiser {
       height: calc(100% - 60px);
@@ -474,7 +479,6 @@ $code-color-error: #ff4444;
   .side-content-tab {
     // Set colour of icons in blueprintjs tabs
     color: #a7b6c2;
-
     &[aria-selected='true'] {
       .side-content-tooltip {
         background-color: #495a6b;
@@ -564,29 +568,6 @@ $code-color-error: #ff4444;
             }
           }
         }
-      }
-    }
-
-    .sa-html-display {
-      background-color: white;
-      width: 100%;
-      height: 60vh;
-    }
-  }
-
-  .sidecontent-overview {
-    // fix overflow for assessment sidecontent
-
-    pre {
-      // for code block in pre
-      overflow-x: auto;
-    }
-
-    p {
-      // for image in p
-      img {
-        max-width: 100%;
-        object-fit: contain;
       }
     }
   }
@@ -710,7 +691,7 @@ $code-color-error: #ff4444;
 
     .Editor {
       flex: 1 1 auto;
-      margin: 0 0.5rem 0 0;
+      margin: 0 0.5rem 0 0.5rem;
       padding: 0;
     }
 
@@ -758,15 +739,15 @@ $code-color-error: #ff4444;
         font: 16px / normal 'Inconsolata', 'Consolas', monospace;
       }
 
-      .code-output {
+      .codeOutput {
         color: $code-color-code;
       }
 
-      .log-output {
+      .logOutput {
         color: $code-color-log;
       }
 
-      .result-output {
+      .resultOutput {
         color: $code-color-result;
 
         .canvas-container {
@@ -782,7 +763,7 @@ $code-color-error: #ff4444;
         }
       }
 
-      .error-output {
+      .errorOutput {
         color: $code-color-error;
       }
     }
@@ -791,7 +772,6 @@ $code-color-error: #ff4444;
     .repl-input-parent {
       padding: 0;
       margin-bottom: 0rem;
-      flex-wrap: nowrap;
     }
 
     .repl-react-ace {
@@ -822,9 +802,7 @@ $code-color-error: #ff4444;
     }
   }
 
-  .Autograder,
-  .ContestEntryVoting,
-  .ContestLeaderboard {
+  .Autograder {
     min-width: 640px;
 
     *:focus {
@@ -847,14 +825,8 @@ $code-color-error: #ff4444;
       }
     }
 
-    .testcaseeditor-subcomponent {
-      padding: 0.5rem;
-    }
-
     .testcases-header,
-    .results-header,
-    .contestentries-header,
-    .leaderboard-header {
+    .results-header {
       width: 100%;
       display: flex;
       justify-content: space-between;
@@ -903,30 +875,6 @@ $code-color-error: #ff4444;
       }
     }
 
-    .contestentries-header {
-      .header-entryid {
-        width: 55%;
-      }
-
-      .header-entryrank {
-        width: 45%;
-      }
-    }
-
-    .leaderboard-header {
-      .header-entryid {
-        width: 40%;
-      }
-
-      .header-entryrank {
-        width: 20%;
-      }
-
-      .header-score {
-        width: 40%;
-      }
-    }
-
     pre {
       color: $code-color-code;
     }
@@ -939,12 +887,8 @@ $code-color-error: #ff4444;
   }
 
   .AutograderCard,
-  .EditableAutograderCard,
-  .ResultCard,
-  .ContestEntryCard,
-  .LeaderboardCard {
+  .ResultCard {
     /* Wrapper container (Blueprint Card) for each testcase and autograder result */
-    /* Wrapper container for each Contest Entry Voting cards */
     .#{$ns}-card {
       border-color: rgb(26, 37, 48);
       border-style: solid;
@@ -970,7 +914,7 @@ $code-color-error: #ff4444;
       }
     }
 
-    &.secret > .#{$ns}-card {
+    &.private > .#{$ns}-card {
       background-color: rgba(192, 192, 192, 0.2);
     }
 
@@ -993,41 +937,6 @@ $code-color-error: #ff4444;
       border-top-style: solid;
       border-top-width: 1px;
       border-color: #1a2530;
-    }
-  }
-
-  .ContestEntryCard {
-    /* Nested Blueprint Card component for Contest Entry Card */
-    .#{$ns}-card {
-      .contestentry-entryid {
-        width: 55%;
-        text-align: center;
-      }
-
-      .contestentry-rank {
-        width: 45%;
-        text-align: center;
-      }
-    }
-  }
-
-  .LeaderboardCard {
-    /* Nested Blueprint Card component for Contest Entry Card */
-    .#{$ns}-card {
-      .contestentry-entryid {
-        width: 40%;
-        text-align: center;
-      }
-
-      .contestentry-rank {
-        width: 20%;
-        text-align: center;
-      }
-
-      .contestentry-score {
-        width: 40%;
-        text-align: center;
-      }
     }
   }
 
@@ -1097,90 +1006,11 @@ $code-color-error: #ff4444;
       animation: 4s wrong;
     }
 
-    &.correct.secret > .#{$ns}-card {
+    &.correct.private > .#{$ns}-card {
       animation: 4s correct, 4s private-revert 4s forwards;
     }
 
-    &.wrong.secret > .#{$ns}-card {
-      animation: 4s wrong, 4s private-revert 4s forwards;
-    }
-  }
-
-  .EditableAutograderCard {
-    /* Nested Blueprint Card component (with onClick attached) */
-    .#{$ns}-card {
-      .testcase-placeholder {
-        width: 100%;
-        text-align: center;
-      }
-
-      .testcase-program,
-      .testcase-expected {
-        width: 37%;
-      }
-
-      .testcase-actual {
-        width: 26%;
-      }
-
-      .testcase-button {
-        width: 0.1%;
-      }
-
-      /* Following two are styles for rendered WebGL elements (runes, curves) */
-      .canvas-container {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-
-      /* Override canvas inline height and width */
-      canvas {
-        height: 12rem !important;
-        width: 12rem !important;
-      }
-    }
-
-    /* CSS animation styling for testcases when run */
-    @keyframes correct {
-      from {
-        background: rgba(125, 255, 125, 0.5);
-      }
-
-      to {
-        background: rgba(125, 255, 125, 0.2);
-      }
-    }
-
-    @keyframes wrong {
-      from {
-        background: rgba(255, 55, 55, 0.5);
-      }
-
-      to {
-        background: rgba(255, 55, 55, 0.2);
-      }
-    }
-
-    @keyframes private-revert {
-      to {
-        background: rgba(192, 192, 192, 0.2);
-      }
-    }
-
-    &.correct > .#{$ns}-card {
-      animation: 4s correct;
-    }
-
-    &.wrong > .#{$ns}-card {
-      animation: 4s wrong;
-    }
-
-    &.correct.secret > .#{$ns}-card {
-      animation: 4s correct, 4s private-revert 4s forwards;
-    }
-
-    &.wrong.secret > .#{$ns}-card {
+    &.wrong.private > .#{$ns}-card {
       animation: 4s wrong, 4s private-revert 4s forwards;
     }
   }
@@ -1227,17 +1057,17 @@ $code-color-error: #ff4444;
 }
 
 .Popover-share {
-  .#{$ns}-popover2-arrow-fill {
+  .#{$ns}-popover-arrow-fill {
     fill: $cadet-color-4;
   }
 
-  .#{$ns}-popover2-content {
+  .#{$ns}-popover-content {
     background: $cadet-color-4;
     display: flex;
     padding: 0.4rem 0.8rem 0.4rem 0.8rem;
 
     input {
-      width: 15rem;
+      width: 25rem;
       margin-right: 0.58em;
       &:focus {
         outline: none;

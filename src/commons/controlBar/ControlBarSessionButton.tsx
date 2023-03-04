@@ -1,11 +1,10 @@
-import { Classes, Colors, Menu } from '@blueprintjs/core';
+import { Classes, Colors, Menu, Popover } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
-import { Popover2 } from '@blueprintjs/popover2';
 import * as React from 'react';
 import * as CopyToClipboard from 'react-copy-to-clipboard';
 
 import { checkSessionIdExists, createNewSession } from '../collabEditing/CollabEditingHelper';
-import ControlButton from '../ControlButton';
+import controlButton from '../ControlButton';
 import { showWarningMessage } from '../utils/NotificationsHelper';
 
 type ControlBarSessionButtonsProps = DispatchProps & StateProps;
@@ -16,7 +15,7 @@ type DispatchProps = {
 
 type StateProps = {
   editorSessionId?: string;
-  editorValue: string;
+  editorValue?: string | null;
   sharedbConnected?: boolean;
   key: string;
 };
@@ -54,23 +53,16 @@ export class ControlBarSessionButtons extends React.PureComponent<
       }
     };
 
-    const inviteButtonPopoverContent = (
-      <>
-        <input value={this.props.editorSessionId} readOnly={true} ref={this.inviteInputElem} />
-        <CopyToClipboard text={'' + this.props.editorSessionId}>
-          <ControlButton icon={IconNames.DUPLICATE} onClick={this.selectInviteInputText} />
-        </CopyToClipboard>
-      </>
-    );
-
     const inviteButton = (
-      <Popover2
-        popoverClassName="Popover-share"
-        inheritDarkTheme={false}
-        content={inviteButtonPopoverContent}
-      >
-        <ControlButton label="Invite" icon={IconNames.GRAPH} onClick={handleStartInvite} />
-      </Popover2>
+      <Popover popoverClassName="Popover-share" inheritDarkTheme={false}>
+        {controlButton('Invite', IconNames.GRAPH, handleStartInvite)}
+        <>
+          <input value={this.props.editorSessionId} readOnly={true} ref={this.inviteInputElem} />
+          <CopyToClipboard text={'' + this.props.editorSessionId}>
+            {controlButton('', IconNames.DUPLICATE, this.selectInviteInputText)}
+          </CopyToClipboard>
+        </>
+      </Popover>
     );
 
     const handleStartJoining = (event: React.FormEvent<HTMLFormElement>) => {
@@ -92,40 +84,29 @@ export class ControlBarSessionButtons extends React.PureComponent<
       );
     };
 
-    const joinButtonPopoverContent = (
-      // TODO: this form should use Blueprint
-      <form onSubmit={handleStartJoining}>
-        <input type="text" value={this.state.joinElemValue} onChange={this.handleChange} />
-        <span className={Classes.POPOVER_DISMISS}>
-          <ControlButton icon={IconNames.KEY_ENTER} options={{ type: 'submit' }} />
-        </span>
-      </form>
-    );
-
     const joinButton = (
-      <Popover2
-        popoverClassName="Popover-share"
-        inheritDarkTheme={false}
-        content={joinButtonPopoverContent}
-      >
-        <ControlButton label="Join" icon={IconNames.LOG_IN} />
-      </Popover2>
+      <Popover popoverClassName="Popover-share" inheritDarkTheme={false}>
+        {controlButton('Join', IconNames.LOG_IN)}
+        {/* FIXME this form should use Blueprint */}
+        <>
+          <form onSubmit={handleStartJoining}>
+            <input type="text" value={this.state.joinElemValue} onChange={this.handleChange} />
+            <span className={Classes.POPOVER_DISMISS}>
+              {controlButton('', IconNames.KEY_ENTER, null, { type: 'submit' })}
+            </span>
+          </form>
+        </>
+      </Popover>
     );
 
-    const leaveButton = (
-      <ControlButton
-        label="Leave"
-        icon={IconNames.FEED}
-        onClick={() => {
-          // FIXME: this handler should be a Saga action or at least in a controller
-          this.props.handleSetEditorSessionId!('');
-          this.setState({ joinElemValue: '' });
-        }}
-      />
-    );
+    const leaveButton = controlButton('Leave', IconNames.FEED, () => {
+      // FIXME this handler should be a Saga action or at least in a controller
+      this.props.handleSetEditorSessionId!('');
+      this.setState({ joinElemValue: '' });
+    });
 
     return (
-      <Popover2
+      <Popover
         content={
           <Menu large={true}>
             {inviteButton}
@@ -133,19 +114,15 @@ export class ControlBarSessionButtons extends React.PureComponent<
           </Menu>
         }
       >
-        <ControlButton
-          label="Session"
-          icon={IconNames.SOCIAL_MEDIA}
-          options={{
-            iconColor:
-              this.props.editorSessionId === ''
-                ? undefined
-                : this.props.sharedbConnected
-                ? Colors.GREEN3
-                : Colors.RED3
-          }}
-        />
-      </Popover2>
+        {controlButton('Session', IconNames.SOCIAL_MEDIA, undefined, {
+          iconColor:
+            this.props.editorSessionId === ''
+              ? undefined
+              : this.props.sharedbConnected
+              ? Colors.GREEN3
+              : Colors.RED3
+        })}
+      </Popover>
     );
   }
 

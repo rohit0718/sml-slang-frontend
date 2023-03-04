@@ -68,10 +68,11 @@ div.#{$ns}-dialog.help {
       flex: 0 0 auto;
       display: flex;
       flex-direction: row;
-      padding-bottom: 0.75em;
+      padding-bottom: 1.75em;
       justify-content: space-around;
       align-items: stretch;
 
+      .profile-grade,
       .profile-xp {
         position: relative;
         width: 42%;
@@ -112,12 +113,6 @@ div.#{$ns}-dialog.help {
       }
     }
 
-    .profile-xp-footer {
-      font-style: italic;
-      text-align: center;
-      padding-bottom: 0.75em;
-    }
-
     div.profile-callouts {
       flex-grow: 1;
       flex-shrink: 1;
@@ -130,7 +125,6 @@ div.#{$ns}-dialog.help {
         .profile-summary-callout {
           line-height: 1em;
           padding: 4px 12px 6px 30px;
-          border-radius: 6px;
 
           &:hover {
             background-color: rgba(138, 155, 168, 0.25);
@@ -180,7 +174,7 @@ div.#{$ns}-dialog.help {
       }
 
       .profile-summary-navlink:not(:last-child) > .profile-summary-callout {
-        margin-bottom: 0.5em;
+        margin-bottom: 0.25em;
       }
     }
   }
@@ -213,57 +207,5 @@ div.#{$ns}-dialog.help {
     &.value-bar > div {
       background-color: #9ac0d8;
     }
-  }
-}
-
-.my-courses {
-  .#{$ns}-html-select {
-    margin-top: 10px;
-  }
-}
-
-.create-course {
-  .boolean-container {
-    display: flex;
-  }
-
-  .create-course-button-container {
-    margin-top: 20px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .input-textarea {
-    height: 100px;
-  }
-
-  .input-markdown {
-    padding: 10px;
-    height: 100px;
-    background-color: #f5f5f5;
-    border-radius: 3px;
-    box-shadow: 0 0 0 0 rgb(19 124 189 / 0%), 0 0 0 0 rgb(19 124 189 / 0%),
-      inset 0 0 0 1px rgb(16 22 26 / 15%), inset 0 1px 1px rgb(16 22 26 / 20%);
-    overflow: auto;
-  }
-
-  div.input-markdown > div > * {
-    margin: 0;
-  }
-
-  .optional-text {
-    color: #5c7080;
-  }
-
-  .module-help-text-tabs {
-    display: inline-block;
-    margin-left: 15px;
-  }
-}
-
-.settings {
-  .form-field-help-text {
-    margin-left: 10px;
   }
 }

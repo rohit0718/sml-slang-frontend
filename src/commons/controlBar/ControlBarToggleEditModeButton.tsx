@@ -1,26 +1,25 @@
+import { Tooltip } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
-import { Tooltip2 } from '@blueprintjs/popover2';
-import React from 'react';
+import * as React from 'react';
 
-import ControlButton from '../ControlButton';
+import controlButton from '../ControlButton';
 
-type ControlBarToggleEditModeButtonProps = {
+type ControlBarToggleEditModeButtonProps = DispatchProps & StateProps;
+
+type DispatchProps = {
   toggleEditMode?(): void;
+};
+
+type StateProps = {
+  key: string;
   editingMode?: string;
 };
 
-export const ControlBarToggleEditModeButton: React.FC<ControlBarToggleEditModeButtonProps> = ({
-  toggleEditMode,
-  editingMode
-}) => {
-  const editMode = editingMode === 'question' ? 'Global' : 'Question Specific';
+export function ControlBarToggleEditModeButton(props: ControlBarToggleEditModeButtonProps) {
+  const editMode = props.editingMode === 'question' ? 'Global' : 'Question Specific';
   return (
-    <Tooltip2 content={'Switch to ' + editMode + ' Editing Mode'}>
-      <ControlButton
-        label={editMode + ' Editing Mode'}
-        icon={IconNames.REFRESH}
-        onClick={toggleEditMode}
-      />
-    </Tooltip2>
+    <Tooltip content={'Switch to ' + editMode + ' Editing Mode'}>
+      {controlButton(editMode + ' Editing Mode', IconNames.REFRESH, props.toggleEditMode)}
+    </Tooltip>
   );
-};
+}

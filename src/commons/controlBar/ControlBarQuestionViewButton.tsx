@@ -1,22 +1,22 @@
-import React from 'react';
-
-import ControlButton from '../ControlButton';
+import controlButton from '../ControlButton';
 
 /**
  * @prop questionProgress a tuple of (current question number, question length) where
  *   the current question number is 1-based.
  */
-type ControlBarQuestionViewButtonProps = {
+type ControlBarQuestionViewButtonProps = StateProps;
+
+type StateProps = {
   questionProgress: [number, number] | null;
+  key: string;
 };
 
-export const ControlBarQuestionViewButton: React.FC<ControlBarQuestionViewButtonProps> = ({
-  questionProgress
-}) => {
-  return (
-    <ControlButton
-      label={`Question ${questionProgress![0]} of ${questionProgress![1]}  `}
-      isDisabled
-    />
+export function ControlBarQuestionViewButton(props: ControlBarQuestionViewButtonProps) {
+  return controlButton(
+    `Question ${props.questionProgress![0]} of ${props.questionProgress![1]}  `,
+    null,
+    null,
+    {},
+    true
   );
-};
+}
