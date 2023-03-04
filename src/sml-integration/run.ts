@@ -5,7 +5,6 @@ import { SourceError } from 'sml-slang/types';
 import { Context, Result } from 'sml-slang/types';
 
 export function run(code: string, context: Context): Result {
-  console.log(code)
   try {
     const program = parseExp(code)
     // TODO: type checking, error handling etc.
