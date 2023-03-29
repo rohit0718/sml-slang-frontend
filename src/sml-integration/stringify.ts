@@ -4,5 +4,5 @@ export const stringify = (
   indent: number | string = 2,
   splitlineThreshold = 80
 ): string => {
-  return value.toString()
+  return value.toString();
 };
