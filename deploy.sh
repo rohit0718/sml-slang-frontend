@@ -3,7 +3,7 @@ export REACT_APP_VERSION=$(date +"%Y-%m-%dT%H:%M:%S%z")
 export REACT_APP_ENVIRONMENT='pages'
 export REACT_APP_MODULE_BACKEND_URL=https://source-academy.github.io/modules
 export SW_EXCLUDE_REGEXES='["^/source", "^/sicp", "^/modules", "^/ev3-source"]'
-export PUBLIC_URL='https:/rohit0718.github.io/sml-slang-frontend'
+export PUBLIC_URL='https://rohit0718.github.io/sml-slang-frontend'
 
 git checkout deploy
 yarn install
