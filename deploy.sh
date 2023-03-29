@@ -12,7 +12,8 @@ ln -s index.html build/playground.html
 ln -s index.html build/contributors.html
 ln -s index.html build/sourcecast.html
 
-mv ./build/* .
+cp -r ./build/* .
+rm -rf build/*
 
 git add .
 git commit -m "deploy"
