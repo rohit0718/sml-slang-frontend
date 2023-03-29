@@ -21,7 +21,7 @@ import {
 import { ControlBarAutorunButtons } from '../../commons/controlBar/ControlBarAutorunButtons';
 import { ControlBarClearButton } from '../../commons/controlBar/ControlBarClearButton';
 import { ControlBarEvalButton } from '../../commons/controlBar/ControlBarEvalButton';
-import { ControlBarStepLimit } from '../../commons/controlBar/ControlBarStepLimit';
+// import { ControlBarStepLimit } from '../../commons/controlBar/ControlBarStepLimit';
 import { ControlBarVariantSelect } from '../../commons/controlBar/ControlBarVariantSelect';
 import { HighlightedLines, Position } from '../../commons/editor/EditorTypes';
 import Markdown from '../../commons/Markdown';
@@ -272,16 +272,16 @@ const Playground: React.FC<PlaygroundProps> = props => {
    *   [props.execTime, props.handleChangeExecTime]
    * ); */
 
-  const stepperStepLimit = React.useMemo(
-    () => (
-      <ControlBarStepLimit
-        stepLimit={props.stepLimit}
-        handleChangeStepLimit={props.handleChangeStepLimit}
-        key="step_limit"
-      />
-    ),
-    [props.handleChangeStepLimit, props.stepLimit]
-  );
+  // const stepperStepLimit = React.useMemo(
+  //   () => (
+  //     <ControlBarStepLimit
+  //       stepLimit={props.stepLimit}
+  //       handleChangeStepLimit={props.handleChangeStepLimit}
+  //       key="step_limit"
+  //     />
+  //   ),
+  //   [props.handleChangeStepLimit, props.stepLimit]
+  // );
 
   const { handleEditorValueChange } = props;
 
@@ -365,7 +365,7 @@ const Playground: React.FC<PlaygroundProps> = props => {
 
   const workspaceProps: WorkspaceProps = {
     controlBarProps: {
-      editorButtons: [autorunButtons, variantSelect, stepperStepLimit],
+      editorButtons: [autorunButtons, variantSelect],
       replButtons: [replDisabled ? null : evalButton, clearButton]
     },
     editorProps: {
