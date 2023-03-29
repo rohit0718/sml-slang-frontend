@@ -44,7 +44,7 @@ export function HighlightRulesSelector(
     // const identifierRegex = '[a-zA-Z\\$_\u00a1-\uffff][a-zA-Z\\d\\$_\u00a1-\uffff]*';
 
     const SourceHighlightRules = function (this: any, options: any) {
-      const keywordControls = 'if|then|else|let|in|end|case|of|val|fun';
+      const keywordControls = 'if|then|else|let|in|end|case|of|val|fun|local|andalso|orelse';
 
       const storageType = 'int|float|string|char|bool|unit';
 
