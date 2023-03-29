@@ -2,7 +2,6 @@ import { Card, Classes, Pre } from '@blueprintjs/core';
 import classNames from 'classnames';
 import * as React from 'react';
 import { HotKeys } from 'react-hotkeys';
-import { Finished } from 'sml-slang/types';
 import { formatFinishedForRepl } from 'sml-slang/utils/formatters';
 import { parseError, Variant } from 'src/sml-integration';
 
@@ -71,16 +70,12 @@ export const Output: React.FC<OutputProps> = (props: OutputProps) => {
     case 'result':
       console.dir(props.output, { depth: 4 });
       if (props.output.consoleLogs.length === 0) {
-        return (
-          <Card>
-            <Pre className="resultOutput">{renderResult(props.output)}</Pre>
-          </Card>
-        );
+        return <Card>{renderResult(props.output)}</Card>;
       } else {
         return (
           <Card>
             <Pre className="logOutput">{props.output.consoleLogs.join('\n')}</Pre>
-            <Pre className="resultOutput">{renderResult(props.output)}</Pre>
+            {renderResult(props.output)}
           </Card>
         );
       }
@@ -109,10 +104,14 @@ const renderResult = (output: ResultOutput) => {
   /** A class which is the output of the show() function */
   const ShapeDrawn = (window as any).ShapeDrawn;
   if (typeof ShapeDrawn !== 'undefined' && output.value instanceof ShapeDrawn) {
-    return <SideContentCanvasOutput canvas={output.value.$canvas} />;
-  } else {
-    return formatFinishedForRepl(output.value as Finished);
+    return (
+      <Pre className="resultOutput">
+        <SideContentCanvasOutput canvas={output.value.$canvas} />
+      </Pre>
+    );
   }
+
+  return <Pre className="resultOutput">{formatFinishedForRepl(output.value)}</Pre>;
 };
 
 /* Override handler, so does not trigger when focus is in editor */
