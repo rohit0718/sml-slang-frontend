@@ -5,6 +5,8 @@ export REACT_APP_MODULE_BACKEND_URL=https://source-academy.github.io/modules
 export SW_EXCLUDE_REGEXES='["^/source", "^/sicp", "^/modules", "^/ev3-source"]'
 export PUBLIC_URL='https://rohit0718.github.io/sml-slang-frontend'
 
+hash=$(git rev-parse --short HEAD)
+
 git branch -D deploy
 git checkout -b deploy
 yarn install
@@ -17,7 +19,7 @@ cp -r ./build/* .
 rm -rf build/*
 
 git add .
-git commit -m "deploy"
+git commit -m "deploying from $hash"
 git push --force origin deploy
 
 git checkout main
