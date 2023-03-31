@@ -1,12 +1,18 @@
 import { SourceError } from 'sml-slang/types';
 
-const verboseErrors = false;
-export function parseError(errors: SourceError[], verbose: boolean = verboseErrors): string {
+export function parseError(errors: SourceError[]): string {
   const errorMessagesArr = errors.map(error => {
-    // TODO: add explanations etc.
     const line = error.location ? error.location.start.line : '<unknown>';
     const column = error.location ? error.location.start.column : '<unknown>';
-    return `Line ${line}, column ${column}`;
+    const explanation = error.explain ? error.explain() : '<unknown>';
+
+    if (line === '<unknown>' || column === '<unknown>') {
+      return `Unexpected error :(\n`;
+    }
+    if (error.explain === undefined) {
+      return `Line ${line}, Column ${column}: Unexpected error :(\n`;
+    }
+    return `Line ${line}, Column ${column}: ${explanation}`;
   });
   return errorMessagesArr.join('\n');
 }
