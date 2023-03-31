@@ -322,6 +322,19 @@ const EditorBase = React.memo(
       .filter(([_, exec]) => exec)
       .map(([name, exec]) => ({ name, bindKey: keyBindings[name], exec: exec! }));
 
+    // add new command that overwrites command to toggle line comment since SMl does
+    // not have line comments
+    aceEditorProps.commands.push({
+      name: 'toggleBlockComment',
+      bindKey: {
+        win: 'Ctrl-/',
+        mac: 'Command-/'
+      },
+      exec: function () {
+        reactAceRef.current?.editor.toggleBlockComment();
+      }
+    });
+
     // Merge in .onEvent ace editor props
     // This prevents user errors such as
     // TRYING TO ADD AN ONCHANGE PROP WHICH KILLS THE ABOVE ONCHANGE.

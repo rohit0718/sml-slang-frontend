@@ -213,7 +213,7 @@ export function ModeSelector(id: number, variant: Variant, external: string = 'N
     oop.inherits(Mode, TextMode);
     (function (this: any) {
       this.lineCommentStart = '//';
-      this.blockComment = { start: '/*', end: '*/' };
+      this.blockComment = { start: '(*', end: '*)' };
       this.$quotes = { '"': '"', "'": "'", '`': '`' };
 
       this.getNextLineIndent = function (state: any, line: any, tab: any) {
