@@ -1,5 +1,4 @@
 /* tslint:disable: ban-types*/
-import { difference, keys } from 'lodash';
 import { default as smlCreateContext } from 'sml-slang/context';
 import { Context } from 'sml-slang/types';
 import { stringify, Variant } from 'src/sml-integration';
@@ -134,67 +133,6 @@ export function createContext<T>(
   moduleParams?: any
 ) {
   return smlCreateContext(externals, externalContext);
-}
-
-// Given a Context, returns a privileged Context that when referenced,
-// intercepts reads from the underlying Context and returns desired values
-export function makeElevatedContext(context: Context) {
-  function ProxyFrame() {}
-  ProxyFrame.prototype = context.runtime.environments[0].head;
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  const fakeFrame: { [key: string]: any } = new ProxyFrame();
-  // Explanation: Proxy doesn't work for defineProperty in use-strict.
-  // The x-slang will defineProperty on loadStandardLibraries
-  // Creating a raw JS object and setting prototype will allow defineProperty on the child
-  // while reflection should work on parent.
-
-  const proxyGlobalEnv = new Proxy(context.runtime.environments[0], {
-    get(target, prop: string | symbol, receiver) {
-      if (prop === 'head') {
-        return fakeFrame;
-      }
-      return target[prop];
-    }
-  });
-
-  const proxyEnvs = new Proxy(context.runtime.environments, {
-    get(target, prop, receiver) {
-      if (prop === '0') {
-        return proxyGlobalEnv;
-      }
-      return target[prop];
-    }
-  });
-
-  const proxyRuntime = new Proxy(context.runtime, {
-    get(target, prop, receiver) {
-      if (prop === 'environments') {
-        return proxyEnvs;
-      }
-      return target[prop];
-    }
-  });
-
-  const elevatedContext = new Proxy(context, {
-    get(target, prop, receiver) {
-      switch (prop) {
-        case 'variant':
-          return 4;
-        case 'runtime':
-          return proxyRuntime;
-        default:
-          return target[prop];
-      }
-    }
-  });
-  return elevatedContext;
-}
-
-export function getDifferenceInMethods(elevatedContext: Context, context: Context) {
-  const eFrame = elevatedContext.runtime.environments[0].head;
-  const frame = context.runtime.environments[0].head;
-  return difference(keys(eFrame), keys(frame));
 }
 
 export function getStoreExtraMethodsString(toRemove: string[], unblockKey: string) {

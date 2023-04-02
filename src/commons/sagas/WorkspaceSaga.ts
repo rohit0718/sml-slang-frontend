@@ -9,15 +9,7 @@ import { DEBUG_RESET, DEBUG_RESUME, HIGHLIGHT_LINE } from '../application/types/
 import { Documentation } from '../documentation/Documentation';
 import { actions } from '../utils/ActionsHelper';
 import { showWarningMessage } from '../utils/NotificationsHelper';
-import {
-  getBlockExtraMethodsString,
-  getDifferenceInMethods,
-  getRestoreExtraMethodsString,
-  getStoreExtraMethodsString,
-  highlightLine,
-  inspectorUpdate,
-  visualiseEnv
-} from '../utils/XSlangHelper';
+import { highlightLine, inspectorUpdate, visualiseEnv } from '../utils/XSlangHelper';
 import { notifyProgramEvaluated } from '../workspace/WorkspaceActions';
 import {
   EVAL_EDITOR,
@@ -203,36 +195,6 @@ function* updateInspector(workspaceLocation: WorkspaceLocation): SagaIterator {
     // half of the time this comes from execution ending or a stack overflow and
     // the context goes missing.
   }
-}
-
-export function* blockExtraMethods(
-  elevatedContext: Context,
-  context: Context,
-  execTime: number,
-  workspaceLocation: WorkspaceLocation,
-  unblockKey?: string
-) {
-  // Extract additional methods available in the elevated context relative to the context
-  const toBeBlocked = getDifferenceInMethods(elevatedContext, context);
-  if (unblockKey) {
-    const storeValues = getStoreExtraMethodsString(toBeBlocked, unblockKey);
-    yield call(evalCode, storeValues, elevatedContext, execTime, workspaceLocation, EVAL_SILENT);
-  }
-
-  const nullifier = getBlockExtraMethodsString(toBeBlocked);
-  yield call(evalCode, nullifier, elevatedContext, execTime, workspaceLocation, EVAL_SILENT);
-}
-
-export function* restoreExtraMethods(
-  elevatedContext: Context,
-  context: Context,
-  execTime: number,
-  workspaceLocation: WorkspaceLocation,
-  unblockKey: string
-) {
-  const toUnblock = getDifferenceInMethods(elevatedContext, context);
-  const restorer = getRestoreExtraMethodsString(toUnblock, unblockKey);
-  yield call(evalCode, restorer, elevatedContext, execTime, workspaceLocation, EVAL_SILENT);
 }
 
 export function* evalCode(
