@@ -126,8 +126,7 @@ export const defaultApplication: ApplicationState = {
 
 export const defaultPlayground: PlaygroundState = {};
 
-export const defaultEditorValue = `
-fun fib n =
+export const defaultEditorValue = `fun fib n =
   let
     fun loop acc i =
       if i > n then
