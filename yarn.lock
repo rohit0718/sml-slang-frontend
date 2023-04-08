@@ -11681,9 +11681,9 @@ slice-ansi@^2.1.0:
     astral-regex "^1.0.0"
     is-fullwidth-code-point "^2.0.0"
 
-"sml-slang@github:sebastiantoh/sml-slang#c7fc4b9103952100c7c71a409f037f7d9f37b846":
+"sml-slang@github:sebastiantoh/sml-slang#27b34c1a64a29dd1a97a9937d46484dd8cfb86dd":
   version "0.0.0"
-  resolved "git+ssh://git@github.com/sebastiantoh/sml-slang.git#c7fc4b9103952100c7c71a409f037f7d9f37b846"
+  resolved "git+ssh://git@github.com/sebastiantoh/sml-slang.git#27b34c1a64a29dd1a97a9937d46484dd8cfb86dd"
 
 snapdragon-node@^2.0.1:
   version "2.1.1"
