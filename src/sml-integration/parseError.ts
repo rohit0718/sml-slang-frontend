@@ -6,6 +6,7 @@ export function parseError(errors: SourceError[]): string {
     const column = error.location ? error.location.start.column : '<unknown>';
     const explanation = error.explain ? error.explain() : '<unknown>';
 
+    console.error(error);
     if (line === '<unknown>' || column === '<unknown>') {
       return `Unexpected error :(\n`;
     }

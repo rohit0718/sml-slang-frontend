@@ -69,7 +69,7 @@
     "redux-mock-store": "^1.5.4",
     "redux-saga": "^1.1.3",
     "showdown": "^1.9.1",
-    "sml-slang": "github:sebastiantoh/sml-slang#3ee06f416c62228f121b3949d434c382079a0e32",
+    "sml-slang": "github:sebastiantoh/sml-slang#c7fc4b9103952100c7c71a409f037f7d9f37b846",
     "sourceror": "^0.7.0",
     "typesafe-actions": "^5.1.0",
     "uuid": "^8.3.0",
