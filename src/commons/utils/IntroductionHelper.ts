@@ -44,7 +44,7 @@ val () = (
 )
 \`\`\`
 
-In the REPL below, you can evaluate SML expressions. For example
+In the REPL below, you can evaluate SML expressions. For example,
 \`\`\`
 let
   val bool_list = [true, true, false]
