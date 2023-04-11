@@ -3,7 +3,8 @@ import { IconName } from '@blueprintjs/core';
 export const NOTIFY_PROGRAM_EVALUATED = 'NOTIFY_PROGRAM_EVALUATED';
 
 export enum SideContentType {
-  introduction = 'introduction'
+  introduction = 'introduction',
+  examples = 'examples'
 }
 
 export type SideContentTab = {

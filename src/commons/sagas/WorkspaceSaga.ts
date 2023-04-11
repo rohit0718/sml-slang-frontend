@@ -2,7 +2,7 @@ import { SagaIterator } from 'redux-saga';
 import { call, put, race, select } from 'redux-saga/effects';
 import { Context } from 'sml-slang/types';
 import Constants from 'src/commons/utils/Constants';
-import { run, Variant } from 'src/sml-integration';
+import { run, runProg, Variant } from 'src/sml-integration';
 
 import { OverallState } from '../application/ApplicationTypes';
 import { DEBUG_RESET, DEBUG_RESUME, HIGHLIGHT_LINE } from '../application/types/InterpreterTypes';
@@ -193,7 +193,11 @@ export function* evalCode(
 
   function call_variant(variant: Variant) {
     if (variant === Constants.defaultSourceVariant) {
-      return call(run, code, context);
+      if (actionType === EVAL_REPL) {
+        return call(run, code, context);
+      } else {
+        return call(runProg, code, context);
+      }
     } else {
       throw new Error('Unknown variant: ' + variant);
     }

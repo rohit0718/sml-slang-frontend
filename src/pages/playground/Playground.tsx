@@ -25,7 +25,10 @@ import { ControlBarEvalButton } from '../../commons/controlBar/ControlBarEvalBut
 import { ControlBarVariantSelect } from '../../commons/controlBar/ControlBarVariantSelect';
 import { HighlightedLines, Position } from '../../commons/editor/EditorTypes';
 import Markdown from '../../commons/Markdown';
-import { generateSourceIntroduction } from '../../commons/utils/IntroductionHelper';
+import {
+  generateSmlExamples,
+  generateSourceIntroduction
+} from '../../commons/utils/IntroductionHelper';
 import Workspace, { WorkspaceProps } from '../../commons/workspace/Workspace';
 import {
   CodeDelta,
@@ -296,10 +299,21 @@ const Playground: React.FC<PlaygroundProps> = props => {
     []
   );
 
+  const examplesTab: SideContentTab = React.useMemo(
+    () => ({
+      label: 'Examples',
+      iconName: IconNames.HELP,
+      body: <Markdown content={generateSmlExamples()} openLinksInNewWindow={true} />,
+      id: SideContentType.examples,
+      toSpawn: () => true
+    }),
+    []
+  );
+
   const tabs = React.useMemo(() => {
-    const tabs: SideContentTab[] = [playgroundIntroductionTab];
+    const tabs: SideContentTab[] = [playgroundIntroductionTab, examplesTab];
     return tabs;
-  }, [playgroundIntroductionTab]);
+  }, [playgroundIntroductionTab, examplesTab]);
 
   const onChangeMethod = React.useCallback(
     (newCode: string, delta: CodeDelta) => {
