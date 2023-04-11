@@ -6,7 +6,6 @@ import { stringify, Variant } from 'src/sml-integration';
 import { handleConsoleLog } from '../application/actions/InterpreterActions';
 import Constants from './Constants';
 
-// TODO: replace this with sml slang Value type
 type Value = any;
 /**
  * This file contains wrappers for certain functions
@@ -44,7 +43,6 @@ function display(value: Value, str: string, workspaceLocation: any) {
  */
 function rawDisplay(value: Value, str: string, workspaceLocation: any) {
   const output = (str === undefined ? '' : str + ' ') + String(value);
-  // TODO in 2019: fix this hack
   if (typeof (window as any).__REDUX_STORE__ !== 'undefined') {
     (window as any).__REDUX_STORE__.dispatch(handleConsoleLog(output, workspaceLocation));
   }

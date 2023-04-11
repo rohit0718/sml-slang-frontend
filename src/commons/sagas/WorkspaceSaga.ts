@@ -52,25 +52,7 @@ export default function* WorkspaceSaga(): SagaIterator {
     const workspaceLocation = action.payload.workspaceLocation;
 
     context = yield select((state: OverallState) => state.workspaces[workspaceLocation].context);
-    // const code: string = yield select((state: OverallState) => {
-    //   const prependCode = state.workspaces[workspaceLocation].editorPrepend;
-    //   const editorCode = state.workspaces[workspaceLocation].editorValue!;
-    //   return [prependCode, editorCode] as [string, string];
-    // });
-    // const [prepend, editorValue] = code;
 
-    // TODO: use autocompleteCode and prependLength to identify names in code
-    // Deal with prepended code
-    // let autocompleteCode;
-    // let prependLength = 0;
-    // if (!prepend) {
-    //   autocompleteCode = editorValue;
-    // } else {
-    //   prependLength = prepend.split('\n').length;
-    //   autocompleteCode = prepend + '\n' + editorValue;
-    // }
-
-    // TODO: Check if user is declaring a name
     const displaySuggestions = true;
 
     if (!displaySuggestions) {

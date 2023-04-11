@@ -166,7 +166,7 @@ export const promptAutocomplete = (
   workspaceLocation: WorkspaceLocation,
   row: number,
   column: number,
-  callback: any // TODO: define a type for this
+  callback: any
 ) =>
   action(PROMPT_AUTOCOMPLETE, {
     workspaceLocation,

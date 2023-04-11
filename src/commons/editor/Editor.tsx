@@ -15,7 +15,6 @@ import { keyBindings, KeyFunction } from './EditorHotkeys';
 import { AceMouseEvent, HighlightedLines, Position } from './EditorTypes';
 
 // =============== Hooks ===============
-// TODO: Should further refactor into EditorBase + different variants.
 // Ideally, hooks should be specified by the parent component instead.
 import useHighlighting from './UseHighlighting';
 import useNavigation from './UseNavigation';

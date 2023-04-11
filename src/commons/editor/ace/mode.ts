@@ -265,24 +265,6 @@ export function ModeSelector(id: number, variant: Variant, external: string = 'N
       // ace.config.setModuleUrl("ace/mode/javascript_worker", jsWorkerUrl)
       //
       // Note: some lint disabling may be needed for the above
-
-      // // @ts-ignore
-      // this.createWorker = function (session) {
-      //   const worker = new WorkerClient(["ace"], "ace/mode/javascript_worker", "JavaScriptWorker");
-      //   worker.attachToDocument(session.getDocument())
-      //
-      //   // @ts-ignore
-      //   worker.on('annotate', function (results) {
-      //     session.setAnnotations(results.data)
-      //   })
-      //
-      //   worker.on('terminate', function () {
-      //     session.clearAnnotations()
-      //   })
-      //
-      //   return worker
-      // }
-
       this.$id = 'ace/mode/source' + name;
     }.call(Mode.prototype));
 

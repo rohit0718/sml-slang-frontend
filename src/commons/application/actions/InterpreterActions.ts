@@ -17,7 +17,6 @@ import {
 export const handleConsoleLog = (logString: string, workspaceLocation: WorkspaceLocation) =>
   action(HANDLE_CONSOLE_LOG, { logString, workspaceLocation });
 
-// TODO: update value to SML Value type
 export const evalInterpreterSuccess = (value: any, workspaceLocation: WorkspaceLocation) =>
   action(EVAL_INTERPRETER_SUCCESS, { type: 'result', value, workspaceLocation });
 
