@@ -1,0 +1,17 @@
+{
+  "files": {
+    "main.css": "https://rohit0718.github.io/sml-slang-frontend/static/css/main.f144cae0.css",
+    "main.js": "https://rohit0718.github.io/sml-slang-frontend/static/js/main.7f7db32c.js",
+    "main.js.map": "https://rohit0718.github.io/sml-slang-frontend/static/js/main.7f7db32c.js.map",
+    "index.html": "https://rohit0718.github.io/sml-slang-frontend/index.html",
+    "precache-manifest.01e543eedfc422587ec13291ed747616.js": "https://rohit0718.github.io/sml-slang-frontend/precache-manifest.01e543eedfc422587ec13291ed747616.js",
+    "service-worker.js": "https://rohit0718.github.io/sml-slang-frontend/service-worker.js",
+    "static/css/main.f144cae0.css.map": "https://rohit0718.github.io/sml-slang-frontend/static/css/main.f144cae0.css.map",
+    "static/js/main.7f7db32c.js.LICENSE.txt": "https://rohit0718.github.io/sml-slang-frontend/static/js/main.7f7db32c.js.LICENSE.txt",
+    "static/media/index.scss": "https://rohit0718.github.io/sml-slang-frontend/static/media/no_page_background.61832e2d.jpg"
+  },
+  "entrypoints": [
+    "static/css/main.f144cae0.css",
+    "static/js/main.7f7db32c.js"
+  ]
+}
